@@ -1,0 +1,6 @@
+_ref/
+database/*.json
+.DS_Store
+Thumbs.db
+*.log
+node_modules/

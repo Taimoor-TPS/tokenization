@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TknEngine harness — Phase 3</title>
+  <style>
+    body { font-family: Consolas, "Courier New", monospace; margin: 24px; background: #111; color: #ddd; }
+    h1 { font-size: 18px; color: #fff; }
+    .meta { color: #888; margin-bottom: 16px; }
+    #summary { font-size: 16px; margin: 12px 0 20px; padding: 10px 12px; border-radius: 4px; }
+    #summary.pass { background: #14321a; color: #7dffa0; }
+    #summary.fail { background: #3a1515; color: #ff8e8e; }
+    .row { padding: 4px 0; border-bottom: 1px solid #222; }
+    .ok { color: #7dffa0; }
+    .bad { color: #ff8e8e; }
+    .name { display: inline-block; min-width: 280px; }
+  </style>
+</head>
+<body>
+  <h1>IRIS TknEngine — Phase 3 harness</h1>
+  <div class="meta">Seed aligned to PRD §12. Fixed now = 11 Nov 2026, 14:00:00.</div>
+  <div id="summary"></div>
+  <div id="results"></div>
+  <script src="tkn-engine.js"></script>
+  <script>
+(function () {
+  'use strict';
+
+  var NOW = new Date(2026, 10, 11, 14, 0, 0); // 11 Nov 2026
+  var STAMP = '11 Nov 2026, 09:00:00';
+
+  function seedStore() {
+    return {
+      institution: [{ bankName: 'IRIS Issuer Bank', currency: 'PKR', currencyDecimals: 2, timezone: 'Asia/Karachi' }],
+      schemes: [
+        { code: 'VISA', name: 'Visa', tokenService: 'VTS', tokenRefPrefix: 'VTSREF0000', panPrefix: '4', tokenValidityMonths: 36, cascadeMode: 'CARD_LEVEL', disabled: false },
+        { code: 'MC', name: 'Mastercard', tokenService: 'MDES', tokenRefPrefix: 'DAPLMC0000', panPrefix: '5', tokenValidityMonths: 36, cascadeMode: 'PER_TOKEN', disabled: false }
+      ],
+      products: [
+        { code: 'VCLS', name: 'Classic Debit', scheme: 'VISA', bin: '400012', tokenizationEnabled: true, maxTokensPerCard: 5, disabled: false },
+        { code: 'VGLD', name: 'Gold Debit', scheme: 'VISA', bin: '400013', tokenizationEnabled: true, maxTokensPerCard: 5, disabled: false },
+        { code: 'VBSC', name: 'Basic Debit', scheme: 'VISA', bin: '400014', tokenizationEnabled: false, maxTokensPerCard: 5, disabled: false },
+        { code: 'MCLS', name: 'Classic Debit', scheme: 'MC', bin: '500012', tokenizationEnabled: true, maxTokensPerCard: 5, disabled: false },
+        { code: 'MGLD', name: 'Gold Debit', scheme: 'MC', bin: '500013', tokenizationEnabled: true, maxTokensPerCard: 2, disabled: false }
+      ],
+      cards: [
+        { id: 'CARD-0001', customerId: 'CUST-000101', product: 'VCLS', pan: '4000120000001001', customer: 'Demo Customer 01', expiry: '09/29', cvv2: '314', status: 'ACTIVE', balance: 85000, mobile: '03000000147', email: 'customer01@mail.test', disabled: false },
+        { id: 'CARD-0002', customerId: 'CUST-000102', product: 'VGLD', pan: '4000130000002002', customer: 'Demo Customer 02', expiry: '03/28', cvv2: '652', status: 'ACTIVE', balance: 4200, mobile: '03000000219', email: 'customer02@mail.test', disabled: false },
+        { id: 'CARD-0003', customerId: 'CUST-000103', product: 'VBSC', pan: '4000140000003003', customer: 'Demo Customer 03', expiry: '12/27', cvv2: '907', status: 'ACTIVE', balance: 60000, mobile: '03000000382', email: 'customer03@mail.test', disabled: false },
+        { id: 'CARD-0005', customerId: 'CUST-000105', product: 'MGLD', pan: '5000130000005005', customer: 'Demo Customer 05', expiry: '01/28', cvv2: '219', status: 'WARM', balance: 35000, mobile: '03000000526', email: 'customer05@mail.test', disabled: false },
+        { id: 'CARD-0006', customerId: 'CUST-000106', product: 'VCLS', pan: '4000120000006006', customer: 'Demo Customer 06', expiry: '10/25', cvv2: '730', status: 'ACTIVE', balance: 15000, mobile: '03000000637', email: 'customer06@mail.test', disabled: false }
+      ],
+      tokenRequestors: [
+        { id: '40010075001', name: 'OEM Wallet', type: 'OEM wallet', schemes: ['VISA', 'MC'], tokenType: '03', deviceTypes: ['Mobile', 'Watch'], channels: ['POS contactless', 'E-commerce'], disabled: false },
+        { id: '40010075002', name: 'Bank App Wallet', type: 'Issuer wallet (HCE)', schemes: ['VISA', 'MC'], tokenType: '03', deviceTypes: ['Mobile'], channels: ['POS contactless'], disabled: false },
+        { id: '40010075003', name: 'Unapproved Wallet', type: 'OEM wallet', schemes: ['VISA', 'MC'], tokenType: '03', deviceTypes: ['Mobile'], channels: ['POS contactless'], disabled: true }
+      ],
+      eligibility: [{
+        allowedCardStatuses: ['ACTIVE'],
+        requireProductFlag: true,
+        requireCvv2: true,
+        requireApprovedRequestor: true,
+        rejectExpired: true,
+        enforceMaxTokens: true,
+        oneTokenPerDeviceRequestor: true,
+        unlistedReasonDecision: 'YELLOW',
+        assuranceNoStepUp: 50,
+        assuranceAfterStepUp: 70
+      }],
+      riskScoreBands: [
+        { score: 5, decision: 'GREEN', disabled: false },
+        { score: 4, decision: 'GREEN', disabled: false },
+        { score: 3, decision: 'YELLOW', disabled: false },
+        { score: 2, decision: 'YELLOW', disabled: false },
+        { score: 1, decision: 'RED', disabled: false }
+      ],
+      riskReasonRules: [
+        { code: 'LONG_STANDING_ACCOUNT', description: 'long clean history', decision: 'GREEN', disabled: false },
+        { code: 'NEW_DEVICE', description: 'new device', decision: 'YELLOW', disabled: false },
+        { code: 'DEVICE_FLAGGED', description: 'flagged', decision: 'RED', disabled: false }
+      ],
+      stepup: [{
+        smsEnabled: true, emailEnabled: true, callCentreEnabled: false,
+        otpBy: 'Scheme', otpLength: 6, otpValiditySeconds: 180, maxAttempts: 3, maxResends: 2
+      }],
+      templates: [
+        { event: 'OTP', channel: 'SMS', text: 'Use OTP {otp} to add your {product} card ending {last4} to {wallet}. This OTP will be valid for {minutes} minutes. {bank}', disabled: false },
+        { event: 'OTP', channel: 'EMAIL', text: 'Your one-time code is {otp}.', disabled: false },
+        { event: 'CARD_ADDED', channel: 'SMS', text: 'Your {product} card ending {last4} has been added to {wallet} on your {device}. {bank}', disabled: false },
+        { event: 'TOKEN_SUSPENDED', channel: 'SMS', text: 'Your card ending {last4} in {wallet} on your {device} has been suspended. {bank}', disabled: false },
+        { event: 'TOKEN_RESUMED', channel: 'SMS', text: 'ready again', disabled: false },
+        { event: 'TOKEN_DELETED', channel: 'SMS', text: 'removed', disabled: false }
+      ],
+      authRules: [{
+        allowedCardStatuses: ['ACTIVE'],
+        validateRequestor: true,
+        enforceExpiryMatch: true,
+        requireCryptogram: true,
+        applyLimits: true,
+        checkBalance: true,
+        defaultDeclineCode: '05'
+      }],
+      limits: [
+        { product: 'VCLS', channel: 'POS contactless', perTxn: 25000, dailyAmount: 100000, dailyCount: 10, disabled: false },
+        { product: 'VGLD', channel: 'POS contactless', perTxn: 50000, dailyAmount: 250000, dailyCount: 20, disabled: false }
+      ],
+      responseCodes: [
+        { reason: 'APPROVED', description: 'ok', code: '00', disabled: false },
+        { reason: 'TOKENIZATION_DISABLED', description: '', code: '57', disabled: false },
+        { reason: 'TOKEN_NOT_FOUND', description: '', code: '14', disabled: false },
+        { reason: 'TOKEN_NOT_ACTIVE', description: '', code: '62', disabled: false },
+        { reason: 'REQUESTOR_INVALID', description: '', code: '58', disabled: false },
+        { reason: 'TOKEN_EXPIRED', description: '', code: '54', disabled: false },
+        { reason: 'EXPIRY_MISMATCH', description: '', code: '54', disabled: false },
+        { reason: 'CARD_STATUS_NOT_ALLOWED', description: '', code: '62', disabled: false },
+        { reason: 'CRYPTOGRAM_FAILED', description: '', code: '05', disabled: false },
+        { reason: 'LIMIT_EXCEEDED_TXN', description: '', code: '61', disabled: false },
+        { reason: 'LIMIT_EXCEEDED_DAILY_AMOUNT', description: '', code: '61', disabled: false },
+        { reason: 'LIMIT_EXCEEDED_DAILY_COUNT', description: '', code: '65', disabled: false },
+        { reason: 'INSUFFICIENT_FUNDS', description: '', code: '51', disabled: false }
+      ],
+      reasonCodes: [
+        { code: 'Z', description: 'Other', actions: ['Suspend', 'Unsuspend', 'Delete', 'Activate'], schemes: ['VISA', 'MC'], disabled: false },
+        { code: 'F', description: 'Found', actions: ['Unsuspend'], schemes: ['VISA', 'MC'], disabled: false }
+      ],
+      cascadeRules: [
+        { cardStatus: 'ACTIVE', effect: 'Resume', disabled: false },
+        { cardStatus: 'WARM', effect: 'Suspend', disabled: false },
+        { cardStatus: 'HOT', effect: 'Delete', disabled: false }
+      ],
+      tokens: [],
+      transactions: []
+    };
+  }
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  function activeToken(store, overrides) {
+    var t = Object.assign({
+      ref: 'VTSREF0000123456789012',
+      token: '4808321195524929',
+      scheme: 'VISA',
+      cardId: 'CARD-0001',
+      requestorId: '40010075001',
+      channel: 'OEM Wallet',
+      deviceId: 'DEV-PH-7F21',
+      deviceType: 'Mobile',
+      tokenType: '03',
+      assurance: '50',
+      status: 'ACTIVE',
+      suspendedBy: '',
+      provisionedAt: STAMP,
+      tokenExpiry: '11/2029',
+      updatedAt: STAMP,
+      lastReason: '',
+      idvPath: 'GREEN'
+    }, overrides || {});
+    store.tokens.push(t);
+    return t;
+  }
+
+  var E = window.TknEngine;
+  var resultsEl = document.getElementById('results');
+  var passed = 0;
+  var failed = 0;
+
+  function assert(name, cond, detail) {
+    var ok = !!cond;
+    if (ok) passed++; else failed++;
+    var div = document.createElement('div');
+    div.className = 'row ' + (ok ? 'ok' : 'bad');
+    div.innerHTML = '<span class="name">' + (ok ? 'PASS' : 'FAIL') + '  ' + name + '</span>' +
+      (ok ? '' : (' — ' + (detail || '')));
+    resultsEl.appendChild(div);
+  }
+
+  function expectReason(name, res, reason) {
+    assert(name, res && res.reason === reason,
+      'got ' + (res && res.reason) + ' / ok=' + (res && res.ok) +
+      (res && res.checks && res.checks.length ? ' last=' + res.checks[res.checks.length - 1].text : ''));
+  }
+
+  // --- Eligibility declines ---
+  (function () {
+    var s = seedStore();
+    expectReason('PRODUCT_NOT_ENABLED',
+      E.checkEligibility(s, { cardId: 'CARD-0003', cvv2: '907', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW }),
+      'PRODUCT_NOT_ENABLED');
+  })();
+
+  (function () {
+    var s = seedStore();
+    expectReason('CARD_STATUS_NOT_ALLOWED',
+      E.checkEligibility(s, { cardId: 'CARD-0005', cvv2: '219', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW }),
+      'CARD_STATUS_NOT_ALLOWED');
+  })();
+
+  (function () {
+    var s = seedStore();
+    expectReason('CARD_EXPIRED',
+      E.checkEligibility(s, { cardId: 'CARD-0006', cvv2: '730', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW }),
+      'CARD_EXPIRED');
+  })();
+
+  (function () {
+    var s = seedStore();
+    expectReason('CVV2_MISMATCH',
+      E.checkEligibility(s, { cardId: 'CARD-0001', cvv2: '000', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW }),
+      'CVV2_MISMATCH');
+  })();
+
+  (function () {
+    var s = seedStore();
+    expectReason('REQUESTOR_NOT_APPROVED',
+      E.checkEligibility(s, { cardId: 'CARD-0001', cvv2: '314', requestorId: '40010075003', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW }),
+      'REQUESTOR_NOT_APPROVED');
+  })();
+
+  (function () {
+    var s = seedStore();
+    expectReason('DEVICE_TYPE_NOT_ALLOWED',
+      E.checkEligibility(s, { cardId: 'CARD-0001', cvv2: '314', requestorId: '40010075002', deviceId: 'DEV-WT-3A90', deviceType: 'Watch', now: NOW }),
+      'DEVICE_TYPE_NOT_ALLOWED');
+  })();
+
+  // --- ID&V RED ---
+  (function () {
+    var s = seedStore();
+    var res = E.decideIdv(s, { cardId: 'CARD-0001', deviceScore: 5, reasonCodes: ['DEVICE_FLAGGED'] });
+    expectReason('IDV_RED', res, 'IDV_RED');
+    assert('IDV_RED decision=RED', res.decision === 'RED' && res.ok === false);
+  })();
+
+  // --- OTP attempts ---
+  (function () {
+    var s = seedStore();
+    var issued = E.issueOtp(s, { cardId: 'CARD-0001', method: 'SMS', now: NOW, seed: 42, requestorId: '40010075001' });
+    assert('issueOtp ok', issued.ok && issued.otp && issued.otp.length === 6, issued.reason);
+    var r1 = E.verifyOtp(s, { entered: '000000', otp: issued.otp, expiresAt: issued.expiresAt, attempt: 1, now: NOW });
+    assert('OTP attempt1 INCORRECT', r1.reason === 'OTP_INCORRECT');
+    var r2 = E.verifyOtp(s, { entered: '000000', otp: issued.otp, expiresAt: issued.expiresAt, attempt: 2, now: NOW });
+    assert('OTP attempt2 INCORRECT', r2.reason === 'OTP_INCORRECT');
+    var r3 = E.verifyOtp(s, { entered: '000000', otp: issued.otp, expiresAt: issued.expiresAt, attempt: 3, now: NOW });
+    expectReason('OTP_ATTEMPTS_EXCEEDED', r3, 'OTP_ATTEMPTS_EXCEEDED');
+  })();
+
+  // --- Auth: TOKEN_NOT_ACTIVE, LIMIT, FUNDS, CRYPTO, APPROVED ---
+  (function () {
+    var s = seedStore();
+    var tok = activeToken(s, { status: 'SUSPENDED', suspendedBy: 'OPERATOR' });
+    expectReason('TOKEN_NOT_ACTIVE',
+      E.authorize(s, { tokenRef: tok.ref, amount: 1850, channel: 'POS', camResult: 'PASS', msgTokenExpiry: tok.tokenExpiry, now: NOW }),
+      'TOKEN_NOT_ACTIVE');
+  })();
+
+  (function () {
+    var s = seedStore();
+    var tok = activeToken(s);
+    expectReason('LIMIT_EXCEEDED_TXN',
+      E.authorize(s, { tokenRef: tok.ref, amount: 30000, channel: 'POS', camResult: 'PASS', msgTokenExpiry: tok.tokenExpiry, now: NOW }),
+      'LIMIT_EXCEEDED_TXN');
+  })();
+
+  (function () {
+    var s = seedStore();
+    var tok = activeToken(s, { cardId: 'CARD-0002', ref: 'VTSREF0000222222222222' });
+    expectReason('INSUFFICIENT_FUNDS',
+      E.authorize(s, { tokenRef: tok.ref, amount: 9000, channel: 'POS', camResult: 'PASS', msgTokenExpiry: tok.tokenExpiry, now: NOW }),
+      'INSUFFICIENT_FUNDS');
+  })();
+
+  (function () {
+    var s = seedStore();
+    var tok = activeToken(s);
+    expectReason('CRYPTOGRAM_FAILED',
+      E.authorize(s, { tokenRef: tok.ref, amount: 1850, channel: 'POS', camResult: 'FAIL', msgTokenExpiry: tok.tokenExpiry, now: NOW }),
+      'CRYPTOGRAM_FAILED');
+  })();
+
+  (function () {
+    var s = seedStore();
+    var tok = activeToken(s);
+    var res = E.authorize(s, { tokenRef: tok.ref, amount: 1850, channel: 'POS', camResult: 'PASS', msgTokenExpiry: tok.tokenExpiry, now: NOW });
+    expectReason('APPROVED', res, 'APPROVED');
+    assert('APPROVED responseCode 00', res.responseCode === '00' && res.decision === 'APPROVED');
+    assert('APPROVED has DEBIT effect', res.effects && res.effects[0] && res.effects[0].type === 'DEBIT' && res.effects[0].amount === 1850);
+  })();
+
+  // --- Cascade suspend on WARM ---
+  (function () {
+    var s = seedStore();
+    var a = activeToken(s, { ref: 'VTSREF0000AAAAAAAAAAAA', status: 'ACTIVE' });
+    var op = activeToken(s, { ref: 'VTSREF0000BBBBBBBBBBBB', status: 'SUSPENDED', suspendedBy: 'OPERATOR' });
+    var res = E.cascade(s, { cardId: 'CARD-0001', newStatus: 'WARM' });
+    assert('cascade WARM ok', res.ok && res.reason === 'CASCADE_OK', res.reason);
+    var patches = (res.effects || []).filter(function (e) { return e.type === 'UPDATE_TOKEN'; });
+    assert('cascade suspends ACTIVE only', patches.length === 1 && patches[0].tokenRef === a.ref && patches[0].patch.status === 'SUSPENDED' && patches[0].patch.suspendedBy === 'CARD');
+    assert('cascade leaves OPERATOR-suspended alone', !patches.some(function (e) { return e.tokenRef === op.ref; }));
+    assert('cascade CARD_LEVEL for Visa', res.cascadeMode === 'CARD_LEVEL');
+  })();
+
+  // Extra sanity: eligible path + createToken
+  (function () {
+    var s = seedStore();
+    var elig = E.checkEligibility(s, { cardId: 'CARD-0001', cvv2: '314', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', now: NOW });
+    assert('ELIGIBLE', elig.ok && elig.reason === 'ELIGIBLE', elig.reason);
+    var idv = E.decideIdv(s, { cardId: 'CARD-0001', deviceScore: 5, reasonCodes: [] });
+    assert('IDV_GREEN', idv.ok && idv.decision === 'GREEN', idv.reason);
+    var created = E.createToken(s, { cardId: 'CARD-0001', requestorId: '40010075001', deviceId: 'DEV-PH-7F21', deviceType: 'Mobile', idvPath: 'GREEN', now: NOW, seed: 99 });
+    assert('createToken ACTIVE assurance 50', created.ok && created.token && created.token.status === 'ACTIVE' && created.token.assurance === '50');
+  })();
+
+  var summary = document.getElementById('summary');
+  summary.className = failed ? 'fail' : 'pass';
+  summary.textContent = (failed ? 'FAIL' : 'PASS') + ' — ' + passed + ' passed, ' + failed + ' failed';
+  document.title = (failed ? 'FAIL' : 'PASS') + ' · TknEngine harness';
+})();
+  </script>
+</body>
+</html>

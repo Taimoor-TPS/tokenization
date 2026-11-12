@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IRIS Tokenization Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="tkn-engine.js"></script>
+<style>
+:root{
+  --paper:#EEF1F4;--surface:#FFFFFF;--surface-2:#F5F7F9;--ink:#14202B;--muted:#5A6672;--line:#D3D9DF;
+  --dev:#6B7684;--wal:#0F5E8C;--acq:#0F7C78;--sch:#4A5568;--tkn:#5B4BC4;--iss:#A8641B;--msg:#2F7D3A;
+  --ok:#2F7D3A;--warn:#9A6200;--bad:#B3261E;--jkey:#5B4BC4;--jstr:#0F7C78;
+  --bezel:#101A20;--ph-bg:#F7F9FA;--ph-card:#0F3A4E;--ph-card-ink:#FFFFFF;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F151B;--surface:#17202A;--surface-2:#1D2732;--ink:#E6ECF1;--muted:#9AA7B3;--line:#2C3742;
+  --dev:#9AA7B3;--wal:#5BA8D4;--acq:#3DB7B0;--sch:#A9B6C4;--tkn:#A79BF5;--iss:#E3A35A;--msg:#6CC17A;
+  --ok:#6CC17A;--warn:#E2B04A;--bad:#F08A80;--jkey:#B9AEFA;--jstr:#5FCFC8;
+  --bezel:#05090B;--ph-bg:#101B21;--ph-card:#1D5068;--ph-card-ink:#F2F7F9;color-scheme:dark}}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.4;overflow:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--tkn);outline-offset:2px}
+.wrap{margin:0;padding:8px 10px 16px}
+.simnote{background:#FBF0D9;color:#9A6200;font-size:12px;padding:6px 12px;border:1px solid #E8D4A8;border-radius:8px;margin-bottom:8px;font-weight:500}
+.story{display:none;background:#E8EEF8;color:var(--ink);padding:7px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;font-size:13px;gap:10px;align-items:center}
+.story.on{display:flex}
+.story b{color:var(--tkn)}
+.simbar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;margin-bottom:8px}
+.ctl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ctl-l{font-size:11px;color:var(--muted);line-height:1.2}
+.seg{display:inline-flex;flex-wrap:nowrap;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:2px}
+.seg button{border:0;background:transparent;padding:5px 9px;border-radius:6px;cursor:pointer;color:var(--muted);font-weight:500;font-size:13px;height:28px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.cardpick,.ctxpick{min-width:160px;max-width:280px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:12.5px;height:32px}
+.exrow{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:4px 0}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--tkn)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;cursor:pointer;font-weight:500;font-size:13px;height:32px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--tkn);border-color:var(--tkn);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.mswrap{position:relative;min-width:180px}
+.msbtn{width:100%;text-align:left;height:32px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mspop{display:none;position:absolute;z-index:30;top:34px;left:0;min-width:260px;max-height:220px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.mspop.on{display:grid;gap:4px}
+.mspop label{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink);cursor:pointer}
+
+.stage{display:grid;grid-template-columns:minmax(280px,330px) minmax(0,1fr);gap:12px;align-items:stretch}
+@media (max-width:1020px){.stage{grid-template-columns:minmax(0,1fr)}}
+.devcol{min-width:0;display:flex;flex-direction:column;gap:8px;align-items:center}
+.devhint{font-size:11.5px;color:var(--muted);text-align:center;max-width:300px}
+
+/* phone / watch frames (from source simulator) */
+.phone{width:300px;background:var(--bezel);border-radius:30px;padding:10px;position:relative;z-index:1}
+.screen{background:var(--ph-bg);border-radius:22px;height:520px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.ph-top{display:flex;justify-content:space-between;align-items:center;padding:8px 14px 4px;font-size:11px;color:var(--muted)}
+.ph-body{flex:1;overflow:auto;padding:6px 14px 14px;display:flex;flex-direction:column;gap:10px}
+.ph-body h3{font-size:17px;margin:0}
+.ph-body p{margin:0}
+.hint{font-size:11.5px;color:var(--muted)}
+.wcard{background:var(--ph-card);color:var(--ph-card-ink);border-radius:12px;padding:12px;display:grid;gap:14px}
+.wcard .r{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wcard .pn{font-family:var(--mono);font-size:13px;letter-spacing:1px}
+.wcard.paused{filter:saturate(.3);opacity:.8}
+.wcard .acts{display:flex;gap:6px}
+.wcard .acts button{flex:1;border:1px solid rgba(255,255,255,.45);background:transparent;color:var(--ph-card-ink);border-radius:6px;padding:5px 6px;font-size:12px;font-weight:600}
+.wcard .acts button.solid{background:var(--ph-card-ink);color:var(--ph-card)}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:1px 8px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.ok{background:#E3F4EA;color:var(--ok)}.pill.warn{background:#FBF0D9;color:var(--warn)}.pill.bad{background:#FBE7E4;color:var(--bad)}.pill.mute{background:var(--surface-2);color:var(--muted)}
+.field{display:grid;gap:3px;font-size:12px}
+.field>span{color:var(--muted);font-weight:500}
+.field input,.field select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 8px;width:100%}
+.pbtn{border:1px solid var(--wal);background:var(--wal);color:#fff;border-radius:8px;padding:8px 10px;font-weight:600;cursor:pointer}
+.pbtn.ghost{background:transparent;color:var(--wal)}
+.pbtn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.sms{margin:2px 8px 4px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--msg);border-radius:10px;padding:7px 9px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;gap:8px}
+.sms b{display:block;font-size:11px;color:var(--muted)}
+.sms button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;padding:0 2px;cursor:pointer}
+.bigres{display:grid;justify-items:center;gap:8px;text-align:center;padding-top:26px}
+.bigres .mark{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:34px;font-weight:700}
+.bigres.ok .mark{background:#E3F4EA;color:var(--ok)}.bigres.bad .mark{background:#FBE7E4;color:var(--bad)}.bigres.wait .mark{background:#E8EEF8;color:var(--tkn)}
+.hist{display:grid;gap:4px;font-size:12px}
+.hist div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding:3px 0}
+.art{background:var(--ph-card);color:var(--ph-card-ink);border-radius:12px;padding:14px;height:96px;display:flex;flex-direction:column;justify-content:space-between}
+.crown,.sidebtn,.strap{display:none}
+.is-watch .strap{display:block;width:148px;height:58px;background:var(--bezel);opacity:.82}
+.is-watch .strap.top{border-radius:18px 18px 0 0;margin-bottom:-16px}
+.is-watch .strap.bot{border-radius:0 0 18px 18px;margin-top:-16px}
+.is-watch .phone{width:236px;padding:11px;border-radius:60px}
+.is-watch .crown{display:block;position:absolute;right:-8px;top:74px;width:9px;height:38px;border-radius:0 5px 5px 0;background:var(--bezel)}
+.is-watch .sidebtn{display:block;position:absolute;right:-5px;top:140px;width:6px;height:52px;border-radius:0 4px 4px 0;background:var(--bezel);opacity:.85}
+.is-watch .screen{height:268px;border-radius:50px}
+.is-watch .ph-top{justify-content:center;padding:11px 0 2px;font-size:10.5px;font-weight:600}
+.is-watch .ph-body{padding:2px 20px 22px;gap:7px}
+.is-watch .ph-body h3{font-size:14px;text-align:center}
+.is-watch .hint{font-size:10.5px}
+.is-watch .hint.opt{display:none}
+.is-watch .wcard{padding:9px 10px;gap:7px;border-radius:14px}
+.is-watch .wcard .pn{font-size:11.5px}
+.is-watch .wcard .acts button{padding:4px;font-size:11px}
+.is-watch .pbtn{padding:6px 8px;font-size:12px;border-radius:99px}
+.is-watch .art{height:60px;padding:9px 11px;font-size:12px}
+.is-watch .sms{margin:0 16px 2px;padding:5px 8px;font-size:10.5px;border-radius:12px}
+.is-watch .bigres{padding-top:4px;gap:5px}
+.is-watch .bigres .mark{width:46px;height:46px;font-size:22px}
+.is-watch .bigres p{font-size:11.5px}
+
+.flowcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-width:0;min-height:100%}
+.flowhead{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.flowhead h2{font-size:15px;margin:0;font-weight:600}
+.flowhead .cap{font-size:13px;color:var(--muted);flex:1 1 220px;min-width:0}
+.flowhead .cap b{color:var(--ink)}
+.lanes{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line);padding:6px 0 4px;background:var(--surface);border-radius:12px 12px 0 0}
+.grp{grid-row:1;font-size:11.5px;text-align:center;border-bottom:2px solid;margin:0 4px 6px;padding-bottom:3px;font-weight:600}
+.grp.c{grid-column:1/span 2;border-color:var(--wal);color:var(--wal)}
+.grp.a{grid-column:3;border-color:var(--acq);color:var(--acq)}
+.grp.s{grid-column:4;border-color:var(--sch);color:var(--sch)}
+.grp.i{grid-column:5/span 3;border-color:var(--iss);color:var(--iss)}
+.lane{grid-row:2;text-align:center;font-weight:600;font-size:11.5px;padding:0 2px;min-width:0;overflow-wrap:anywhere;line-height:1.25}
+.lane small{display:block;font-weight:400;color:var(--muted);font-size:10px}
+.lane[data-i="0"]{color:var(--dev)}.lane[data-i="1"]{color:var(--wal)}.lane[data-i="2"]{color:var(--acq)}
+.lane[data-i="3"]{color:var(--sch)}.lane[data-i="4"]{color:var(--tkn)}.lane[data-i="5"]{color:var(--iss)}.lane[data-i="6"]{color:var(--msg)}
+#flow{flex:1;overflow:auto;padding:6px 0 18px;position:relative;min-height:280px;
+  background-image:
+  linear-gradient(to right,transparent calc(7.14% - .5px),var(--line) calc(7.14% - .5px),var(--line) calc(7.14% + .5px),transparent calc(7.14% + .5px)),
+  linear-gradient(to right,transparent calc(21.43% - .5px),var(--line) calc(21.43% - .5px),var(--line) calc(21.43% + .5px),transparent calc(21.43% + .5px)),
+  linear-gradient(to right,transparent calc(35.71% - .5px),var(--line) calc(35.71% - .5px),var(--line) calc(35.71% + .5px),transparent calc(35.71% + .5px)),
+  linear-gradient(to right,transparent calc(50% - .5px),var(--line) calc(50% - .5px),var(--line) calc(50% + .5px),transparent calc(50% + .5px)),
+  linear-gradient(to right,transparent calc(64.29% - .5px),var(--line) calc(64.29% - .5px),var(--line) calc(64.29% + .5px),transparent calc(64.29% + .5px)),
+  linear-gradient(to right,transparent calc(78.57% - .5px),var(--line) calc(78.57% - .5px),var(--line) calc(78.57% + .5px),transparent calc(78.57% + .5px)),
+  linear-gradient(to right,transparent calc(92.86% - .5px),var(--line) calc(92.86% - .5px),var(--line) calc(92.86% + .5px),transparent calc(92.86% + .5px));
+  background-attachment:local}
+.empty{margin:16px 12px;color:var(--muted)}
+.sep{display:flex;align-items:center;gap:10px;margin:14px 12px 4px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.msg{position:relative;cursor:pointer;margin:0 0 8px}
+.msg.has-lane{padding-top:58px} /* room for absolute title + arrow so payload never sits under them */
+.msg .lane-row{position:absolute;left:0;right:0;top:0;height:56px;pointer-events:none}
+.msg .lbl{position:absolute;top:2px;transform:translateX(-50%);max-width:min(46%,320px);text-align:center;font-size:12px;line-height:1.3;background:var(--surface);padding:3px 8px;border-radius:4px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);z-index:2;overflow-wrap:anywhere;pointer-events:none}
+.msg.api .lbl{font-family:var(--mono);font-size:11px;color:var(--tkn)}
+.msg.cur .lbl{border-color:color-mix(in srgb,var(--tkn) 55%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--tkn) 28%,transparent)}
+.msg .arr{position:absolute;top:40px;height:0;border-top:2px solid var(--c);z-index:1}
+.msg .arr::after{content:"";position:absolute;top:-6px;border:5px solid transparent}
+.msg .arr.r::after{right:-2px;border-left:8px solid var(--c);border-right:0}
+.msg .arr.l::after{left:-2px;border-right:8px solid var(--c);border-left:0}
+.msg .pkt{position:absolute;top:-5px;width:8px;height:8px;border-radius:50%;background:var(--c);animation:go .55s ease-out forwards}
+.msg .arr.l .pkt{animation-name:gol}
+@keyframes go{from{left:0;opacity:1}to{left:calc(100% - 8px);opacity:0}}
+@keyframes gol{from{left:calc(100% - 8px);opacity:1}to{left:0;opacity:0}}
+.det{display:none;margin:0 12px 4px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:12px;position:relative;z-index:1}
+.det.open{display:grid;grid-template-columns:minmax(120px,max-content) minmax(0,1fr);gap:4px 16px;align-items:start}
+.det dt{color:var(--muted);line-height:1.4}.det dd{margin:0;overflow-wrap:anywhere;line-height:1.4}
+.nbox{margin:0 8px 6px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c,var(--tkn));border-radius:4px;padding:6px 8px;font-size:12.5px;max-width:min(52%,420px)}
+.nbox b{margin-right:6px;font-family:var(--mono);color:var(--muted)}
+.flowfoot{border-top:1px solid var(--line);padding:6px 10px;font-size:12px;color:var(--muted)}
+
+.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:10px}
+@media (max-width:1200px){.lower{grid-template-columns:minmax(0,1fr)}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}
+.block h2{font-size:15px;margin:0 0 2px;font-weight:600}
+.block > p.lead{margin:0 0 8px;color:var(--muted);font-size:12.5px}
+.apitabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.atab{border:1px solid var(--line);background:var(--surface-2);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px;font-family:var(--mono)}
+.atab[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.apibody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:900px){.apibody{grid-template-columns:minmax(0,1fr)}}
+.apibox h3{font-size:13px;margin:0 0 6px;font-weight:600}
+.apibox .hdr{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:6px;overflow-wrap:anywhere}
+pre.json{margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--mono);font-size:12px;line-height:1.5;overflow-x:auto;white-space:pre-wrap}
+.jk{color:var(--jkey)}.js{color:var(--jstr)}
+table.iso{border-collapse:collapse;width:100%;font-size:12.5px}
+table.iso th,table.iso td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.iso th{color:var(--muted);font-weight:600}
+.checks{list-style:none;margin:0;padding:0;display:grid}
+.checks li{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:8px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.checks li:last-child{border-bottom:0}
+.checks .src{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px;border:1px solid;white-space:nowrap}
+.tag.pass{color:var(--ok);border-color:var(--ok)}.tag.bad{color:var(--bad);border-color:var(--bad)}
+.linkbtn{border:0;background:transparent;color:var(--tkn);text-decoration:underline;cursor:pointer;font-size:12px;padding:0}
+.ph{color:var(--muted);font-size:13px;padding:8px 0}
+.toast{position:fixed;right:16px;bottom:16px;background:var(--ink);color:var(--surface);padding:10px 14px;border-radius:8px;font-size:13px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.veil{position:fixed;inset:0;background:rgba(8,16,20,.55);display:none;place-items:center;z-index:40;padding:16px}
+.veil.on{display:grid}
+.dlg{background:var(--surface);border:1px solid var(--line);border-radius:10px;width:min(420px,100%);padding:16px;display:grid;gap:12px}
+.is-busy .lockable{opacity:.5;pointer-events:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="simnote">Simulation only. Nothing here connects to VTS, MDES or IRIS. Cards, tokens, customers and response codes are fictitious test data.</div>
+  <div class="story" id="story"><span id="storyText"></span><span style="flex:1"></span><button type="button" class="btn" id="storyStop">Stop storyline</button></div>
+
+  <div class="simbar" id="simbar">
+    <div class="ctl"><span class="ctl-l">Scheme</span>
+      <div class="seg" id="schemeSeg">
+        <button type="button" data-scheme="VISA" aria-pressed="true">Visa</button>
+        <button type="button" data-scheme="MC" aria-pressed="false">Mastercard</button>
+      </div>
+    </div>
+    <div class="ctl"><span class="ctl-l">Device</span>
+      <div class="seg" id="devSeg">
+        <button type="button" data-dev="phone" aria-pressed="true">Phone</button>
+        <button type="button" data-dev="watch" aria-pressed="false">Watch</button>
+      </div>
+    </div>
+    <div class="ctl"><span class="ctl-l">Wallet</span><select class="cardpick" id="walletPick"></select></div>
+    <div class="ctl"><span class="ctl-l">Card</span><select class="cardpick" id="cardPick"></select></div>
+    <div class="ctl"><span class="ctl-l">Device score</span>
+      <select class="ctxpick" id="scorePick">
+        <option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option>
+      </select>
+    </div>
+    <div class="ctl"><span class="ctl-l">Reason codes</span>
+      <div class="mswrap">
+        <button type="button" class="btn msbtn" id="reasonBtn">None selected</button>
+        <div class="mspop" id="reasonPop"></div>
+      </div>
+    </div>
+    <div class="ctl" style="flex:1 1 100%"><span class="ctl-l">Exceptions</span>
+      <div class="exrow">
+        <label class="chk"><input type="checkbox" id="xCvv"> Wrong CVV2</label>
+        <label class="chk"><input type="checkbox" id="xCrypto"> Bad cryptogram</label>
+        <label class="chk"><input type="checkbox" id="xExpiry"> Expiry mismatch</label>
+        <label class="chk"><input type="checkbox" id="xOtp"> Let OTP expire</label>
+      </div>
+    </div>
+    <div class="ctl"><span class="ctl-l">Speed</span><button type="button" class="btn" id="speedBtn">Speed: normal</button></div>
+    <div class="ctl"><span class="ctl-l">Step</span>
+      <label class="chk" style="height:32px"><input type="checkbox" id="manual"> Step manually</label>
+    </div>
+    <button type="button" class="btn" id="nextBtn" disabled>Next step</button>
+    <button type="button" class="btn primary" id="guidedBtn">Guided storyline</button>
+    <button type="button" class="btn" id="restartBtn">Restart</button>
+  </div>
+
+  <div class="stage">
+    <div class="devcol" id="devcol">
+      <div class="strap top" aria-hidden="true"></div>
+      <div class="phone" id="device"><span class="crown" aria-hidden="true"></span><span class="sidebtn" aria-hidden="true"></span><div class="screen" id="screen"></div></div>
+      <div class="strap bot" aria-hidden="true"></div>
+      <div class="devhint" id="devHint">Cardholder phone with a simulated wallet</div>
+    </div>
+
+    <section class="flowcard">
+      <div class="flowhead">
+        <h2>Backend flow</h2>
+        <div class="cap" id="cap">Start an action on the device. Each hop appears here in order.</div>
+      </div>
+      <div class="lanes" id="lanes"></div>
+      <div id="flow"><div class="empty">No steps yet.</div></div>
+      <div class="flowfoot">Click a hop to open its payload. Lane colours follow PRD §5.5. Dashed issuer lanes are bank-side.</div>
+    </section>
+  </div>
+
+  <div class="lower">
+    <section class="block">
+      <h2>API calls</h2>
+      <p class="lead">Scheme / Tokenization Connect vocabulary for this run</p>
+      <div class="apitabs" id="apiTabs"></div>
+      <div id="apiBody"><div class="ph">Calls appear here as the run progresses.</div></div>
+    </section>
+    <section class="block">
+      <h2>ISO 8583 messages</h2>
+      <p class="lead">0100 / 0110 / 0620 fields for payment and lifecycle hops</p>
+      <div class="apitabs" id="isoTabs"></div>
+      <div id="isoBody"><div class="ph">Messages appear here as the run progresses.</div></div>
+    </section>
+    <section class="block">
+      <h2>Configuration checks</h2>
+      <p class="lead">Engine checks for the current run, with the screen each used</p>
+      <div id="chkBody"><div class="ph">Checks appear after the engine runs.</div></div>
+    </section>
+  </div>
+</div>
+
+<div class="veil" id="veil"><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = (n, l = 2) => String(n).padStart(l, '0');
+const rnd = (n) => Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join('');
+const money = (n, ccy) => (ccy || (inst().currency || 'PKR')) + ' ' + Number(n).toLocaleString('en-US');
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function stamp(d) {
+  d = d || new Date();
+  return d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + ', ' +
+    pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+}
+function yymmdd(d) {
+  d = d || new Date();
+  return String(d.getFullYear()).slice(-2) + pad(d.getMonth() + 1) + pad(d.getDate());
+}
+function maskPan(p) {
+  const s = String(p || '');
+  if (s.length < 10) return s;
+  return s.slice(0, 6) + '******' + s.slice(-4);
+}
+function maskTok(t) { return maskPan(t); }
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+function jsonHTML(o) {
+  return esc(JSON.stringify(o, null, 2)).replace(/("(?:[^&]|&(?!quot;))*?")(\s*:)?/g, (m, s, c) =>
+    c ? `<span class="jk">${s}</span>${c}` : `<span class="js">${s}</span>`);
+}
+
+/* ================= scheme vocabulary (kept from source) ================= */
+const API = {
+  VISA: {
+    elig: 'POST {issuer}/vtis/v1/checkEligibility', eligSrc: 'R3 Phase 01; R4 A4',
+    approve: 'Approve Provisioning', approveSrc: 'R4 A4',
+    methods: 'POST /vtis/v1/retrieveStepUpMethods', methodsSrc: 'R3 Phase 01',
+    otp: 'Deliver OTP to the cardholder', otpSrc: 'R4 A4 Figure 4',
+    created: 'POST {issuer}/vtis/v2/tokenRequestors/{id}/tokens/{ref}/tokenChanged', createdSrc: 'R3 Phase 01',
+    life: (a) => `POST {visa}/vtis/v1/tokenRequestors/{id}/tokens/{ref}/lifecycle  (${a})`, lifeSrc: 'R3 Phase 01; R4 Visa table',
+    notify: '0620 token status change notification', notifySrc: 'R5 slide 50',
+    pan: (a) => `POST {visa}/vtis/v1/pan/lifecycle  (${a})`, panSrc: 'R3 Phase 01; R4 Visa table #8, #9',
+    removed: 'tokenChanged notification (token deleted by wallet)', removedSrc: 'R4 Visa table #11'
+  },
+  MC: {
+    elig: 'POST /authorizeService', eligSrc: 'R2 APIs Mapping',
+    approve: 'Card digitization request (ID&V decision)', approveSrc: 'R5 slides 25, 30; R2 API Call for Token Provisioning',
+    methods: 'POST /requestActivationMethods', methodsSrc: 'R2 APIs Mapping',
+    otp: 'POST /deliverActivationCode', otpSrc: 'R2 APIs Mapping',
+    created: 'POST /notifyServiceActivated', createdSrc: 'R2 APIs Mapping',
+    life: (a) => `POST /{id}/token/${a.toLowerCase()}`, lifeSrc: 'R2 APIs Mapping; R4 Mastercard table',
+    notify: 'POST /notifyTokenUpdated', notifySrc: 'R2 APIs Mapping',
+    pan: (a) => a === 'DELETE' ? 'Delete Account / POST /closeAccount' : `POST /{id}/token/${a.toLowerCase()}  (one call per token)`, panSrc: 'R4 Mastercard table #7, #8',
+    removed: 'POST /notifyTokenUpdated (token deleted by wallet)', removedSrc: 'R4 Mastercard table #10'
+  }
+};
+const apiVocab = () => API[UI.scheme] || API.VISA;
+
+const DEV = 0, WAL = 1, POS = 2, SCH = 3, ITC = 4, CMS = 5, SMS = 6;
+const LANE_COLOURS = ['var(--dev)','var(--wal)','var(--acq)','var(--sch)','var(--tkn)','var(--iss)','var(--msg)'];
+const DEVICES = { phone: { id: 'DEV-PH-7F21', type: 'Mobile' }, watch: { id: 'DEV-WT-3A90', type: 'Watch' } };
+const SPEEDS = { slow: 1500, normal: 800, fast: 220 };
+const SPEED_ORDER = ['slow', 'normal', 'fast'];
+const COLLECTION_FILES = {
+  institution: 'institution.json', schemes: 'schemes.json', products: 'products.json', cards: 'cards.json',
+  tokenRequestors: 'token-requestors.json', eligibility: 'eligibility.json', riskScoreBands: 'risk-score-bands.json',
+  riskReasonRules: 'risk-reason-rules.json', stepup: 'stepup.json', templates: 'templates.json',
+  authRules: 'auth-rules.json', limits: 'limits.json', responseCodes: 'response-codes.json',
+  reasonCodes: 'reason-codes.json', cascadeRules: 'cascade-rules.json', tokens: 'tokens.json',
+  transactions: 'transactions.json', audits: 'audits.json'
+};
+
+let STORE = emptyStore();
+let STORE_FP = '';
+let STORE_REV = 0;
+let pendingApply = null;
+let localHistory = [];
+let smsBanner = null;
+
+const UI = {
+  scheme: 'VISA', device: 'phone', walletId: '', cardId: '', score: 3, reasons: [],
+  speed: 'normal', manual: false, busy: false, screen: 'home', ctx: {},
+  calls: [], callSel: 0, isoList: [], isoSel: 0, hops: [], hopSel: -1, checks: [],
+  txnId: null, guidedOn: false, guidedStop: false
+};
+let pendingNext = null, userResolve = null, userQueued = null, stepNo = 0;
+
+function emptyStore() {
+  return {
+    institution: [], schemes: [], products: [], cards: [], tokenRequestors: [], eligibility: [],
+    riskScoreBands: [], riskReasonRules: [], stepup: [], templates: [], authRules: [], limits: [],
+    responseCodes: [], reasonCodes: [], cascadeRules: [], tokens: [], transactions: [], audits: []
+  };
+}
+function syncFromPortal() {
+  const host = portalHost();
+  if (!host) return STORE;
+  try {
+    const snap = host.tknLiveStore();
+    if (snap && typeof snap === 'object') {
+      applySnap(snap);
+      STORE_FP = storeFingerprint(snap);
+    }
+  } catch (e) {}
+  return STORE;
+}
+function receiveStore(snap) {
+  if (!snap || typeof snap !== 'object') return;
+  applySnap(snap);
+  try { STORE_FP = storeFingerprint(STORE); } catch (e) { STORE_FP = String(Date.now()); }
+  STORE_REV = Math.max(STORE_REV, 1);
+  paintControls();
+  renderPhone();
+}
+window.tknReceiveStore = receiveStore;
+window.addEventListener('message', (e) => {
+  const data = e && e.data;
+  if (!data || data.type !== 'tkn-store' || !data.store) return;
+  receiveStore(data.store);
+});
+function inst() { return (STORE.institution && STORE.institution[0]) || { bankName: 'IRIS Issuer Bank', currency: 'PKR' }; }
+function bankLabel() { return inst().bankName || 'IRIS Issuer Bank'; }
+function findBy(list, key, val) { return (list || []).find((r) => r && String(r[key]) === String(val)) || null; }
+function cardById(id) {
+  if (id == null || id === '') return null;
+  return findBy(STORE.cards, 'id', id);
+}
+function productOf(card) { return card ? findBy(STORE.products, 'code', card.product) : null; }
+function schemeOf(card) { const p = productOf(card); return p ? findBy(STORE.schemes, 'code', p.scheme) : null; }
+function requestorById(id) { return findBy(STORE.tokenRequestors, 'id', id); }
+function tokenByRef(ref) { return findBy(STORE.tokens, 'ref', ref); }
+function rowOff(row) {
+  return !!(row && (row.disabled === true || row.disabled === 'true' || row.disabled === 1));
+}
+function cardsForScheme(scheme) {
+  const sch = scheme || UI.scheme;
+  return (STORE.cards || []).filter((c) => {
+    if (!c || rowOff(c)) return false;
+    const p = productOf(c);
+    if (p) return !rowOff(p) && String(p.scheme) === String(sch);
+    // Fallback when products are not yet synced: infer scheme from PAN
+    const pan = String(c.pan || c.cardNumber || '');
+    if (sch === 'VISA') return /^4/.test(pan);
+    if (sch === 'MC') return /^5/.test(pan);
+    return true;
+  });
+}
+function selectedCard() {
+  syncFromPortal();
+  const pick = $('#cardPick');
+  if (pick && pick.value) UI.cardId = pick.value;
+  let c = cardById(UI.cardId);
+  if (c) return c;
+  const list = cardsForScheme(UI.scheme);
+  if (list.length) {
+    UI.cardId = list[0].id;
+    if (pick) pick.value = UI.cardId;
+    return list[0];
+  }
+  return null;
+}
+function cardCvv(card) {
+  if (!card) return '';
+  const v = card.cvv2 != null ? card.cvv2 : card.CVV2;
+  return v == null ? '' : String(v);
+}
+function cardLast4(card) {
+  const pan = card && (card.pan || card.cardNumber || '');
+  const digits = String(pan).replace(/\D/g, '');
+  return digits.length >= 4 ? digits.slice(-4) : '';
+}
+function walletTokens() {
+  const dev = DEVICES[UI.device];
+  const wid = UI.walletId;
+  return (STORE.tokens || []).filter((t) =>
+    t && t.deviceId === dev.id && t.requestorId === wid && t.status !== 'DELETED');
+}
+function laneNames() {
+  const sch = UI.scheme === 'MC' ? 'Mastercard network and MDES' : 'VisaNet and VTS';
+  return [
+    ['Cardholder device', 'phone or watch'],
+    ['Wallet', 'token requestor'],
+    ['POS and acquirer', 'merchant side'],
+    [sch, 'network and token vault'],
+    ['IRIS Tokenization Connect', 'provisioning and lifecycle'],
+    ['IRIS CMS and switch', 'cards, authorization'],
+    ['SMS / email gateway', 'bank notifications']
+  ];
+}
+function shortName(i) { return laneNames()[i][0]; }
+function merchantsForWallet() {
+  const w = requestorById(UI.walletId);
+  const chans = (w && w.channels) || ['POS contactless', 'E-commerce'];
+  const out = [];
+  if (chans.some((c) => /POS/i.test(c))) {
+    out.push({ name: 'Al-Noor Grocery', ch: 'POS', label: 'Al-Noor Grocery (contactless POS)' });
+    out.push({ name: 'Metro Fuel Station', ch: 'POS', label: 'Metro Fuel Station (contactless POS)' });
+  }
+  if (chans.some((c) => /E-?com/i.test(c))) {
+    out.push({ name: 'ShopOnline.test', ch: 'ECOM', label: 'ShopOnline.test (e-commerce)' });
+  }
+  if (!out.length) out.push({ name: 'Al-Noor Grocery', ch: 'POS', label: 'Al-Noor Grocery (contactless POS)' });
+  return out;
+}
+
+/* ================= portal bridge / standalone fallback ================= */
+function dataBase() {
+  const host = portalHost();
+  if (host && host.TKN_DATA_BASE) return String(host.TKN_DATA_BASE).replace(/\/$/, '');
+  return String(window.TKN_DATA_BASE || '/database').replace(/\/$/, '');
+}
+function portalHost() {
+  // Walk parent frames (Cursor/Simple Browser may nest the portal) and opener (new window).
+  try {
+    let w = window.parent;
+    for (let i = 0; i < 6 && w; i++) {
+      try {
+        if (typeof w.tknLiveStore === 'function') return w;
+      } catch (e) {}
+      if (w === w.top) break;
+      try { w = w.parent; } catch (e) { break; }
+    }
+  } catch (e) {}
+  try {
+    if (window.opener && !window.opener.closed && typeof window.opener.tknLiveStore === 'function') return window.opener;
+  } catch (e) {}
+  return null;
+}
+function storeFingerprint(s) {
+  if (!s) return '';
+  return JSON.stringify({
+    institution: s.institution, schemes: s.schemes, products: s.products, cards: s.cards,
+    tokenRequestors: s.tokenRequestors, eligibility: s.eligibility, riskScoreBands: s.riskScoreBands,
+    riskReasonRules: s.riskReasonRules, stepup: s.stepup, templates: s.templates, authRules: s.authRules,
+    limits: s.limits, responseCodes: s.responseCodes, reasonCodes: s.reasonCodes, cascadeRules: s.cascadeRules,
+    tokens: s.tokens, transactions: s.transactions, audits: s.audits
+  });
+}
+function applySnap(s) {
+  if (!s || typeof s !== 'object') return;
+  const ops = { tokens: 1, transactions: 1, audits: 1, cards: 1 };
+  Object.keys(COLLECTION_FILES).forEach((k) => {
+    if (!Array.isArray(s[k])) return;
+    // While a flow is running, do not let portal push overwrite ops data we just wrote.
+    if (UI.busy && ops[k]) return;
+    STORE[k] = s[k];
+  });
+}
+async function fetchCollection(file) {
+  const bases = [dataBase(), '/database', 'database'];
+  for (const base of bases) {
+    try {
+      const res = await fetch(base + '/' + file, { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+  }
+  return null;
+}
+async function putCollection(file, rows) {
+  const bases = [dataBase(), '/database', 'database'];
+  for (const base of bases) {
+    try {
+      const put = await fetch(base + '/' + file, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rows)
+      });
+      if (put.ok) return true;
+    } catch (e) {}
+  }
+  return false;
+}
+function requestStoreFromHosts() {
+  try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'tkn-store-request' }, '*'); } catch (e) {}
+  try { if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'tkn-store-request' }, '*'); } catch (e) {}
+}
+async function loadStore() {
+  const host = portalHost();
+  if (host) {
+    const snap = host.tknLiveStore();
+    applySnap(snap);
+    STORE_FP = storeFingerprint(snap);
+    STORE_REV = 1;
+    return;
+  }
+  requestStoreFromHosts();
+  await Promise.all(Object.keys(COLLECTION_FILES).map(async (key) => {
+    const rows = await fetchCollection(COLLECTION_FILES[key]);
+    if (Array.isArray(rows)) STORE[key] = rows;
+  }));
+  const meta = await fetchCollection('meta.json');
+  STORE_REV = meta && meta.revision != null ? Number(meta.revision) || 0 : 0;
+  STORE_FP = storeFingerprint(STORE);
+  // If still empty, ask the portal again (iframe may have loaded before the parent bridge was ready).
+  if (!(STORE.cards && STORE.cards.length) || !(STORE.tokenRequestors && STORE.tokenRequestors.length)) {
+    requestStoreFromHosts();
+  }
+}
+async function pollStore() {
+  try {
+    const host = portalHost();
+    if (host) {
+      const snap = host.tknLiveStore();
+      const fp = storeFingerprint(snap);
+      if (fp === STORE_FP) return;
+      if (UI.busy) { pendingApply = snap; return; }
+      applySnap(snap);
+      STORE_FP = fp;
+      paintControls();
+      renderPhone();
+      return;
+    }
+    const meta = await fetchCollection('meta.json');
+    const rev = meta && meta.revision != null ? Number(meta.revision) || 0 : 0;
+    if (rev === STORE_REV) return;
+    if (UI.busy) { pendingApply = { __reload: true }; return; }
+    await loadStore();
+    paintControls();
+    renderPhone();
+  } catch (e) {}
+}
+function flushPendingStore() {
+  if (!pendingApply) return;
+  const snap = pendingApply;
+  pendingApply = null;
+  // After a flow, prefer the portal live store (it received our tknWrite calls).
+  // Applying a snapshot queued mid-flow can wipe tokens/txns written later in the same run.
+  const host = portalHost();
+  if (host) {
+    try {
+      const live = host.tknLiveStore();
+      applySnap(live);
+      STORE_FP = storeFingerprint(live);
+      paintControls();
+      renderPhone();
+      return;
+    } catch (e) {}
+  }
+  if (snap.__reload) {
+    loadStore().then(() => { paintControls(); renderPhone(); });
+    return;
+  }
+  const keep = {
+    tokens: STORE.tokens, transactions: STORE.transactions,
+    audits: STORE.audits, cards: STORE.cards
+  };
+  applySnap(snap);
+  Object.keys(keep).forEach((k) => {
+    if ((keep[k] || []).length >= (STORE[k] || []).length) STORE[k] = keep[k];
+  });
+  STORE_FP = storeFingerprint(STORE);
+  paintControls();
+  renderPhone();
+}
+function liveStore() {
+  const host = portalHost();
+  if (host) return host.tknLiveStore();
+  return STORE;
+}
+function postWriteToHosts(name, rows) {
+  let cloned = rows;
+  try { cloned = JSON.parse(JSON.stringify(rows)); } catch (e) {}
+  const payload = { type: 'tkn-write', name, rows: cloned };
+  try { if (window.parent && window.parent !== window) window.parent.postMessage(payload, '*'); } catch (e) {}
+  try { if (window.opener && !window.opener.closed) window.opener.postMessage(payload, '*'); } catch (e) {}
+}
+function tknWriteLocal(name, rows) {
+  if (!['tokens', 'transactions', 'cards', 'audits'].includes(name) || !Array.isArray(rows)) return;
+  let cloned = rows;
+  try { cloned = JSON.parse(JSON.stringify(rows)); } catch (e) { cloned = rows.slice(); }
+  STORE[name] = cloned;
+  pendingApply = null; // drop any mid-flow portal snapshot that would wipe this write
+  let wroteHost = false;
+  const host = portalHost();
+  if (host && typeof host.tknWrite === 'function') {
+    try {
+      host.tknWrite(name, cloned);
+      wroteHost = true;
+      try { STORE_FP = storeFingerprint(host.tknLiveStore()); } catch (e) { STORE_FP = storeFingerprint(STORE); }
+    } catch (e) { wroteHost = false; }
+  }
+  // Always postMessage as well — nested frames / Simple Browser may not expose parent.tknWrite.
+  postWriteToHosts(name, cloned);
+  // When the portal accepted the write, it owns disk persistence. Extra PUTs from the
+  // simulator race the portal flush and can reload stale empty collections into the UI.
+  if (!wroteHost) putCollection(COLLECTION_FILES[name], cloned).catch(() => {});
+  if (!wroteHost) STORE_FP = storeFingerprint(STORE);
+}
+function pushAudit(action, refOrId, summary, user) {
+  // Portal Audit Log expects DCC-shaped events (action/module/summary/ts/actor*).
+  const store = liveStore();
+  const list = Array.isArray(store.audits) ? store.audits.slice() : [];
+  const actorUser = user || 'cardholder';
+  const isOps = /token\.admin/i.test(String(actorUser)) || /\(guided\)/.test(String(actorUser));
+  let module = 'Simulator';
+  const act = String(action || '');
+  if (/provision|token.?created/i.test(act)) module = 'Provisioning';
+  else if (/auth|pay|approv|declin/i.test(act)) module = 'Authorization';
+  else if (/suspend|unsuspend|delete|activate|lifecycle|card.?status/i.test(act)) module = 'Token Management';
+  list.unshift({
+    id: 'AUD-' + Date.now() + '-' + Math.floor(Math.random() * 900 + 100),
+    ts: new Date().toISOString(),
+    actorId: isOps ? 'token.admin' : 'cardholder',
+    actorName: isOps ? 'Token Admin' : 'Cardholder',
+    actorType: isOps ? 'User' : 'Cardholder',
+    action: act || 'UPDATE',
+    module,
+    source: 'Simulator',
+    before: null,
+    after: refOrId ? { ref: String(refOrId) } : null,
+    summary: summary || '',
+    outcome: 'SUCCESS',
+    reason: '',
+    ip: isOps ? '10.20.1.15' : '10.x.x.x'
+  });
+  tknWriteLocal('audits', list);
+}
+function txnId(kind) {
+  return 'TKN-' + yymmdd() + '-' + kind + '-' + rnd(6);
+}
+function upsertTxn( partial ) {
+  const store = liveStore();
+  const list = Array.isArray(store.transactions) ? store.transactions.slice() : [];
+  const i = list.findIndex((t) => t && t.id === partial.id);
+  if (i >= 0) list[i] = Object.assign({}, list[i], partial);
+  else list.unshift(partial);
+  tknWriteLocal('transactions', list);
+  return list.find((t) => t.id === partial.id);
+}
+function applyEffects(effects) {
+  if (!Array.isArray(effects)) return;
+  const store = liveStore();
+  let tokens = Array.isArray(store.tokens) ? store.tokens.slice() : [];
+  let cards = Array.isArray(store.cards) ? store.cards.slice() : [];
+  let wroteTok = false, wroteCard = false;
+  effects.forEach((e) => {
+    if (!e) return;
+    if (e.type === 'CREATE_TOKEN' && e.token) {
+      tokens = tokens.filter((t) => t.ref !== e.token.ref);
+      tokens.unshift(e.token);
+      wroteTok = true;
+    } else if (e.type === 'UPDATE_TOKEN' && e.tokenRef) {
+      tokens = tokens.map((t) => t.ref === e.tokenRef ? Object.assign({}, t, e.patch || {}, { updatedAt: stamp() }) : t);
+      wroteTok = true;
+    } else if (e.type === 'DEBIT' && e.cardId) {
+      cards = cards.map((c) => {
+        if (c.id !== e.cardId) return c;
+        return Object.assign({}, c, { balance: Math.max(0, Number(c.balance) - Number(e.amount || 0)) });
+      });
+      wroteCard = true;
+    } else if (e.type === 'UPDATE_CARD' && e.cardId) {
+      cards = cards.map((c) => c.id === e.cardId ? Object.assign({}, c, { status: e.status }) : c);
+      wroteCard = true;
+    } else if (e.type === 'MESSAGE' && e.text) {
+      smsBanner = { from: 'BANK', text: e.text };
+    }
+  });
+  if (wroteTok) tknWriteLocal('tokens', tokens);
+  if (wroteCard) tknWriteLocal('cards', cards);
+}
+
+/* ================= UI paint ================= */
+function paintControls() {
+  syncFromPortal();
+  const schemes = (STORE.schemes || []).filter((s) => s && !s.disabled);
+  const seg = $('#schemeSeg');
+  if (schemes.length) {
+    seg.innerHTML = schemes.map((s) =>
+      `<button type="button" data-scheme="${esc(s.code)}" aria-pressed="${s.code === UI.scheme}">${esc(s.name || s.code)}</button>`
+    ).join('');
+    if (!schemes.some((s) => s.code === UI.scheme)) UI.scheme = schemes[0].code;
+  }
+  // Prefer wallet-type requestors; if none match, show every token requestor from configuration.
+  const allReq = (STORE.tokenRequestors || []).filter((r) => r && r.id);
+  const walletLike = allReq.filter((r) =>
+    r.type === 'OEM wallet' || r.type === 'Issuer wallet (HCE)' || /wallet/i.test(String(r.type || ''))
+  );
+  const pool = walletLike.length ? walletLike : allReq;
+  const forScheme = pool.filter((r) => !Array.isArray(r.schemes) || !r.schemes.length || r.schemes.map(String).indexOf(String(UI.scheme)) >= 0);
+  const list = forScheme.length ? forScheme : pool;
+  if (!list.some((w) => String(w.id) === String(UI.walletId))) UI.walletId = String((list.find((w) => !rowOff(w)) || list[0] || {}).id || '');
+  $('#walletPick').innerHTML = list.map((w) =>
+    `<option value="${esc(w.id)}"${String(w.id) === String(UI.walletId) ? ' selected' : ''}>${esc(w.name || w.id)}${rowOff(w) ? ' (not approved)' : ''}</option>`
+  ).join('') || '<option value="">No wallets</option>';
+
+  const cards = cardsForScheme(UI.scheme);
+  if (!cards.some((c) => String(c.id) === String(UI.cardId))) UI.cardId = String((cards[0] || {}).id || '');
+  $('#cardPick').innerHTML = cards.map((c) => {
+    const p = productOf(c);
+    const pan = c.pan || c.cardNumber || '';
+    return `<option value="${esc(c.id)}"${String(c.id) === String(UI.cardId) ? ' selected' : ''}>${esc(maskPan(pan))} · ${esc(p ? p.name : c.product)} · ${esc(c.status)}</option>`;
+  }).join('') || '<option value="">No cards</option>';
+
+  const reasons = (STORE.riskReasonRules || []).filter((r) => r && !r.disabled);
+  $('#reasonPop').innerHTML = reasons.map((r) =>
+    `<label><input type="checkbox" data-rc="${esc(r.code)}"${UI.reasons.indexOf(r.code) >= 0 ? ' checked' : ''}><span><b>${esc(r.code)}</b> — ${esc(r.description || '')}</span></label>`
+  ).join('') + `<label><input type="checkbox" data-rc="UNLISTED"${UI.reasons.indexOf('UNLISTED') >= 0 ? ' checked' : ''}><span><b>Unlisted code</b></span></label>`;
+  updateReasonBtn();
+  renderLanes();
+}
+function updateReasonBtn() {
+  const n = UI.reasons.length;
+  $('#reasonBtn').textContent = n ? UI.reasons.join(', ') : 'None selected';
+}
+function renderLanes() {
+  const names = laneNames();
+  $('#lanes').innerHTML =
+    `<div class="grp c">Cardholder</div><div class="grp a">Acquirer</div><div class="grp s">Scheme</div><div class="grp i">Issuer · ${esc(bankLabel())}</div>` +
+    names.map((n, i) => `<div class="lane" data-i="${i}">${esc(n[0])}<small>${esc(n[1])}</small></div>`).join('');
+}
+
+/* ================= flow playback ================= */
+function setBusy(b) {
+  UI.busy = b;
+  document.body.classList.toggle('is-busy', b);
+  $('#guidedBtn').disabled = b || UI.guidedOn;
+  if (!b) flushPendingStore();
+}
+function clearFlow() {
+  UI.hops = []; UI.hopSel = -1; UI.calls = []; UI.callSel = 0; UI.isoList = []; UI.isoSel = 0; UI.checks = [];
+  stepNo = 0;
+  $('#flow').innerHTML = '<div class="empty">No steps yet.</div>';
+  $('#cap').textContent = 'Start an action on the device. Each hop appears here in order.';
+  renderApi(); renderIso(); renderChecks();
+}
+function beginFlow(title) {
+  setBusy(true);
+  stepNo = 0;
+  userQueued = null;
+  UI.hops = []; UI.hopSel = -1; UI.calls = []; UI.callSel = 0; UI.isoList = []; UI.isoSel = 0; UI.checks = [];
+  $('#flow').innerHTML = `<div class="sep">${esc(title)}</div>`;
+}
+function endFlow(summary) {
+  $('#cap').innerHTML = summary ? `<b>Finished.</b> ${esc(summary)}` : '<b>Finished.</b>';
+  setBusy(false);
+  renderPhone();
+}
+function wait(mult) {
+  return new Promise((res) => {
+    if (UI.manual) { pendingNext = res; $('#nextBtn').disabled = false; }
+    else setTimeout(res, SPEEDS[UI.speed] * (mult || 1));
+  });
+}
+function nextClick() {
+  if (pendingNext) { const r = pendingNext; pendingNext = null; $('#nextBtn').disabled = true; r(); }
+}
+function awaitUser(def) {
+  return new Promise((res) => {
+    if (UI.guidedOn) { setTimeout(() => res(def), Math.max(700, SPEEDS[UI.speed] * 1.4)); return; }
+    if (userQueued) { const q = userQueued; userQueued = null; res(q.v); return; }
+    userResolve = (v) => { userResolve = null; res(v); };
+  });
+}
+function lanePct(i) { return ((i + 0.5) / 7) * 100; }
+function appendHop(s) {
+  const hop = {
+    n: stepNo, from: shortName(s.from), to: shortName(s.to), title: s.title,
+    kind: s.kind || (s.api ? 'API' : (s.iso ? 'ISO' : 'MSG')),
+    payload: s.body || s.payload || {}, source: s.src || '', note: s.note || '',
+    fromI: s.from, toI: s.to, tone: s.tone || ''
+  };
+  UI.hops.push(hop);
+  UI.hopSel = UI.hops.length - 1;
+  if (s.api) {
+    UI.calls.push(s.api);
+    UI.callSel = UI.calls.length - 1;
+    renderApi();
+  }
+  if (s.iso) {
+    UI.isoList.push(s.iso);
+    UI.isoSel = UI.isoList.length - 1;
+    renderIso();
+  }
+  paintHop(hop, true);
+  return hop;
+}
+function paintHop(hop, animate) {
+  const flow = $('#flow');
+  const empty = $('.empty', flow); if (empty) empty.remove();
+  $$('.msg.cur', flow).forEach((m) => m.classList.remove('cur'));
+  $$('.det.open', flow).forEach((d) => d.classList.remove('open'));
+  const self = hop.fromI === hop.toI;
+  const el = document.createElement('div');
+  el.className = 'msg' + (hop.kind === 'API' ? ' api' : '') + (self ? '' : ' has-lane') + ' cur';
+  el.dataset.i = String(hop.n - 1);
+  const c = LANE_COLOURS[hop.toI] || 'var(--tkn)';
+  el.style.setProperty('--c', c);
+  if (self) {
+    el.innerHTML = `<div class="nbox" style="--c:${c};margin-left:max(8px, calc(${lanePct(hop.fromI)}% - 90px))"><b>${pad(hop.n)}</b> ${esc(hop.title)}</div>`;
+  } else {
+    const left = Math.min(lanePct(hop.fromI), lanePct(hop.toI));
+    const right = Math.max(lanePct(hop.fromI), lanePct(hop.toI));
+    const dir = hop.toI >= hop.fromI ? 'r' : 'l';
+    const mid = (lanePct(hop.fromI) + lanePct(hop.toI)) / 2;
+    el.innerHTML = `<div class="lane-row" aria-hidden="true">
+        <div class="lbl" style="left:${mid}%">${esc(hop.title)}</div>
+        <div class="arr ${dir}" style="left:${left}%;width:${Math.max(right - left, 2)}%">${animate ? '<i class="pkt"></i>' : ''}</div>
+      </div>`;
+  }
+  const det = document.createElement('dl');
+  det.className = 'det open';
+  const payload = hop.payload && typeof hop.payload === 'object' ? hop.payload : { detail: hop.payload };
+  const rows = Object.keys(payload).filter((k) => payload[k] != null && payload[k] !== '');
+  det.innerHTML = rows.map((k) => `<dt>${esc(k)}</dt><dd>${esc(payload[k])}</dd>`).join('') +
+    (hop.note ? `<dt>note</dt><dd>${esc(hop.note)}</dd>` : '') +
+    (hop.source ? `<dt>source</dt><dd>${esc(hop.source)}</dd>` : '');
+  el.appendChild(det);
+  el.addEventListener('click', () => {
+    UI.hopSel = hop.n - 1;
+    $$('.det', flow).forEach((d) => d.classList.remove('open'));
+    $$('.msg', flow).forEach((m) => m.classList.remove('cur'));
+    el.classList.add('cur');
+    det.classList.add('open');
+  });
+  flow.appendChild(el);
+  flow.scrollTop = flow.scrollHeight;
+}
+async function step(s) {
+  stepNo++;
+  if (s.run) s.run();
+  appendHop(s);
+  const route = s.from === s.to ? shortName(s.from) : `${shortName(s.from)} → ${shortName(s.to)}`;
+  $('#cap').innerHTML = `<b>Step ${stepNo}.</b> ${esc(route)}: ${esc(s.title)}`;
+  renderPhone();
+  await wait(s.hold || 1);
+}
+function renderApi() {
+  const L = UI.calls;
+  if (!L.length) { $('#apiTabs').innerHTML = ''; $('#apiBody').innerHTML = '<div class="ph">Calls appear here as the run progresses.</div>'; return; }
+  $('#apiTabs').innerHTML = L.map((c, i) =>
+    `<button type="button" class="atab" data-i="${i}" aria-pressed="${i === UI.callSel}">${i + 1}. ${esc(c.name || c.path || 'call')}</button>`
+  ).join('');
+  $$('#apiTabs .atab').forEach((b) => b.addEventListener('click', () => { UI.callSel = +b.dataset.i; renderApi(); }));
+  const c = L[UI.callSel];
+  $('#apiBody').innerHTML = `<div class="apibody">
+    <div class="apibox"><h3>Request</h3><div class="hdr">${esc(c.method || 'POST')} ${esc(c.path || c.name || '')}</div><pre class="json">${jsonHTML(c.req || {})}</pre></div>
+    <div class="apibox"><h3>Response</h3><div class="hdr">${esc(c.status || '')}</div><pre class="json">${jsonHTML(c.res || {})}</pre></div>
+  </div>`;
+}
+function renderIso() {
+  const L = UI.isoList;
+  if (!L.length) { $('#isoTabs').innerHTML = ''; $('#isoBody').innerHTML = '<div class="ph">Messages appear here as the run progresses.</div>'; return; }
+  $('#isoTabs').innerHTML = L.map((m, i) =>
+    `<button type="button" class="atab" data-i="${i}" aria-pressed="${i === UI.isoSel}">${i + 1}. ${esc(m.mti || m.title || 'ISO')}</button>`
+  ).join('');
+  $$('#isoTabs .atab').forEach((b) => b.addEventListener('click', () => { UI.isoSel = +b.dataset.i; renderIso(); }));
+  const m = L[UI.isoSel];
+  const rows = m.fields || [];
+  $('#isoBody').innerHTML = `<table class="iso"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>` +
+    rows.map((r) => `<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td></tr>`).join('') + `</tbody></table>`;
+}
+function renderChecks() {
+  const L = UI.checks || [];
+  if (!L.length) { $('#chkBody').innerHTML = '<div class="ph">Checks appear after the engine runs.</div>'; return; }
+  $('#chkBody').innerHTML = `<ul class="checks">${L.map((c) => {
+    const tag = c.ok ? '<span class="tag pass">pass</span>' : '<span class="tag bad">fail</span>';
+    const open = c.screen
+      ? `<button type="button" class="linkbtn" data-nav="${esc(c.screen)}">Open</button>` : '';
+    return `<li>${tag}<div>${esc(c.text || '')}<span class="src">${esc(c.screen || '')}${c.setting ? ' · ' + esc(c.setting) : ''}${c.value != null && c.value !== '' ? ' = ' + esc(c.value) : ''}</span></div>${open}</li>`;
+  }).join('')}</ul>`;
+  $$('#chkBody [data-nav]').forEach((b) => b.addEventListener('click', () => {
+    try {
+      if (window.parent && window.parent !== window && typeof window.parent.navigate === 'function') window.parent.navigate(b.dataset.nav);
+      else toast('Open ' + b.dataset.nav + ' in the portal');
+    } catch (e) { toast('Open ' + b.dataset.nav + ' in the portal'); }
+  }));
+}
+function setChecks(checks) {
+  UI.checks = Array.isArray(checks) ? checks.slice() : [];
+  renderChecks();
+}
+
+/* ================= device screens ================= */
+function renderPhone() {
+  syncFromPortal();
+  const sc = $('#screen'), dev = DEVICES[UI.device], x = UI.ctx, watch = UI.device === 'watch';
+  $('#devcol').classList.toggle('is-watch', watch);
+  const w = requestorById(UI.walletId);
+  $('#devHint').textContent = watch
+    ? `Cardholder smartwatch (${dev.id}) · ${w ? w.name : 'wallet'}`
+    : `Cardholder phone · ${w ? w.name : 'wallet'}`;
+  const now = new Date(), clock = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  let h = watch
+    ? `<div class="ph-top"><span class="num">${clock}</span></div>`
+    : `<div class="ph-top"><span>${esc(dev.type)}</span><span style="font-family:var(--mono)">${esc(dev.id)}</span></div>`;
+  if (smsBanner) {
+    h += `<div class="sms"><div style="flex:1"><b>SMS from ${esc(smsBanner.from)}</b>${esc(smsBanner.text)}</div><button type="button" data-act="sms-x" aria-label="Dismiss">&times;</button></div>`;
+  }
+  h += `<div class="ph-body">`;
+  if (UI.screen === 'home') {
+    const ts = walletTokens();
+    h += `<h3>Wallet</h3>`;
+    if (!ts.length) h += `<p class="hint">No cards on this ${dev.type.toLowerCase()} yet. Add a bank card to create a token.</p>`;
+    ts.forEach((t) => {
+      const c = cardById(t.cardId), p = productOf(c), paused = t.status !== 'ACTIVE';
+      const last4 = cardLast4(c) || '····';
+      h += `<div class="wcard${paused ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${paused ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div>
+        <div class="pn">**** ${esc(last4)}</div>
+        <div class="acts"><button type="button" class="solid lockable" data-act="open-pay" data-ref="${esc(t.ref)}">${paused ? 'Try to pay' : 'Pay'}</button><button type="button" class="lockable" data-act="remove" data-ref="${esc(t.ref)}">Remove</button></div></div>`;
+    });
+    h += `<button type="button" class="pbtn ghost lockable" data-act="open-add">Add a card</button>`;
+    const hs = localHistory.filter((i) => ts.some((t) => t.ref === i.ref)).slice(0, 4);
+    if (hs.length) h += `<div><div class="hint" style="font-weight:600">Recent activity</div><div class="hist">${hs.map((i) => `<div><span>${esc(i.text)}</span><span>${esc(money(i.amount))}</span></div>`).join('')}</div></div>`;
+  } else if (UI.screen === 'add') {
+    const c = selectedCard();
+    const p = productOf(c);
+    const wrong = !!( $('#xCvv') && $('#xCvv').checked );
+    const cvv = wrong ? '000' : cardCvv(c);
+    const last4 = cardLast4(c);
+    if (!c) {
+      h += `<h3>Add a card</h3>
+        <p class="hint">No card is available for ${esc(UI.scheme)}. Choose a card in the control bar, or check Card / Card Product configuration in the portal.</p>
+        <div class="row"><button type="button" class="pbtn ghost" data-act="home">Cancel</button></div>`;
+    } else {
+      h += `<h3>Add a card</h3>
+        <div class="art"><b>${esc((p && p.name) || c.product || 'Card')}</b><span style="font-family:var(--mono)">**** ${esc(last4)}</span></div>
+        <p class="hint">${esc(maskPan(c.pan || c.cardNumber || ''))} · ${esc(c.expiry || '')} · ${esc(c.status || '')}</p>
+        <label class="field"><span>CVV2</span><input id="addCvv" inputmode="numeric" maxlength="3" value="${esc(cvv)}"></label>
+        <p class="hint opt">${cvv
+          ? (wrong ? 'Wrong CVV2 exception is on — value set to 000.' : 'CVV2 is pre-filled from the selected card in configuration.')
+          : 'Selected card has no CVV2 in configuration. Enter it manually or set CVV2 on the Card screen.'}</p>
+        <div class="row"><button type="button" class="pbtn ghost" data-act="home">Cancel</button><button type="button" class="pbtn" data-act="do-add">Continue</button></div>`;
+    }
+  } else if (UI.screen === 'tnc') {
+    const c = x.c;
+    h += `<h3>Terms and conditions</h3><div class="art"><b>${esc((productOf(c) || {}).name || '')}</b><span style="font-family:var(--mono)">**** ${esc(cardLast4(c))}</span></div>
+      <p class="hint">Card art and terms from your bank. Accepting creates a device token. Your real card number is not stored on the device.</p>
+      <div class="row"><button type="button" class="pbtn ghost" data-act="user" data-v="false">Decline</button><button type="button" class="pbtn" data-act="user" data-v="true">Accept</button></div>`;
+  } else if (UI.screen === 'stepup') {
+    h += `<h3>Verify your card</h3><p class="hint">Your bank needs an extra check. Where should we send the code?</p>`;
+    (x.methods || []).forEach((m) => {
+      const contact = m.contact ? ` to ${m.contact}` : '';
+      h += `<button type="button" class="pbtn${m.id === 'SMS' ? '' : ' ghost'}" data-act="user" data-v="${esc(m.id)}">${esc(m.label || m.id)}${esc(contact)}</button>`;
+    });
+    if (!(x.methods || []).length) h += `<p class="hint">No step-up methods available.</p><button type="button" class="pbtn ghost" data-act="home">Cancel</button>`;
+  } else if (UI.screen === 'otp') {
+    const left = x.attemptsLeft != null ? x.attemptsLeft : '';
+    h += `<h3>Enter the code</h3><p class="hint opt">We sent a one-time code.${left !== '' ? ' Attempts left: ' + left + '.' : ''}</p>
+      <label class="field"><span>One-time code</span><input id="otpIn" inputmode="numeric" maxlength="8" autocomplete="off"></label>
+      ${x.err ? `<p style="color:var(--bad);font-size:12px">${esc(x.err)}</p>` : ''}
+      <div class="row"><button type="button" class="pbtn ghost" data-act="otp-cancel">Cancel</button>
+      ${x.canResend ? `<button type="button" class="pbtn ghost" data-act="otp-resend">Resend</button>` : ''}
+      <button type="button" class="pbtn" data-act="otp-ok">Verify</button></div>`;
+  } else if (UI.screen === 'pay') {
+    const t = tokenByRef(x.ref), c = t ? cardById(t.cardId) : null, p = productOf(c);
+    const ms = merchantsForWallet();
+    h += `<h3>Pay</h3><div class="wcard${t && t.status !== 'ACTIVE' ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${t && t.status !== 'ACTIVE' ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div><div class="pn">**** ${esc(cardLast4(c))}</div></div>
+      <label class="field"><span>Merchant</span><select id="payM">${ms.map((m, i) => `<option value="${i}">${esc(m.label)}</option>`).join('')}</select></label>
+      <label class="field"><span>Amount (${esc(inst().currency || 'PKR')})</span><input id="payAmt" inputmode="numeric" value="1850"></label>
+      <div class="row"><button type="button" class="pbtn ghost" data-act="home">Back</button><button type="button" class="pbtn" data-act="do-pay">Tap to pay</button></div>`;
+  } else if (UI.screen === 'progress') {
+    h += `<div class="bigres wait"><div class="mark">&#8230;</div><h3>${esc(watch && x.text === 'Hold near the reader' ? 'Hold watch near the reader' : (x.text || 'Working'))}</h3><p class="hint opt">Follow the hops in the backend flow.</p></div>`;
+  } else if (UI.screen === 'result') {
+    h += `<div class="bigres ${x.ok ? 'ok' : 'bad'}"><div class="mark">${x.ok ? '&#10003;' : '&#10005;'}</div><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><button type="button" class="pbtn lockable" data-act="home">Done</button></div>`;
+  }
+  sc.innerHTML = h + `</div>`;
+}
+
+/* ================= flows ================= */
+function hopStepsForTxn() {
+  return UI.hops.map((h) => ({
+    n: h.n, from: h.from, to: h.to, title: h.title, kind: h.kind,
+    payload: h.payload, source: h.source
+  }));
+}
+function baseTxn(type, kind, extras) {
+  const c = cardById(UI.cardId);
+  const p = productOf(c);
+  const w = requestorById(UI.walletId);
+  const id = txnId(kind);
+  UI.txnId = id;
+  const now = stamp();
+  const row = Object.assign({
+    id, type, time: now, scheme: UI.scheme, channel: extras.channel || 'WALLET',
+    actor: extras.actor || 'cardholder', cardId: c ? c.id : '', card: c ? maskPan(c.pan || c.cardNumber || '') : '',
+    product: p ? p.name : '', tokenRef: extras.tokenRef || '', token: extras.token || '',
+    requestorId: UI.walletId, requestor: w ? w.name : '', deviceId: DEVICES[UI.device].id,
+    deviceType: DEVICES[UI.device].type, merchant: extras.merchant || '', entryMode: extras.entryMode || '',
+    amount: extras.amount != null ? extras.amount : null, currency: inst().currency || 'PKR',
+    rrn: extras.rrn || rnd(12), status: 'RECEIVED', decision: '', reason: '', responseCode: '',
+    message: '', inputs: extras.inputs || {}, checks: [], steps: [], cycle: [{ status: 'RECEIVED', time: now }],
+    configRev: STORE_REV
+  }, extras.more || {});
+  upsertTxn(row);
+  return row;
+}
+function finishTxn(patch) {
+  if (!UI.txnId) return;
+  const now = stamp();
+  const store = liveStore();
+  const cur = (store.transactions || []).find((t) => t.id === UI.txnId) || { cycle: [] };
+  const cycle = (cur.cycle || []).slice();
+  if (!cycle.length || cycle[cycle.length - 1].status !== patch.status) cycle.push({ status: patch.status, time: now });
+  upsertTxn(Object.assign({ id: UI.txnId, time: now, steps: hopStepsForTxn(), checks: UI.checks, cycle }, patch));
+}
+
+async function provision() {
+  const Eng = window.TknEngine;
+  if (!Eng) { toast('tkn-engine.js not loaded'); return; }
+  syncFromPortal();
+  const c = selectedCard();
+  const w = requestorById(UI.walletId);
+  const dev = DEVICES[UI.device];
+  const a = apiVocab();
+  if (!c || !w) { toast('Select a card and wallet in the control bar'); return; }
+  const pan = c.pan || c.cardNumber || '';
+  const cvvEl = $('#addCvv');
+  const wrong = !!( $('#xCvv') && $('#xCvv').checked );
+  const cvv2 = cvvEl && cvvEl.value.trim() !== ''
+    ? cvvEl.value.trim()
+    : (wrong ? '000' : cardCvv(c));
+  if (!cvv2) { toast('CVV2 is missing for the selected card in configuration'); return; }
+  const now = new Date();
+  const inputs = {
+    cardId: c.id, cvv2, requestorId: w.id, deviceId: dev.id, deviceType: dev.type,
+    deviceScore: Number(UI.score), reasonCodes: UI.reasons.slice()
+  };
+  beginFlow(`Provisioning: ${(productOf(c) || {}).name || 'card'} ${maskPan(pan)} on ${dev.type}`);
+  baseTxn('PROVISIONING', 'PRV', { inputs, channel: 'WALLET' });
+  UI.screen = 'progress'; UI.ctx = { text: 'Contacting your bank' };
+
+  await step({ from: DEV, to: WAL, title: 'Cardholder starts Add card', body: { cardNumber: maskPan(pan), expiry: c.expiry, cvv2: '***', device: `${dev.type} ${dev.id}` }, src: 'R5 slide 24 step 1; R4 A4 Figure 3' });
+  await step({ from: WAL, to: SCH, title: 'Wallet asks the scheme for a token', body: { tokenRequestor: w.name, tokenRequestorId: w.id, card: maskPan(pan) + '  (sent encrypted)', deviceInfo: `${dev.type}, ${dev.id}` }, note: 'Only the token requestor and the scheme are involved so far.', src: 'R5 slide 24 step 2; R3 Use case' });
+
+  const elig = Eng.checkEligibility(liveStore(), { cardId: c.id, cvv2, requestorId: w.id, deviceId: dev.id, deviceType: dev.type, now });
+  setChecks(elig.checks);
+  await step({
+    from: SCH, to: ITC, title: a.elig, kind: 'API', src: a.eligSrc,
+    api: { name: a.elig, method: 'POST', path: a.elig, status: elig.ok ? '200' : '422', req: { cardNumber: maskPan(pan), deviceInformation: `${dev.type}, ${dev.id}`, walletProviderId: w.id }, res: { eligible: elig.ok, reason: elig.reason, message: elig.message } },
+    body: { question: 'Is this card allowed to be tokenized?', cardNumber: maskPan(pan), deviceInformation: `${dev.type}, ${dev.id}`, walletProviderId: `${w.name} / ${w.id}` }
+  });
+  await step({ from: ITC, to: CMS, title: 'Card status inquiry', body: { card: maskPan(pan), read: 'card status, product tokenization flag, CVV2 result, token count' }, src: 'R5 slide 52; R4 A4' });
+  await step({ from: CMS, to: ITC, title: elig.ok ? 'Eligibility checks passed' : 'Eligibility checks failed', tone: elig.ok ? 'good' : 'bad', body: { result: elig.reason, message: elig.message }, src: 'R4 A4; R2 Assumptions & Constraints' });
+
+  if (!elig.ok) {
+    await step({ from: ITC, to: SCH, title: 'Not eligible', tone: 'bad', body: { eligible: 'false', reason: elig.reason }, src: 'R4 A2 workflow 5' });
+    finishTxn({ status: 'DECLINED', decision: 'DECLINED', reason: elig.reason, message: elig.message, responseCode: '' });
+    pushAudit('Provisioning', maskPan(pan), 'Not eligible: ' + elig.reason);
+    UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card cannot be added', text: elig.message || elig.reason };
+    endFlow('Provisioning stopped: ' + (elig.message || elig.reason));
+    return null;
+  }
+
+  const cardRef = elig.issuerCardRef || c.id;
+  await step({ from: ITC, to: SCH, title: 'Eligible: card reference, card art and terms returned', tone: 'good', body: { issuerCardReferenceId: cardRef, cardMetadata: `${elig.productName || ''}, terms ${elig.termsId || ''}`, responseStatus: 'SUCCESS' }, src: 'R5 slide 30; R4 A4 Figure 3' });
+  await step({ from: SCH, to: WAL, title: 'Wallet shows the card art and terms', src: 'R4 A4 Figure 3', run: () => { UI.screen = 'tnc'; UI.ctx = { c }; } });
+  const accepted = await awaitUser(true);
+  if (!accepted) {
+    finishTxn({ status: 'CANCELLED', decision: 'CANCELLED', reason: 'TERMS_DECLINED', message: 'Cardholder declined terms' });
+    UI.screen = 'home'; endFlow('The cardholder did not accept the terms.'); return null;
+  }
+  UI.screen = 'progress'; UI.ctx = { text: 'Verifying with your bank' };
+  await step({ from: DEV, to: WAL, title: 'Cardholder accepts the terms', body: { tncStatus: 'ACCEPTED', tncAcceptanceDate: stamp() }, src: 'R5 slide 25 step 6a' });
+
+  const idv = Eng.decideIdv(liveStore(), { cardId: c.id, deviceScore: Number(UI.score), reasonCodes: UI.reasons.slice() });
+  setChecks((UI.checks || []).concat(idv.checks || []));
+  await step({
+    from: SCH, to: ITC, title: a.approve, kind: 'API', src: a.approveSrc,
+    api: { name: a.approve, method: 'POST', path: a.approve, status: '200', req: { issuerCardReferenceId: cardRef, deviceScore: UI.score, reasonCodes: UI.reasons }, res: { decision: idv.decision, reason: idv.reason, message: idv.message } },
+    body: { question: 'Given this risk information, does the bank approve?', issuerCardReferenceId: cardRef, deviceScore: String(UI.score), reasonCodes: (UI.reasons.join(', ') || 'none') }
+  });
+  await step({ from: ITC, to: ITC, title: 'Apply the bank\'s rule table', body: { result: idv.decision || idv.reason }, src: 'R4 A4; R5 slide 29' });
+  await step({ from: ITC, to: SCH, title: `Decision: ${idv.decision || idv.reason}`, tone: idv.decision === 'RED' || !idv.ok ? 'bad' : 'good', body: { decision: idv.decision, message: idv.message }, src: 'R4 A4 colour table' });
+
+  if (!idv.ok || idv.decision === 'RED') {
+    finishTxn({ status: 'DECLINED', decision: 'RED', reason: idv.reason, message: idv.message });
+    pushAudit('Provisioning', maskPan(pan), 'Decision RED: provisioning declined');
+    UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card cannot be added', text: idv.message || 'The bank declined this request (RED).' };
+    endFlow('Provisioning declined (RED).');
+    return null;
+  }
+
+  let idvPath = idv.decision || 'GREEN';
+  let stepMethod = '';
+
+  if (idv.decision === 'YELLOW') {
+    const methodsRes = Eng.stepUpMethods(liveStore(), { cardId: c.id });
+    setChecks((UI.checks || []).concat(methodsRes.checks || []));
+    await step({
+      from: SCH, to: ITC, title: a.methods, kind: 'API', src: a.methodsSrc,
+      api: { name: a.methods, method: 'POST', path: a.methods, status: methodsRes.ok ? '200' : '422', req: { issuerCardReferenceId: cardRef }, res: { methods: (methodsRes.methods || []).map((m) => ({ id: m.id, contact: m.contact })) } },
+      body: { question: 'Which ways can we reach this customer?', issuerCardReferenceId: cardRef }
+    });
+    if (!methodsRes.ok) {
+      finishTxn({ status: 'DECLINED', decision: 'YELLOW', reason: methodsRes.reason, message: methodsRes.message });
+      UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card cannot be added', text: methodsRes.message };
+      endFlow('No step-up methods available.');
+      return null;
+    }
+    await step({ from: ITC, to: SCH, title: 'Step-up methods returned (masked)', body: Object.fromEntries((methodsRes.methods || []).map((m) => [m.label || m.id, m.contact || '(call centre)'])), src: 'R4 A4 Figure 4' });
+    await step({ from: SCH, to: WAL, title: 'Wallet asks where to send the code', src: 'R4 A4 Figure 4', run: () => { UI.screen = 'stepup'; UI.ctx = { c, methods: methodsRes.methods }; } });
+    const method = await awaitUser((methodsRes.methods[0] || {}).id || 'SMS');
+    if (!method) { finishTxn({ status: 'CANCELLED', decision: 'CANCELLED', reason: 'STEPUP_CANCELLED', message: 'Cancelled at step-up' }); UI.screen = 'home'; endFlow('Cancelled at step-up.'); return null; }
+    stepMethod = method;
+    UI.screen = 'progress'; UI.ctx = { text: 'Sending your code' };
+    await step({ from: WAL, to: SCH, title: `Cardholder chose ${method}`, src: 'R4 A4 Figure 4' });
+
+    let otpRes = Eng.issueOtp(liveStore(), { cardId: c.id, method, now, requestorId: w.id, deviceType: dev.type });
+    setChecks((UI.checks || []).concat(otpRes.checks || []));
+    if (!otpRes.ok) {
+      finishTxn({ status: 'DECLINED', decision: 'YELLOW', reason: otpRes.reason, message: otpRes.message });
+      UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card cannot be added', text: otpRes.message };
+      endFlow(otpRes.message); return null;
+    }
+    if (otpRes.reason === 'CALL_CENTRE') {
+      idvPath = 'CALL_CENTRE';
+    } else {
+      await step({ from: SCH, to: SCH, title: 'Scheme creates a one-time OTP', body: { otp: '******', validFor: (otpRes.minutes || 3) + ' minutes' }, src: 'R4 A4; R2 Ch.1 Key Components' });
+      await step({
+        from: SCH, to: ITC, title: a.otp, kind: 'API', src: a.otpSrc + '; R5 slide 31',
+        api: { name: a.otp, method: 'POST', path: a.otp, status: '200', req: { issuerCardReferenceId: cardRef, idvMethod: method, otpValue: '******' }, res: { delivered: true } },
+        body: { issuerCardReferenceId: cardRef, idvMethod: method, otpValue: '******', otpExpiration: (otpRes.minutes || 3) + ' minutes' }
+      });
+      await step({ from: ITC, to: SMS, title: `Send OTP by ${method}`, body: { template: otpRes.text ? otpRes.text.replace(otpRes.otp, '******') : 'OTP template' }, src: 'R4 A4' });
+      const stepCfg = (liveStore().stepup && liveStore().stepup[0]) || {};
+      let attempt = 0;
+      let verified = false;
+      let resends = 0;
+      const maxResends = Number(stepCfg.maxResends) || 2;
+      while (!verified) {
+        await step({ from: SMS, to: DEV, title: 'OTP delivered to the cardholder', tone: 'good', src: 'R4 A4 Figure 4', run: () => {
+          smsBanner = { from: 'BANK', text: otpRes.text || ('Use OTP ' + otpRes.otp) };
+          UI.screen = 'otp';
+          UI.ctx = { c, otp: otpRes.otp, expiresAt: otpRes.expiresAt, err: '', canResend: resends < maxResends, attemptsLeft: (Number(stepCfg.maxAttempts) || 3) - attempt };
+        }});
+        const entered = await awaitUser(otpRes.otp);
+        if (entered === '__RESEND__') {
+          if (resends >= maxResends) continue;
+          resends++;
+          otpRes = Eng.issueOtp(liveStore(), { cardId: c.id, method, now: new Date(), requestorId: w.id, deviceType: dev.type });
+          setChecks((UI.checks || []).concat(otpRes.checks || []));
+          attempt = 0;
+          continue;
+        }
+        if (entered === null) {
+          finishTxn({ status: 'CANCELLED', decision: 'CANCELLED', reason: 'OTP_CANCELLED', message: 'Cancelled at OTP' });
+          smsBanner = null; UI.screen = 'home'; endFlow('The cardholder cancelled at the OTP step.'); return null;
+        }
+        attempt++;
+        await step({ from: DEV, to: WAL, title: 'Cardholder types the OTP', body: { otp: '******' }, src: 'R5 slide 27 step 17' });
+        await step({ from: WAL, to: SCH, title: 'Check this code', src: 'R4 A4 Figure 4' });
+        const verifyNow = $('#xOtp').checked ? new Date(Date.parse(otpRes.expiresAt) + 1000) : new Date();
+        const v = Eng.verifyOtp(liveStore(), { entered, otp: otpRes.otp, expiresAt: otpRes.expiresAt, attempt, now: verifyNow });
+        setChecks((UI.checks || []).concat(v.checks || []));
+        if (v.ok) {
+          verified = true;
+          await step({ from: SCH, to: SCH, title: 'Code is correct', tone: 'good', src: 'R4 A4 Figure 4; R5 slide 27 step 19' });
+        } else {
+          const last = v.reason === 'OTP_ATTEMPTS_EXCEEDED' || v.reason === 'OTP_EXPIRED';
+          await step({ from: SCH, to: WAL, title: last ? 'OTP failed' : 'Code incorrect', tone: 'bad', body: { reason: v.reason, attempt: String(attempt) }, src: 'R4 HT-09', run: () => {
+            UI.screen = 'otp';
+            UI.ctx = { c, otp: otpRes.otp, expiresAt: otpRes.expiresAt, err: v.message, canResend: resends < maxResends && v.reason !== 'OTP_EXPIRED', attemptsLeft: (Number(stepCfg.maxAttempts) || 3) - attempt };
+          }});
+          if (last) {
+            finishTxn({ status: 'DECLINED', decision: 'YELLOW', reason: v.reason, message: v.message });
+            smsBanner = null;
+            UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card not added', text: v.message };
+            pushAudit('Provisioning', maskPan(pan), 'Step-up failed: ' + v.reason);
+            endFlow('Step-up failed. No token was created.');
+            return null;
+          }
+        }
+      }
+      smsBanner = null;
+      UI.screen = 'progress'; UI.ctx = { text: 'Adding your card' };
+    }
+  }
+
+  const created = Eng.createToken(liveStore(), {
+    cardId: c.id, requestorId: w.id, deviceId: dev.id, deviceType: dev.type,
+    idvPath, method: stepMethod, now: new Date()
+  });
+  setChecks((UI.checks || []).concat(created.checks || []));
+  if (!created.ok || !created.token) {
+    finishTxn({ status: 'DECLINED', decision: idvPath, reason: created.reason, message: created.message });
+    UI.screen = 'result'; UI.ctx = { ok: false, title: 'Card not added', text: created.message };
+    endFlow(created.message); return null;
+  }
+  const t = created.token;
+  await step({ from: SCH, to: SCH, title: 'Token generated and mapped to the PAN in the vault', tone: 'good', body: { token: maskTok(t.token), tokenReferenceId: t.ref, mappedTo: maskPan(pan), tokenExpiry: t.tokenExpiry, boundTo: `${dev.type} ${dev.id}` }, src: 'R5 slides 18, 27 step 19' });
+  await step({ from: SCH, to: WAL, title: 'Token provisioned to the device', body: { token: maskTok(t.token), tokenType: (t.tokenType || '03') + ' (HCE)', realCardNumberOnDevice: 'no' }, src: 'R5 slide 27 steps 20-22; R5 slide 45' });
+  await step({
+    from: SCH, to: ITC, title: a.created, kind: 'API', src: a.createdSrc,
+    api: { name: a.created, method: 'POST', path: a.created, status: '200', req: { event: 'TOKEN_CREATED', tokenReferenceId: t.ref }, res: { status: t.status } },
+    body: { event: 'TOKEN_CREATED / ' + t.status, tokenReferenceId: t.ref, tokenRequestor: w.name, deviceId: dev.id }
+  });
+  applyEffects(created.effects);
+  await step({ from: ITC, to: CMS, title: 'Record the token against the card', tone: 'good', body: { card: maskPan(pan), tokenReference: t.ref, device: `${dev.type} ${dev.id}`, channel: t.channel, status: t.status, tokenExpiry: t.tokenExpiry }, src: 'R4 A5; R2 Phase 02 Structured Token Storage' });
+  if (created.text) {
+    await step({ from: CMS, to: SMS, title: 'Send the card-added notification', src: 'R4 A4 colour table' });
+    await step({ from: SMS, to: DEV, title: 'SMS: card added to wallet', tone: 'good', src: 'R4 A4 Figure 3', run: () => {
+      smsBanner = { from: 'BANK', text: created.text };
+      UI.screen = 'result'; UI.ctx = { ok: true, title: t.status === 'PENDING' ? 'Pending activation' : 'Card added', text: t.status === 'PENDING' ? 'Awaiting call-centre activation.' : `${(productOf(c) || {}).name || 'Card'} is ready to pay.` };
+    }});
+  } else {
+    UI.screen = 'result'; UI.ctx = { ok: true, title: 'Card added', text: `${(productOf(c) || {}).name || 'Card'} is ready to pay.` };
+  }
+  finishTxn({
+    status: t.status === 'PENDING' ? 'PENDING_ACTIVATION' : 'COMPLETED',
+    decision: idvPath,
+    reason: created.reason || '',
+    message: created.message || '',
+    tokenRef: t.ref,
+    token: maskTok(t.token)
+  });
+  pushAudit('TOKEN_CREATED', t.ref, `Token created for ${maskPan(pan)} on ${dev.type} (${idvPath})`);
+  endFlow(`Token ${t.ref} is ${t.status} on ${dev.type}.`);
+  return t.ref;
+}
+
+async function pay(ref, amount, merchantIdx) {
+  const Eng = window.TknEngine;
+  const t = tokenByRef(ref);
+  if (!t) { toast('Token not found'); return; }
+  const c = cardById(t.cardId);
+  const ms = merchantsForWallet();
+  const m = ms[merchantIdx] || ms[0];
+  const visa = UI.scheme === 'VISA';
+  const badCrypto = $('#xCrypto').checked;
+  const camResult = badCrypto ? 'FAIL' : 'PASS';
+  const msgTokenExpiry = $('#xExpiry').checked ? '01/2099' : t.tokenExpiry;
+  const now = new Date();
+  const crypto = badCrypto ? '00000000FFFFFFFF' : Array.from({ length: 16 }, () => '0123456789ABCDEF'[Math.floor(Math.random() * 16)]).join('');
+  const inputs = { tokenRef: ref, amount, channel: m.ch, camResult, msgTokenExpiry };
+  beginFlow(`Payment: ${money(amount)} at ${m.name}`);
+  baseTxn('AUTHORIZATION', 'AUT', {
+    channel: m.ch, merchant: m.name, entryMode: m.ch === 'POS' ? '07' : '81', amount,
+    tokenRef: t.ref, token: maskTok(t.token), cardId: c ? c.id : t.cardId, card: c ? maskPan(c.pan) : '',
+    inputs, rrn: rnd(12)
+  });
+  UI.screen = 'progress'; UI.ctx = { text: m.ch === 'POS' ? 'Hold near the reader' : 'Paying online' };
+
+  await step({ from: DEV, to: DEV, title: 'Cardholder authenticates on the device', body: { method: 'biometric or device passcode' }, src: 'R5 slide 36 step 1' });
+  await step({ from: DEV, to: POS, title: m.ch === 'POS' ? 'Tap: token and one-time cryptogram' : 'Checkout: token and one-time cryptogram', body: { token: maskTok(t.token), tokenExpiry: msgTokenExpiry, cryptogram: crypto, realCardNumber: 'not present' }, src: 'R5 slide 36 step 1; R5 slide 38' });
+  await step({
+    from: POS, to: SCH, title: '0100 authorization request carrying the token', kind: 'ISO', src: 'R5 slides 36-37 step 2; R5 slide 38',
+    iso: { mti: '0100 request', title: '0100', fields: [['MTI', '0100'], ['F2 account', maskTok(t.token) + ' (token)'], ['F4 amount', money(amount)], ['F22 entry mode', m.ch === 'POS' ? '07 (contactless)' : 'e-commerce'], ['F42 merchant', m.name], ['F55 chip data', 'cryptogram ' + crypto]] },
+    body: { MTI: '0100', 'F2 account': maskTok(t.token) + ' (token)', 'F4 amount': money(amount), 'F22 entry mode': m.ch === 'POS' ? '07 (contactless)' : 'e-commerce', 'F42 merchant': m.name, 'F55 chip data': 'cryptogram ' + crypto }
+  });
+  await step({ from: SCH, to: SCH, title: 'Token vault validates the cryptogram and swaps token for PAN', tone: badCrypto ? 'bad' : 'good', body: { cryptogramValidation: badCrypto ? 'FAILED' : 'PASSED', token: maskTok(t.token), mappedPan: c ? maskPan(c.pan) : '' }, src: 'R5 slide 36 step 3' });
+
+  const fields = visa
+    ? { MTI: '0100', 'F2 account': (c ? maskPan(c.pan) : '') + ' (real PAN)', 'F4 amount': money(amount), 'F44.8 CAM result': badCrypto ? 'failed' : 'passed', 'F123 DS68 Tag 01 token': maskTok(t.token), 'F123 DS68 Tag 03 requestor': t.requestorId, 'F123 DS68 Tag 06 token expiry': msgTokenExpiry }
+    : { MTI: '0100', 'DE2 account': (c ? maskPan(c.pan) : '') + ' (real PAN)', 'DE4 amount': money(amount), 'DE44 CAM result': badCrypto ? 'failed' : 'passed', 'DE48 token data': `token ${maskTok(t.token)}, requestor ${t.requestorId}` };
+  await step({
+    from: SCH, to: CMS, title: '0100 to the issuer with the PAN and token data', kind: 'ISO', src: visa ? 'R3 Token Fields; R5 slides 36, 38' : 'R2 Process Flow',
+    iso: { mti: '0100 to issuer', title: '0100 issuer', fields: Object.keys(fields).map((k) => [k, fields[k]]) },
+    body: fields
+  });
+
+  const auth = Eng.authorize(liveStore(), { tokenRef: ref, amount, channel: m.ch, camResult, msgTokenExpiry, now });
+  setChecks(auth.checks);
+  await step({ from: CMS, to: CMS, title: auth.ok ? 'Authorization checks passed' : `Check failed: ${auth.reason}`, tone: auth.ok ? 'good' : 'bad', body: { decision: auth.decision, reason: auth.reason, message: auth.message, responseCode: auth.responseCode }, src: 'R4 A4 Figure 5; R3 Acceptance Criteria 1-8', hold: 1.2 });
+
+  if (auth.ok) applyEffects(auth.effects);
+  const approved = !!auth.ok;
+  const rc = auth.responseCode || (approved ? '00' : '05');
+  await step({
+    from: CMS, to: SCH, title: `0110 response: ${approved ? rc + ' Approved' : rc + ' Declined'}`, tone: approved ? 'good' : 'bad', kind: 'ISO', src: 'R4 A6; R3 Acceptance Criteria',
+    iso: { mti: '0110', title: '0110', fields: [['MTI', '0110'], ['F39 response code', rc], ['reason', auth.reason || '']] },
+    body: { MTI: '0110', 'F39 response code': rc, reason: auth.reason || auth.message }
+  });
+  await step({ from: SCH, to: POS, title: 'Response returned to the acquirer', body: { account: maskTok(t.token) + ' (token restored)', result: approved ? 'APPROVED' : 'DECLINED' }, src: 'R5 slide 36; R5 slide 42' });
+  await step({ from: POS, to: DEV, title: approved ? 'Terminal shows Approved' : 'Terminal shows Declined', tone: approved ? 'good' : 'bad', src: 'R5 slide 36', run: () => {
+    UI.screen = 'result';
+    UI.ctx = { ok: approved, title: approved ? 'Approved' : 'Declined', text: approved ? `${money(amount)} at ${m.name}` : `${auth.reason}. ${auth.message}` };
+  }});
+  if (approved) {
+    await step({ from: SCH, to: WAL, title: 'Transaction notification to the wallet', body: { merchant: m.name, amount: money(amount) }, src: 'R5 slide 41', run: () => {
+      localHistory.unshift({ ref: t.ref, text: m.name, amount });
+    }});
+  }
+  finishTxn({
+    status: approved ? 'APPROVED' : 'DECLINED', decision: auth.decision || (approved ? 'APPROVED' : 'DECLINED'),
+    reason: auth.reason, responseCode: rc, message: auth.message, amount, merchant: m.name,
+    tokenRef: t.ref, token: maskTok(t.token)
+  });
+  pushAudit(approved ? 'AUTH_APPROVED' : 'AUTH_DECLINED', t.ref,
+    `${approved ? 'Approved' : 'Declined'} ${money(amount)} at ${m.name}` + (auth.reason ? ` (${auth.reason})` : ''));
+  endFlow(approved ? `Approved ${money(amount)}.` : `Declined: ${auth.reason}.`);
+  return approved;
+}
+
+async function walletRemove(ref) {
+  const Eng = window.TknEngine;
+  const t = tokenByRef(ref);
+  if (!t) { toast('Token not found'); return; }
+  const c = cardById(t.cardId);
+  const a = apiVocab();
+  const inputs = { tokenRef: ref, action: 'Delete', initiator: 'CARDHOLDER' };
+  beginFlow(`Wallet removal: ${(productOf(c) || {}).name || 'card'} from ${t.deviceType}`);
+  baseTxn('LIFECYCLE', 'LCM', {
+    channel: 'WALLET', tokenRef: t.ref, token: maskTok(t.token), cardId: t.cardId,
+    card: c ? maskPan(c.pan) : '', inputs, actor: 'cardholder'
+  });
+
+  await step({ from: DEV, to: WAL, title: 'Cardholder removes the card in the wallet', src: 'R4 case 41' });
+  await step({ from: WAL, to: SCH, title: 'Token requestor asks the scheme to delete the token', body: { tokenReferenceId: t.ref, initiatedBy: 'TOKEN REQUESTOR' }, src: 'R5 slide 49' });
+
+  const life = Eng.lifecycle(liveStore(), { tokenRef: ref, action: 'Delete', initiator: 'CARDHOLDER' });
+  setChecks(life.checks);
+  if (!life.ok) {
+    finishTxn({ status: 'DECLINED', decision: 'DECLINED', reason: life.reason, message: life.message });
+    UI.screen = 'result'; UI.ctx = { ok: false, title: 'Could not remove', text: life.message };
+    endFlow(life.message); return;
+  }
+  await step({ from: SCH, to: SCH, title: 'Vault deletes the token', tone: 'good', src: 'R5 slide 49' });
+  await step({
+    from: SCH, to: ITC, title: a.removed, kind: 'API', src: a.removedSrc,
+    api: { name: a.removed, method: 'POST', path: a.removed, status: '200', req: { tokenReferenceId: t.ref, status: 'DELETED' }, res: { result: 'SUCCESS' } },
+    body: { tokenReferenceId: t.ref, status: 'DELETED', initiatedBy: 'CARDHOLDER / WALLET' },
+    note: 'IRIS must acknowledge and keep its records in step with the scheme.'
+  });
+  applyEffects(life.effects);
+  await step({ from: ITC, to: CMS, title: 'Token record updated', tone: 'good', src: 'R4 case 41', run: () => { UI.screen = 'home'; } });
+  if (life.text) {
+    await step({ from: CMS, to: SMS, title: 'Send Token Deleted notification', src: 'R4 HT-06' });
+    await step({ from: SMS, to: DEV, title: 'SMS delivered to the cardholder', src: 'R4 HT-04 step 8', run: () => { smsBanner = { from: 'BANK', text: life.text }; } });
+  }
+  finishTxn({
+    status: 'DELETED', decision: 'DELETED', reason: life.reason, message: life.message,
+    tokenRef: t.ref, token: maskTok(t.token)
+  });
+  pushAudit('Delete', t.ref, 'Token deleted by cardholder in wallet');
+  endFlow('Token deleted. Tokens on other devices are not affected.');
+}
+
+async function operatorLifecycle(ref, action, code, reason) {
+  const Eng = window.TknEngine;
+  const t = tokenByRef(ref);
+  if (!t) return false;
+  const c = cardById(t.cardId);
+  const a = apiVocab();
+  const actLabel = action;
+  beginFlow(`TLCM (guided): ${actLabel} token ${t.ref.slice(0, 14)}…`);
+  baseTxn('LIFECYCLE', 'LCM', {
+    channel: 'BACKOFFICE', actor: 'token.admin (guided)', tokenRef: t.ref, token: maskTok(t.token),
+    cardId: t.cardId, card: c ? maskPan(c.pan) : '',
+    inputs: { tokenRef: ref, action, reasonCode: code, reasonText: reason, initiator: 'OPERATOR' }
+  });
+  await step({ from: CMS, to: CMS, title: `Operator submits Update Token Status: ${actLabel}`, body: { tokenReference: t.ref, newStatus: actLabel, reasonCode: code, reason, user: 'token.admin (guided)' }, src: 'R4 A5; R4 HT-04 to HT-06' });
+  await step({ from: CMS, to: ITC, title: 'Lifecycle request passed to Tokenization Connect', body: { tokenReference: t.ref, action: actLabel, reasonCode: code }, src: 'R2 Phase 03' });
+  const life = Eng.lifecycle(liveStore(), { tokenRef: ref, action, reasonCode: code, reasonText: reason, initiator: 'OPERATOR' });
+  setChecks(life.checks);
+  await step({
+    from: ITC, to: SCH, title: a.life(String(actLabel).toUpperCase()), kind: 'API', src: a.lifeSrc,
+    api: { name: a.life(String(actLabel).toUpperCase()), method: 'POST', path: a.life(String(actLabel).toUpperCase()), status: life.ok ? '200' : '422', req: { tokenReferenceId: t.ref, action: actLabel, reasonCode: code }, res: { ok: life.ok, reason: life.reason } },
+    body: { tokenReferenceId: t.ref, action: actLabel, reasonCode: code, initiatedBy: 'ISSUER' }
+  });
+  if (!life.ok) {
+    finishTxn({ status: 'DECLINED', decision: 'DECLINED', reason: life.reason, message: life.message });
+    endFlow(life.message); return false;
+  }
+  await step({ from: SCH, to: SCH, title: `Vault updates the token`, tone: 'good', src: 'R5 slide 47' });
+  await step({ from: SCH, to: ITC, title: 'Status change confirmed (' + a.notify + ')', kind: 'ISO', src: a.notifySrc,
+    iso: { mti: '0620', title: '0620', fields: [['MTI', '0620'], ['tokenReferenceId', t.ref], ['status', (life.token && life.token.status) || '']] },
+    body: { tokenReferenceId: t.ref, status: (life.token && life.token.status) || '', result: 'SUCCESS' }
+  });
+  await step({ from: SCH, to: WAL, title: 'Scheme notifies the token requestor', src: 'R5 slide 50 step 2' });
+  applyEffects(life.effects);
+  await step({ from: WAL, to: DEV, title: action === 'Suspend' ? 'Card shown as paused on the device' : action === 'Delete' ? 'Card removed from the device' : 'Card shown as ready on the device', tone: 'good', src: 'R5 slide 50 step 4', run: () => { if (UI.screen !== 'home') UI.screen = 'home'; } });
+  await step({ from: ITC, to: CMS, title: 'Token record and audit trail updated', tone: 'good', src: 'R4 HT-04' });
+  if (life.text) {
+    await step({ from: CMS, to: SMS, title: 'Send lifecycle notification', src: 'R4 HT-04 to HT-06' });
+    await step({ from: SMS, to: DEV, title: 'SMS delivered to the cardholder', src: 'R4 HT-04 step 8', run: () => { smsBanner = { from: 'BANK', text: life.text }; } });
+  }
+  finishTxn({
+    status: (life.token && life.token.status) || 'UPDATED', decision: (life.token && life.token.status) || 'UPDATED',
+    reason: life.reason, message: life.message, tokenRef: t.ref, token: maskTok(t.token)
+  });
+  pushAudit(actLabel, t.ref, `Device token ${actLabel} (${code}) ${reason}`, 'token.admin (guided)');
+  endFlow(`Token is now ${(life.token && life.token.status) || 'updated'}.`);
+  return true;
+}
+
+/* ================= guided storyline ================= */
+async function guided() {
+  if (UI.busy) return;
+  restart(false);
+  UI.guidedOn = true; UI.guidedStop = false; $('#guidedBtn').disabled = true;
+  const say = (n, t) => { $('#story').classList.add('on'); $('#storyText').innerHTML = `<b>Step ${n} of 8.</b> ${esc(t)}`; };
+  const pause = () => new Promise((r) => setTimeout(r, SPEEDS[UI.speed] * 1.4));
+  const stop = () => UI.guidedStop;
+  try {
+    UI.score = 3; $('#scorePick').value = '3';
+    UI.reasons = []; updateReasonBtn(); paintControls();
+    ['xCvv','xCrypto','xExpiry','xOtp'].forEach((id) => { $('#' + id).checked = false; });
+    say(1, 'Wallet is empty for this device — no tokens yet.');
+    UI.screen = 'home'; renderPhone(); await pause(); if (stop()) return;
+
+    say(2, 'Add the card. Seed config expects YELLOW, OTP, then an Active token.');
+    UI.screen = 'add'; renderPhone();
+    const ref = await provision();
+    await pause(); if (stop() || !ref) { say(2, 'Provisioning ended: ' + (ref ? 'ok' : 'see flow / checks')); if (!ref) return; }
+
+    UI.screen = 'home'; renderPhone();
+    say(3, 'Tap to pay 1,850 at a POS merchant.');
+    await pay(ref, 1850, 0); await pause(); if (stop()) return;
+
+    say(4, 'Suspend the token (operator lifecycle). Device should show Paused by bank.');
+    await operatorLifecycle(ref, 'Suspend', 'Z', 'Customer request, ticket INC-1042');
+    await pause(); if (stop()) return;
+
+    say(5, 'Tap again — expect decline TOKEN_NOT_ACTIVE.');
+    await pay(ref, 1850, 0); await pause(); if (stop()) return;
+
+    UI.screen = 'home'; renderPhone();
+    say(6, 'Unsuspend the token.');
+    await operatorLifecycle(ref, 'Unsuspend', 'F', 'Device found, ticket INC-1042');
+    await pause(); if (stop()) return;
+
+    say(7, 'Tap once more — expect approval without re-adding the card.');
+    await pay(ref, 1850, 0); await pause(); if (stop()) return;
+
+    say(8, 'Open Transaction Monitor and Audit Log to read the trail.');
+    $('#storyText').innerHTML = `<b>Step 8 of 8.</b> Open Transaction Monitor and Audit Log to read the trail. <button type="button" class="btn primary" id="gotoMon" style="margin-left:8px;height:28px">Open Transaction Monitor</button>`;
+    const g = $('#gotoMon');
+    if (g) g.addEventListener('click', () => {
+      try { if (window.parent && typeof window.parent.navigate === 'function') window.parent.navigate('Transaction Monitor'); }
+      catch (e) { toast('Open Transaction Monitor in the portal'); }
+    });
+    UI.screen = 'home'; renderPhone();
+    await pause(); await pause();
+  } finally {
+    UI.guidedOn = false;
+    $('#story').classList.remove('on');
+    $('#guidedBtn').disabled = UI.busy;
+  }
+}
+
+/* ================= restart / wiring ================= */
+function restart(keepBanners) {
+  if (UI.busy) return;
+  Object.assign(UI, { screen: 'home', ctx: {}, txnId: null });
+  if (!keepBanners) smsBanner = null;
+  clearFlow();
+  paintControls();
+  renderPhone();
+}
+
+function modal(html) {
+  return new Promise((res) => {
+    const v = $('#veil'), d = $('#dlg');
+    d.innerHTML = html; v.classList.add('on');
+    const done = (val) => { v.classList.remove('on'); d.onclick = null; res(val); };
+    d.onclick = (e) => {
+      const b = e.target.closest('[data-m]'); if (!b) return;
+      if (b.dataset.m === 'ok') done(true); else done(null);
+    };
+  });
+}
+
+document.addEventListener('click', async (e) => {
+  if (e.target.closest('#reasonBtn')) { $('#reasonPop').classList.toggle('on'); return; }
+  if (!e.target.closest('.mswrap')) $('#reasonPop').classList.remove('on');
+
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act;
+  if (act === 'sms-x') { smsBanner = null; renderPhone(); return; }
+  if (act === 'user') {
+    if (userResolve) userResolve(el.dataset.v === 'true' ? true : el.dataset.v === 'false' ? false : el.dataset.v);
+    return;
+  }
+  if (act === 'otp-ok' || act === 'otp-cancel' || act === 'otp-resend') {
+    const v = act === 'otp-ok' ? ($('#otpIn') && $('#otpIn').value.trim()) : act === 'otp-resend' ? '__RESEND__' : null;
+    if (userResolve) userResolve(v); else if (!UI.guidedOn) userQueued = { v };
+    return;
+  }
+  if (UI.busy && !['sms-x'].includes(act)) return;
+  if (act === 'home') { UI.screen = 'home'; UI.ctx = {}; renderPhone(); }
+  else if (act === 'open-add') { paintControls(); UI.screen = 'add'; UI.ctx = {}; selectedCard(); renderPhone(); }
+  else if (act === 'do-add') { await provision(); }
+  else if (act === 'open-pay') { UI.screen = 'pay'; UI.ctx = { ref: el.dataset.ref }; renderPhone(); }
+  else if (act === 'do-pay') {
+    const amt = Math.round(Number(($('#payAmt').value || '').replace(/[^0-9.]/g, '')));
+    if (!amt || amt <= 0) { $('#payAmt').focus(); return; }
+    await pay(UI.ctx.ref, amt, Number($('#payM').value));
+  } else if (act === 'remove') {
+    const ok = await modal(`<h3>Remove card</h3><p>Remove this card from the wallet on this device? Its token will be deleted.</p><div class="row"><button type="button" class="pbtn ghost" data-m="x">Cancel</button><button type="button" class="pbtn" data-m="ok">Remove</button></div>`);
+    if (ok) await walletRemove(el.dataset.ref);
+  }
+});
+
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.dataset && el.dataset.rc != null) {
+    UI.reasons = $$('#reasonPop input[data-rc]:checked').map((x) => x.dataset.rc);
+    updateReasonBtn();
+    return;
+  }
+  if (el.id === 'manual') { UI.manual = el.checked; if (!UI.manual) nextClick(); }
+  if (el.id === 'walletPick') { UI.walletId = el.value; UI.screen = 'home'; renderPhone(); }
+  if (el.id === 'cardPick') {
+    UI.cardId = el.value;
+    if (UI.screen === 'add') renderPhone();
+    else {
+      const addCvv = $('#addCvv');
+      const c = selectedCard();
+      if (addCvv && c) addCvv.value = ($('#xCvv') && $('#xCvv').checked) ? '000' : cardCvv(c);
+    }
+  }
+  if (el.id === 'scorePick') UI.score = Number(el.value);
+  if (el.id === 'xCvv' && UI.screen === 'add') renderPhone();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.id === 'otpIn') {
+    const v = e.target.value.trim();
+    if (userResolve) userResolve(v); else if (!UI.guidedOn) userQueued = { v };
+  }
+  if (e.key === 'Escape' && $('#veil').classList.contains('on')) {
+    const x = $('#dlg [data-m="x"]'); if (x) x.click();
+  }
+});
+
+$('#schemeSeg').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-scheme]'); if (!b || UI.busy) return;
+  UI.scheme = b.dataset.scheme;
+  $$('#schemeSeg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  paintControls(); restart(true);
+});
+$('#devSeg').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-dev]'); if (!b || UI.busy) return;
+  UI.device = b.dataset.dev;
+  $$('#devSeg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  UI.screen = 'home'; renderPhone();
+});
+$('#speedBtn').addEventListener('click', () => {
+  const i = SPEED_ORDER.indexOf(UI.speed);
+  UI.speed = SPEED_ORDER[(i + 1) % SPEED_ORDER.length];
+  $('#speedBtn').textContent = 'Speed: ' + UI.speed;
+});
+$('#nextBtn').addEventListener('click', nextClick);
+$('#restartBtn').addEventListener('click', () => restart(false));
+$('#guidedBtn').addEventListener('click', guided);
+$('#storyStop').addEventListener('click', () => { UI.guidedStop = true; $('#storyText').innerHTML = '<b>Stopping after the current flow.</b>'; });
+
+loadStore().then(() => {
+  paintControls();
+  renderPhone();
+  clearFlow();
+  if (!(STORE.cards && STORE.cards.length)) {
+    requestStoreFromHosts();
+    setTimeout(() => { syncFromPortal(); paintControls(); renderPhone(); }, 300);
+    setTimeout(() => { syncFromPortal(); paintControls(); renderPhone(); }, 900);
+  }
+}).catch(() => {
+  paintControls();
+  renderPhone();
+  requestStoreFromHosts();
+  toast('Could not load configuration — open via the portal or with the local server');
+});
+setInterval(pollStore, 1000);
+</script>
+</body>
+</html>

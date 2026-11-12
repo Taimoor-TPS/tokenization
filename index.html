@@ -1,0 +1,2876 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IRIS Tokenization Operations Portal</title>
+  <style>
+:root{
+      --navy:#16233d;--sidebar:#1b2a45;--orange:#e8492f;--teal:#1f3a5f;
+      --ink:#263449;--muted:#728096;--line:#dce2ea;--bg:#f5f7fa;--green:#18a875;
+      --amber:#e9a52c;--red:#d64550;--blue:#3273c8;--shadow:0 12px 32px rgba(22,35,61,.09);--z-popover:50
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Calibri,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+    button,input,select{font:inherit} button{cursor:pointer;border:0}
+    .hidden{display:none!important}.muted{color:var(--muted)}.tiny{font-size:12px}.strong{font-weight:650}
+    .login-page{min-height:100vh;display:grid;place-items:center;position:relative;overflow:hidden;background:
+      radial-gradient(circle at 82% 68%,rgba(24,78,58,.32),transparent 22%),
+      radial-gradient(circle at 14% 16%,rgba(22,52,96,.45),transparent 34%),
+      linear-gradient(165deg,#050d18 0%,#0c1b2e 46%,#07111d 100%)}
+    .login-net{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none}
+    .login-ips{display:none}
+    .login-card{width:min(425px,calc(100% - 36px));padding:40px 42px 34px;border:1px solid rgba(255,255,255,.45);
+      background:rgba(244,246,249,.88);box-shadow:0 20px 70px rgba(0,0,0,.38);border-radius:4px;position:relative;z-index:2}
+    .logo{font-weight:800;letter-spacing:.13em;color:var(--navy);font-size:25px}.logo span{color:var(--orange)}
+    .login-card .logo{text-align:center;margin-bottom:31px}.login-card h1{font-size:20px;color:var(--navy);text-align:center;margin:0 0 22px}
+    .field{margin:0 0 17px}.field label{display:block;font-size:12px;font-weight:650;color:var(--navy);margin:0 0 7px}
+    .field input,.field select,.field textarea{width:100%;border:1px solid #cdd5e0;padding:11px 12px;border-radius:3px;background:#fff;color:var(--ink);outline:0}
+    .field select[multiple]{height:auto;min-height:108px;padding:6px}
+    .atm-select{position:relative}.atm-select-box{width:100%;min-height:41px;border:1px solid #cdd5e0;border-radius:3px;background:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;color:var(--ink);font-size:13px}.atm-select-box .placeholder{color:#8b97a8}.atm-select-box b{color:var(--muted);font-weight:500}.atm-menu{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #cdd5e0;border-radius:3px;box-shadow:0 10px 24px rgba(22,35,61,.14);z-index:6;overflow:hidden}.atm-menu.open{display:block}.atm-menu .atm-search{width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 12px}.atm-options{max-height:180px;overflow:auto}.atm-option{display:flex;align-items:center;gap:10px;padding:9px 12px;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer}.atm-option:hover{background:#f6f8fb}.atm-option input{width:16px;height:16px;flex:0 0 16px;padding:0;margin:0;accent-color:var(--orange)}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,73,47,.11)}
+    .field textarea{min-height:160px;resize:vertical;font-family:Consolas,monospace;font-size:12px;line-height:1.55}
+    .input-icon{position:relative}.input-icon input{padding-left:38px}.input-icon b{position:absolute;left:13px;top:10px;color:var(--muted);font-size:15px}
+    .password-eye{position:absolute;right:11px;top:9px;background:none;color:var(--muted);font-size:15px}.login-btn{width:100%;padding:12px;background:var(--teal);color:#fff;border-radius:3px;font-weight:650;margin-top:4px}
+    .login-btn:hover,.primary:hover{background:#162e4d}.login-help{text-align:center;margin-top:19px;color:var(--muted);font-size:12px}.login-help a{color:var(--teal);font-weight:650}
+    .login-error{background:#fff0f0;color:#ac2838;border:1px solid #f2c3c7;padding:9px 11px;font-size:12px;border-radius:3px;margin:0 0 16px}
+    .demo-accounts{margin-top:26px;border-top:1px solid #e1e5eb;padding-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.demo-accounts b{color:var(--navy)}
+    .app{height:100vh;display:flex;flex-direction:column;overflow:hidden}.topbar{height:68px;flex:0 0 68px;background:#fff;display:flex;align-items:center;padding:0 23px;gap:20px;border-bottom:1px solid var(--line);z-index:10}
+    .hamburger{background:none;color:var(--orange);font-size:24px;width:25px}.topbar .logo{font-size:21px;white-space:nowrap}.quick-actions{display:flex;gap:10px;margin-left:12px}.quick{width:29px;height:29px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:13px;position:relative}.quick .dot{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--orange);right:-1px;top:-1px;border:1px solid white}
+    .smart-nav{height:34px;border:1px solid #cad4e0;display:flex;align-items:center;gap:8px;padding:0 11px;border-radius:3px;max-width:290px;flex:1;margin-left:auto;color:var(--muted)}.smart-nav input{border:0;outline:0;width:100%;font-size:12px}
+    .user-menu{display:flex;align-items:center;gap:10px;margin-left:10px;cursor:pointer;position:relative}.avatar{width:35px;height:35px;border-radius:50%;background:#dbe5f0;color:var(--teal);display:grid;place-items:center;font-weight:700}.user-copy{line-height:1.2;font-size:12px}.user-copy b{display:block;color:var(--navy)}.chevron{color:var(--orange);font-size:18px}.user-dropdown{position:absolute;top:49px;right:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);width:190px;padding:6px;border-radius:4px}.user-dropdown button{display:block;width:100%;text-align:left;background:#fff;padding:9px;color:var(--ink);font-size:12px}.user-dropdown button:hover{background:var(--bg)}
+    .layout{display:flex;flex:1;min-height:0;overflow:hidden}.sidebar{width:250px;flex:0 0 250px;min-height:0;align-self:stretch;background:var(--sidebar);color:#dbe4f2;transition:width .22s,flex-basis .22s,transform .22s;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;-ms-overflow-style:none}.sidebar::-webkit-scrollbar{display:none;width:0;height:0}.sidebar.collapsed{width:66px;flex-basis:66px}.sidebar.collapsed .nav-label,.sidebar.collapsed .section-title,.sidebar.collapsed .nav-chevron{display:none}.sidebar.collapsed .nav-item{justify-content:center}.sidebar.collapsed .nav-item.active:before{left:0}.nav-scroll{padding:16px 0}.section-title{padding:18px 22px 9px;color:#8393ac;font-size:10px;text-transform:uppercase;letter-spacing:.12em}.nav-item{min-height:39px;height:auto;display:flex;align-items:center;gap:10px;padding:8px 16px;position:relative;color:#d6dfed;background:transparent;width:100%;text-align:left;font-size:13px}.nav-label{flex:1;white-space:normal;line-height:1.25}.nav-item:hover{background:rgba(255,255,255,.07)}.nav-item.active{background:rgba(232,73,47,.18);color:#fff}.nav-item.active:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}.nav-icon{width:16px;text-align:center;color:#a8bad0}.nav-item.active .nav-icon{color:#ff8c78}.nav-chevron{margin-left:auto;color:#93a5bf;font-size:15px}.subnav{background:rgba(0,0,0,.13);padding:3px 0 5px}.subnav .nav-item{padding-left:50px;font-size:12px;height:33px}.content{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain}.breadcrumb{height:44px;background:#f0f2f5;display:flex;align-items:center;gap:9px;padding:0 27px;color:#66768c;font-size:12px;border-bottom:1px solid #e0e4ea}.crumb-home{background:#dbe1e9;color:var(--navy);height:23px;width:23px;display:grid;place-items:center;border-radius:3px}.canvas{padding:22px 27px 35px;max-width:1600px;margin:auto}.page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.page-head h1{font-size:20px;font-weight:650;color:var(--navy);margin:0}.head-actions{display:flex;gap:9px;align-items:center}.icon-btn,.add-btn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:20px;box-shadow:0 4px 9px rgba(232,73,47,.22)}.icon-btn{background:#e9edf3;color:var(--teal);font-size:14px;box-shadow:none}.primary,.secondary,.danger{border-radius:3px;padding:9px 15px;font-size:12px;font-weight:650}.primary{background:var(--teal);color:#fff}.secondary{background:#fff;color:var(--teal);border:1px solid #c8d1dd}.danger{background:#fff0f0;color:var(--red);border:1px solid #f2c4c8}.card{background:#fff;border:1px solid var(--line);border-radius:4px;box-shadow:0 2px 6px rgba(23,42,69,.025)}.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:720px}.data-table th{background:var(--orange);color:#fff;text-align:left;padding:12px 13px;font-size:12px;font-weight:650;white-space:nowrap}.data-table th .filter{opacity:.8;margin-left:6px}.data-table td{padding:12px 13px;border-bottom:1px solid #e9edf2;font-size:12px;white-space:nowrap}.data-table tbody tr:nth-child(even){background:#fafbfd}.data-table tbody tr:hover{background:#fff4f1}.actions{display:flex;gap:7px}.status{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:650}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.status.green{color:#07885c;background:#e6f7f0}.status.orange{color:#b57609;background:#fff4dc}.status.red{color:#bd3441;background:#ffedef}.status.blue{color:#2c68b5;background:#eaf2ff}.status.gray{color:#65748a;background:#edf0f4}.toolbar{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap}.search-field{height:33px;border:1px solid #ccd5e1;border-radius:3px;padding:0 10px;min-width:210px;outline:0;font-size:12px}.select-mini{height:33px;border:1px solid #ccd5e1;border-radius:3px;padding:0 9px;color:var(--ink);font-size:12px;background:#fff}.toolbar .spacer{flex:1}.count{font-size:12px;color:var(--muted)}
+    .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:13px;margin-bottom:20px}.kpi{padding:16px 17px;min-height:108px;position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:70px;height:70px;border-radius:50%;right:-25px;top:-23px;background:rgba(232,73,47,.08)}.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.kpi-value{font-size:25px;color:var(--navy);font-weight:700;margin:9px 0 4px}.kpi-note{font-size:11px;color:var(--green)}.kpi-note.warn{color:var(--amber)}.dashboard-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.section-card{padding:18px}.section-card h2{font-size:15px;color:var(--navy);margin:0 0 14px}.metric-row{display:flex;align-items:center;gap:12px;margin:14px 0}.metric-name{width:120px;font-size:12px}.bar{height:8px;background:#edf0f4;border-radius:10px;flex:1;overflow:hidden}.bar i{height:100%;display:block;background:var(--orange);border-radius:10px}.metric-val{width:47px;text-align:right;font-weight:650;font-size:12px}.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick-link{padding:13px;border:1px solid var(--line);border-radius:4px;background:#fff;text-align:left;color:var(--teal);font-size:12px}.quick-link:hover{border-color:var(--orange);color:var(--orange)}.quick-link b{display:block;margin-bottom:5px;color:var(--navy)}
+    .tabs{display:flex;border-bottom:1px solid var(--line);padding:0 18px;gap:26px}.tab{padding:13px 1px 11px;background:none;color:var(--muted);font-size:12px;position:relative}.tab.active{color:var(--navy);font-weight:650}.tab.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--orange)}.form-body{padding:22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 25px}.check-line{display:flex;align-items:center;gap:8px;height:41px;font-size:12px}.check-line input{accent-color:var(--orange)}.form-footer{display:flex;justify-content:flex-end;gap:9px;padding:17px 22px;border-top:1px solid var(--line)}.required{color:var(--orange)}.readonly{background:#f1f3f6!important;color:#718097!important}body.checker-viewing .atm-ms-trigger,body.checker-viewing .atm-ms-option,body.checker-viewing .map-chip,body.checker-viewing .map-drop{pointer-events:none}body.checker-viewing .checker-view-note{margin:12px 23px 0}.helper{font-size:11px;color:var(--muted);margin-top:-9px;margin-bottom:15px}.subtle-banner{background:#f4f8fc;border:1px solid #dce9f7;color:#49637e;padding:11px 13px;border-radius:3px;font-size:12px;margin-bottom:15px}
+    .drawer-backdrop,.modal-backdrop{position:fixed;inset:0;background:rgba(8,20,39,.38);z-index:30}.drawer{position:absolute;right:0;top:0;height:100%;width:min(570px,100%);background:#fff;box-shadow:-10px 0 35px rgba(0,0,0,.2);overflow:auto}.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:20px 23px;border-bottom:1px solid var(--line)}.drawer-head h2{margin:0;font-size:17px;color:var(--navy)}.drawer-body{padding:20px 23px}.close{background:none;font-size:23px;color:var(--muted)}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:19px}.detail-box{background:#f7f9fb;border:1px solid #e4e9ef;border-radius:3px;padding:12px}.detail-box label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}.detail-box b{font-size:13px;color:var(--navy)}.json{background:#122038;color:#c9d9ee;border-radius:4px;padding:14px;font-family:Consolas,monospace;font-size:11px;line-height:1.7;overflow:auto}.modal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(470px,calc(100% - 30px));background:#fff;border-radius:5px;box-shadow:0 20px 70px rgba(0,0,0,.25)}.modal.wide{width:min(820px,calc(100% - 30px));max-height:calc(100vh - 48px);display:flex;flex-direction:column}.modal.wide .modal-body{overflow:auto}.modal-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.modal-head h2{font-size:16px;color:var(--navy);margin:0}.modal-body{padding:20px}.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--line)}
+    .alert-list{display:grid;gap:11px}.alert-item{display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px solid var(--line);background:#fff;border-radius:4px}.alert-severity{width:8px;height:40px;border-radius:4px;background:var(--red)}.alert-severity.amber{background:var(--amber)}.alert-copy{flex:1}.alert-copy b{font-size:13px;color:var(--navy)}.alert-copy p{margin:4px 0 0;font-size:11px;color:var(--muted)}.alert-item .primary{padding:7px 11px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.report-card{padding:17px;border:1px solid var(--line);background:#fff;border-radius:4px;min-height:142px;display:flex;flex-direction:column}.report-card h3{font-size:13px;color:var(--navy);margin:0 0 8px}.report-card p{font-size:11px;color:var(--muted);line-height:1.5;margin:0}.report-card button{margin-top:auto;align-self:flex-start;color:var(--teal);background:none;font-size:12px;padding:9px 0 0;font-weight:650}.report-result{margin-top:17px}.queue-badge{background:var(--orange);color:#fff;border-radius:10px;padding:2px 7px;font-size:10px;margin-left:5px}
+.atm-page{background:#0e1b2f;min-height:600px;color:#fff;border-radius:5px;overflow:hidden;max-width:1100px;margin:auto;box-shadow:0 12px 30px rgba(22,35,61,.2)}.atm-top{padding:21px 30px;display:flex;justify-content:space-between;align-items:center;background:#132642}.atm-brand{font-size:19px;letter-spacing:.18em;font-weight:700}.atm-brand span{color:#ff6b52}.atm-locale{font-size:12px;color:#b4c5dc}.atm-content{padding:34px 39px 38px}.atm-content h2{text-align:center;font-size:20px;font-weight:500;margin:4px 0 8px}.atm-content .atm-sub{text-align:center;color:#aebed2;font-size:12px;margin-bottom:28px}.atm-options{display:grid;grid-template-columns:1fr 1fr;gap:18px}.atm-option{background:#fff;color:var(--navy);border-radius:5px;padding:22px 22px 19px;border:2px solid transparent;position:relative}.atm-option.opt1{border-top-color:var(--orange)}.atm-option.opt2{border-top-color:#3f83d1}.atm-option.selected{box-shadow:0 0 0 3px rgba(255,255,255,.45)}.option-tag{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase}.atm-option h3{margin:8px 0 18px;font-size:18px}.atm-amount{font-size:28px;font-weight:700;color:var(--navy)}.atm-amount small{font-size:13px;font-weight:500}.breakdown{border-top:1px solid #e5e9ee;margin-top:17px;padding-top:12px}.breakdown div{display:flex;justify-content:space-between;font-size:12px;margin:8px 0;color:#5c6b7e}.breakdown div b{color:var(--ink)}.atm-note{font-size:11px;color:#5c6b7e;margin:18px 0 14px;min-height:30px}.atm-select{width:100%;padding:11px;background:var(--teal);color:#fff;border-radius:3px;font-weight:650}.atm-select.alt{background:#2e70b9}.atm-footer{text-align:center;color:#8da2bd;font-size:11px;margin-top:25px}.atm-confirm{max-width:600px;margin:30px auto;text-align:center}.confirm-card{background:#fff;color:var(--navy);border-radius:5px;padding:26px;text-align:left;margin:22px 0}.confirm-card h3{margin:0 0 15px}.confirm-lines{display:grid;grid-template-columns:1fr 1fr;gap:12px}.confirm-lines div{background:#f5f7fa;padding:11px;border-radius:3px;font-size:12px}.confirm-lines span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;margin-bottom:3px}.atm-actions{display:flex;justify-content:center;gap:10px}.atm-actions button{padding:11px 22px;border-radius:3px}.atm-actions .back{background:transparent;color:#b9c8da;border:1px solid #526b8b}.atm-actions .confirm{background:var(--orange);color:#fff}    .receipt{background:#fff;color:#222;max-width:320px;margin:24px auto;padding:20px;font-family:monospace;font-size:11px}.receipt h3{text-align:center;margin:0 0 13px;letter-spacing:.12em}.receipt hr{border:0;border-top:1px dashed #777}.receipt p{margin:8px 0;line-height:1.45}
+    .toast{position:fixed;right:23px;bottom:23px;background:#132642;color:#fff;padding:12px 16px;border-left:3px solid var(--orange);border-radius:3px;box-shadow:var(--shadow);font-size:12px;z-index:60;animation:slide .2s ease-out}@keyframes slide{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+    @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}.report-grid{grid-template-columns:repeat(2,1fr)}.quick-actions{display:none}}
+    @media(max-width:700px){.topbar{padding:0 13px;gap:10px}.topbar .logo{font-size:17px}.user-copy{display:none}.smart-nav{max-width:none}.sidebar{position:fixed;z-index:12;top:68px;bottom:0}.sidebar.collapsed{transform:translateX(-100%);width:250px}.canvas{padding:18px 13px}.kpis{grid-template-columns:repeat(2,1fr);gap:9px}.kpi{min-height:98px;padding:13px}.form-grid,.detail-grid,.atm-options,.confirm-lines{grid-template-columns:1fr}.report-grid{grid-template-columns:1fr}.breadcrumb{padding:0 13px}.page-head h1{font-size:18px}}
+    .kpis.admin-kpis{grid-template-columns:repeat(4,1fr)}
+    @media(max-width:1100px){.kpis.admin-kpis{grid-template-columns:repeat(2,1fr)}}
+    .form-section{margin:0 0 8px}.form-section h3{margin:4px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:14px;color:var(--navy);font-weight:650}
+    .form-section+.form-section{margin-top:16px}
+    .photo-row{display:flex;align-items:center;gap:14px}
+    .photo-preview{width:56px;height:56px;border-radius:50%;background:#dbe5f0;color:var(--teal);display:grid;place-items:center;overflow:hidden;font-weight:700;flex:0 0 56px}
+    .photo-preview img{width:100%;height:100%;object-fit:cover;display:block}
+    .photo-row input[type=file]{width:auto;border:0;padding:0;background:transparent;box-shadow:none}
+    .notify-grid{display:flex;flex-wrap:wrap;gap:4px 28px}
+    .user-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 16px;align-items:start}
+    .span-all{grid-column:1/-1}
+    @media(max-width:1100px){.user-form-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.user-form-grid{grid-template-columns:1fr}}
+    .nav-caret{width:16px;height:16px;flex:0 0 16px;display:grid;place-items:center;margin-left:auto;border-radius:50%;background:rgba(255,255,255,.1);color:#d5deea;letter-spacing:0;text-transform:none;transition:transform .15s ease}
+    .nav-caret svg{display:block}
+    .nav-item.collapsed .nav-caret{transform:rotate(-90deg)}
+    .subnav .nav-item{height:auto;min-height:33px}
+    .subnav .subnav{background:transparent;padding:0 0 4px}
+    .subnav .subnav>.nav-item{padding-left:64px}
+
+.atm-ms{background:transparent;padding:0;font-weight:400;color:var(--ink)}
+    .atm-ms-trigger{width:100%;display:flex;align-items:center;gap:8px;box-sizing:border-box;background:#fff;color:var(--ink);border:1px solid #cdd5e0;border-radius:3px;padding:11px 12px;font:inherit;font-weight:400;line-height:normal;text-align:left;cursor:pointer;outline:0}
+    .atm-ms-trigger:focus,.atm-ms-trigger[aria-expanded="true"]{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,73,47,.11)}
+    .atm-ms-value{flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow:hidden}
+    .atm-ms-value .placeholder{color:var(--muted);font-weight:400;white-space:nowrap}
+    .atm-ms-chevron{flex:0 0 auto;color:var(--muted);transition:transform .15s ease}
+    .atm-ms-trigger[aria-expanded="true"] .atm-ms-chevron{transform:rotate(180deg)}
+    .atm-ms-chip{flex:0 1 auto;min-width:0;max-width:100%;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 4px 0 8px;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--ink);font-size:12px;font-weight:400;line-height:1}
+    .atm-ms-value.measure .atm-ms-chip{flex:0 0 auto;max-width:none}
+    .atm-ms-chip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .atm-ms-chip.more{flex:0 0 auto;max-width:none;padding:0 8px;color:var(--muted);background:#fff}
+    .atm-ms-chip-x{width:16px;height:16px;display:grid;place-items:center;padding:0;background:transparent;color:var(--muted);font-size:14px;line-height:1;border-radius:2px}
+    .atm-ms-chip-x:hover{color:var(--ink);background:#e4e8ee}
+    .atm-ms-panel{position:fixed;z-index:var(--z-popover);display:flex;flex-direction:column;max-height:320px;overflow:hidden;background:#fff;color:var(--ink);font-weight:400;border:1px solid #cdd5e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .atm-ms-panel[hidden]{display:none!important}
+    .atm-ms-search{position:relative;flex:0 0 auto;border-bottom:1px solid var(--line);background:#fff}
+    .atm-ms-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+    .atm-ms-panel .atm-ms-search input{width:100%;margin:0;border:0;outline:0;background:#fff;color:var(--ink);font:inherit;font-weight:400;font-size:14px;padding:10px 12px 10px 34px;border-radius:8px 8px 0 0;box-shadow:none}
+    .atm-ms-panel .atm-ms-search input:focus{border:0;outline:0;box-shadow:none}
+    .atm-ms-panel .atm-ms-search input::placeholder{color:var(--muted);font-weight:400}
+    .atm-ms-search:focus-within{border-bottom-color:var(--orange)}
+    .atm-ms-list{flex:1 1 auto;min-height:0;max-height:248px;overflow:auto;overscroll-behavior:contain;background:#fff}
+    .atm-ms-empty{padding:14px 12px;color:var(--muted);font-size:12px;font-weight:400}
+    .atm-ms-option{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;background:transparent;color:var(--ink);text-align:left;cursor:pointer;font-weight:400;user-select:none}
+    .atm-ms-option:hover{background:var(--bg)}
+    .atm-ms-option[aria-selected="true"]{background:rgba(232,73,47,.06)}
+    .atm-ms-option[aria-selected="true"]:hover{background:rgba(232,73,47,.1)}
+    .atm-ms-option.active{box-shadow:inset 3px 0 0 var(--orange)}
+    .atm-ms-box{width:16px;height:16px;flex:0 0 16px;border:1px solid #cdd5e0;border-radius:3px;background:#fff center/10px 10px no-repeat}
+    .atm-ms-option[aria-selected="true"] .atm-ms-box{border-color:var(--orange);background-color:var(--orange);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.1 L4.9 8.8 L9.8 3.5' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+    .atm-ms-copy{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+    .atm-ms-name,.atm-ms-meta{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+    .atm-ms-name{font-size:14px;font-weight:500;color:var(--ink)}
+    .atm-ms-meta{font-size:12px;font-weight:400;color:var(--muted)}
+    .atm-ms-foot{flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:8px 12px;border-top:1px solid var(--line);background:#fff}
+    .atm-ms-foot button{background:transparent;color:var(--teal);font-size:12px;font-weight:650;padding:0}
+    .atm-ms-foot button:hover{color:var(--orange)}
+    .atm-ms-foot button:focus-visible{outline:2px solid rgba(232,73,47,.35);outline-offset:2px}
+    .atm-ms-foot span{margin-left:auto;color:var(--muted);font-size:12px;font-weight:400}
+    .import-note{font-size:12px;color:var(--muted);line-height:1.55;margin:0 0 14px}
+    .import-reject{width:100%;border-collapse:collapse;min-width:640px}.import-reject th{position:sticky;top:0}.import-reject td{white-space:normal;vertical-align:top}.import-reject .reason{color:#bd3441;min-width:240px}
+    .pager{display:flex;align-items:center;gap:14px;padding:12px 15px;border-top:1px solid var(--line);background:#fff;flex-wrap:wrap}
+    .pager-size{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+    .pager-count{font-size:12px;color:var(--muted);margin-right:auto}
+    .pager-nav{display:flex;align-items:center;gap:4px}
+    .pager-btn{min-width:30px;height:30px;padding:0 8px;border-radius:3px;background:#fff;color:var(--ink);border:1px solid #c8d1dd;font-size:12px}
+    .pager-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:650}
+    .pager-btn:disabled{opacity:.4;cursor:default}
+    .pager-btn:hover:not(:disabled):not(.active){border-color:var(--orange);color:var(--orange)}
+    .pager-gap{color:var(--muted);min-width:16px;text-align:center}
+    .drawer.wide{width:min(980px,100%)}
+    .map-note{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 14px}
+    .map-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+    .map-col{border:1px solid var(--line);border-radius:4px;background:#fff;min-height:280px;display:flex;flex-direction:column}
+    .map-col h3{margin:0;padding:11px 14px;font-size:12px;color:var(--navy);border-bottom:1px solid var(--line);background:#f7f9fb}
+    .map-body{padding:12px 14px;flex:1}
+    .map-line{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+    .map-line>label{width:84px;flex:0 0 84px;font-size:12px;font-weight:650;color:var(--navy)}
+    .map-drop,.map-pool{border:1px dashed #c8d1dd;border-radius:3px;background:#fafbfd}
+    .map-drop{flex:1;min-height:42px;padding:6px;display:flex;align-items:center}
+    .map-pool{min-height:160px;padding:8px}
+    .map-drop.over,.map-pool.over{border-color:var(--orange);background:#fff4f1}
+    .map-hint{font-size:12px;color:var(--muted);padding:4px}
+    .map-chip{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin:0 0 8px;border:1px solid #cdd5e0;border-radius:3px;background:#fff;cursor:grab;font-size:12px;color:var(--ink)}
+    .map-chip:active{cursor:grabbing}
+    .map-chip span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .map-chip button{background:none;color:var(--muted);font-size:16px;line-height:1;padding:0 2px}
+    .map-chip button:hover{color:var(--red)}
+    .map-drop .map-chip{margin:0}
+    .map-pool .map-chip:last-child{margin-bottom:0}
+    .map-tools{margin-bottom:14px}
+    .rule-stack{display:flex;flex-direction:column;gap:16px}
+    .rule-locked{opacity:.45;pointer-events:none}
+    .rule-split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .rule-option{border:1px solid var(--line);border-radius:4px;padding:16px;background:#fbfcfd}
+    .rule-option h3{margin:0;font-size:14px;color:var(--navy)}
+    .rule-add{display:flex;gap:8px;align-items:center}
+    .rule-add select{flex:1;min-width:0;height:41px;border:1px solid #cdd5e0;border-radius:3px;padding:0 10px;background:#fff;color:var(--ink);outline:0}
+    .rule-add select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,73,47,.11)}
+    .rule-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:24px;margin-top:8px}
+    .rule-ms{position:relative;z-index:1}
+    .rule-ms.open{z-index:25}
+    .rule-ms .atm-ms-trigger{min-height:41px;height:auto}
+    .rule-ms .atm-ms-value{flex-wrap:wrap;overflow:visible}
+    .rule-ms-panel{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #cdd5e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.08);overflow:hidden}
+    .rule-ms.open .rule-ms-panel{display:block}
+    .atm-ms-option.is-disabled{opacity:.4;cursor:default}
+    .atm-ms-option.is-disabled:hover{background:transparent}
+    .atm-ms-option.is-taken{background:#fff4e5}
+    .atm-ms-option.is-taken .atm-ms-meta{color:#9a5b00;font-weight:650}
+    .grid-check{width:16px;height:16px;accent-color:var(--orange)}
+    .rule-help{margin:8px 0 0;font-size:11px;color:var(--muted)}
+    .rule-band{border:1px solid var(--line);border-radius:4px;padding:12px 14px 4px;margin:0 0 12px;background:#fff}
+    .rule-band-head,.rule-side-head{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+    .rule-band-head b,.rule-side-head h3{color:var(--navy);font-size:13px;margin:0;flex:1}
+    .rule-band.is-collapsed{padding-bottom:12px}
+    .rule-band.is-collapsed .rule-band-body,.rule-option.is-collapsed .rule-side-body{display:none}
+    .rule-band.is-collapsed .rule-band-head,.rule-option.is-collapsed .rule-side-head{margin-bottom:0}
+    .rule-collapse{width:22px;height:22px;flex:0 0 22px;border-radius:3px;background:#fff;border:1px solid #c8d1dd;color:var(--teal);display:inline-grid;place-items:center;padding:0}
+    .rule-collapse svg{transition:transform .15s ease}
+    .rule-collapse.is-collapsed svg{transform:rotate(-90deg)}
+    .rule-collapse:hover{border-color:var(--orange);color:var(--orange)}
+    .rule-mode{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:10px 4px}
+    .rule-mode label{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:650;color:var(--navy)}
+    .rule-mode input{accent-color:var(--orange)}
+    .rule-amt-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+    .rule-add-more{margin:0 0 4px}
+    .rule-tabs{flex-wrap:wrap}
+    .rule-tab{padding:16px 0 6px}
+    #ruleAtmHost{border-top:1px solid var(--line)}
+    .rule-card-title{padding:14px 15px 0;font-size:15px;color:var(--navy);font-weight:650}
+    #rule-group-table td.strong{position:relative}
+    .rule-atm-index{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+    .data-table tbody tr.rule-group-atms,.data-table tbody tr.rule-group-atms:hover{background:#f7f9fb}
+    .data-table tbody tr.rule-group-atms>td{white-space:normal;padding:0 13px 12px 42px;border-bottom:1px solid #e9edf2}
+    .rule-nest{width:100%;border-collapse:collapse;min-width:640px;background:#fff}
+    .rule-nest th{background:#eef2f6;color:var(--navy);text-align:left;padding:8px 13px;font-size:11px;font-weight:650}
+    .rule-nest td{padding:8px 13px;border-bottom:1px solid #eef2f6;font-size:12px;white-space:nowrap}
+    .rule-nest tr:last-child td{border-bottom:0}
+    @media(max-width:700px){.map-grid,.rule-split,.rule-amt-grid,.rule-option-picks{grid-template-columns:1fr}}
+    .action-text{height:32px;padding:0 10px;border-radius:3px;background:#fff;color:var(--teal);border:1px solid #c8d1dd;font-size:12px;font-weight:650;white-space:nowrap;cursor:pointer}
+    .action-text:hover{border-color:var(--orange);color:var(--orange)}
+    .wf-toggle{display:inline-flex;align-items:stretch;height:26px;border:1px solid #c8d1dd;border-radius:13px;overflow:hidden;background:#fff;flex:none}
+    .wf-toggle button{height:26px;padding:0 12px;border:0;border-radius:0;background:transparent;color:var(--teal);font-size:12px;font-weight:650}
+    .wf-toggle button+button{border-left:1px solid #c8d1dd}
+    .wf-toggle button.on{background:var(--navy);color:#fff}
+    .wf-slot{display:inline-flex;gap:6px;margin-left:8px}
+    .wf-check{width:16px;height:16px;accent-color:var(--orange)}
+    .wf-check:disabled{cursor:not-allowed;accent-color:#b7c0cc}
+    tr.wf-own td{color:#8b97a8}
+    .audit-clip{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+    .wf-hide{display:none!important}
+    .toolbar select.quote-status{width:220px;min-width:220px}
+    tr.cycle-current td{background:#fff7f5}
+    tr.row-off td{color:#8b97a8}
+body{font-size:12px;line-height:1.35}
+    .topbar{height:40px;flex:0 0 40px;padding:0 10px;gap:10px}
+    .hamburger{font-size:16px;width:20px}
+    .topbar .logo{font-size:15px;letter-spacing:.08em}
+    .quick-actions{gap:6px;margin-left:2px}
+    .quick{width:22px;height:22px;font-size:11px}
+    .smart-nav{height:26px;max-width:240px;padding:0 8px;gap:6px}
+    .smart-nav input{font-size:12px}
+    .avatar{width:26px;height:26px;font-size:10px}
+    .user-copy{font-size:11px}
+    .user-menu{gap:6px;margin-left:8px}
+    .chevron{font-size:14px}
+    .user-dropdown{top:32px;width:160px}
+    .alert-menu{position:relative;display:flex;align-items:center}
+    .alert-menu .quick{overflow:visible}
+    .alert-count{position:absolute;top:-5px;right:-6px;min-width:14px;height:14px;padding:0 3px;border-radius:8px;background:var(--orange);color:#fff;font-size:9px;font-weight:700;line-height:14px;text-align:center;border:1px solid #fff}
+    .alert-dropdown{position:absolute;top:30px;right:0;width:380px;max-width:min(380px,70vw);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:4px;z-index:30;max-height:min(420px,70vh);overflow:auto}
+    .alert-drop-head{padding:8px 10px;font-size:12px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+    .alert-drop-item{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-bottom:1px solid var(--line)}
+    .alert-drop-item .alert-severity{width:4px;min-height:32px;height:auto;align-self:stretch;flex:0 0 4px}
+    .alert-drop-item .alert-copy b{font-size:12px}
+    .alert-drop-item .secondary{padding:3px 8px;font-size:11px;white-space:nowrap}
+    .alert-drop-empty{padding:12px 10px;font-size:12px;color:#728096}
+    .alert-drop-blank{min-height:160px}
+    .sidebar{width:228px;flex-basis:228px}
+    .nav-scroll{padding:2px 0 8px}
+    .section-title{padding:8px 12px 3px;font-size:10px;letter-spacing:.08em}
+    .nav-item{min-height:26px;padding:2px 10px;gap:8px;font-size:12px}
+    .subnav{padding:0}
+    .subnav .nav-item{padding-left:26px;font-size:12px;min-height:24px;height:auto}
+    .subnav .subnav>.nav-item{padding-left:38px}
+    .content{display:flex;flex-direction:column;overflow:hidden}
+    .breadcrumb{height:28px;flex:0 0 28px;padding:0 10px;gap:6px;font-size:11px}
+    .crumb-home{height:18px;width:18px;font-size:11px}
+
+.canvas{flex:1;min-height:0;overflow:auto;max-width:none;margin:0;padding:8px 10px 8px}
+    .page-head{margin-bottom:6px;min-height:26px}
+    .page-head h1{font-size:15px;font-weight:650}
+    .head-actions{gap:6px}
+    .icon-btn,.add-btn{width:26px;height:26px;font-size:16px}
+    .icon-btn{font-size:12px}
+    .primary,.secondary,.danger{padding:4px 10px;font-size:11px;line-height:1.4}
+    .card{border-radius:2px;box-shadow:none}
+    .toolbar{display:flex;align-items:center;flex-wrap:wrap;padding:4px 8px;gap:6px}
+    .search-field,.select-mini{height:26px;font-size:12px}
+    .search-field{min-width:180px}
+    .count{font-size:11px}
+    .data-table th{padding:5px 8px;font-size:11px;font-weight:650;position:sticky;top:0;z-index:1}
+    .data-table td{padding:3px 8px;font-size:12px;line-height:1.3}
+    .th-label{display:inline-flex;align-items:center;gap:4px;max-width:100%}
+    .data-table th .col-filter{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:2px;background:transparent;color:#fff;flex:none}
+    .data-table th .col-filter svg{display:block;stroke:#fff}
+    .data-table th .col-filter.on{background:rgba(255,255,255,.28)}
+    .data-table th .col-filter.on svg path{fill:#fff;stroke:#fff}
+    .col-pop{position:fixed;z-index:25;width:240px;max-height:280px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:var(--shadow)}
+    .col-pop-search{margin:8px;height:24px;padding:0 6px;border:1px solid var(--line);border-radius:2px;font-size:11px}
+    .col-pop-list{overflow:auto;padding:0 8px 8px;display:flex;flex-direction:column;gap:2px}
+    .col-pop-opt{display:flex;align-items:flex-start;gap:6px;font-size:12px;font-weight:400;color:var(--navy);line-height:1.3}
+    .col-pop-opt input{margin-top:2px;accent-color:var(--orange)}
+    .col-pop-foot{display:flex;align-items:center;gap:8px;padding:6px 8px;border-top:1px solid var(--line)}
+    .col-pop-foot button{background:none;color:var(--teal);font-size:11px;font-weight:650;padding:0}
+    .mcc-lines{white-space:normal;line-height:1.45}
+    .mcc-lines div{white-space:normal}
+    .status{padding:0 6px;font-size:11px;border-radius:2px;gap:4px;line-height:16px}
+    .status:before{width:5px;height:5px}
+    .actions{gap:4px}
+    .kpis{gap:8px;margin-bottom:8px}
+    .kpi{padding:8px 10px;min-height:0}
+    .kpi:after{width:48px;height:48px;right:-16px;top:-16px}
+    .kpi-label{font-size:10px;letter-spacing:.04em}
+    .kpi-value{font-size:18px;margin:2px 0 0}
+    .kpi-note{font-size:10px}
+    .dashboard-grid{gap:8px}
+    .section-card{padding:8px 10px}
+    .section-card h2{font-size:13px;margin:0 0 6px}
+    .metric-row{margin:4px 0;gap:8px}
+    .metric-name{font-size:12px;width:108px}
+    .bar{height:6px}
+    .quick-grid{gap:6px}
+    .quick-link{padding:7px 8px;font-size:11px}
+    .quick-link b{margin-bottom:2px}
+    .tabs{padding:0 10px;gap:14px}
+    .tab{padding:6px 0 5px;font-size:12px}
+    .form-body{padding:8px 10px 2px}
+    .form-grid{gap:0 12px}
+    .field{margin:0 0 6px}
+    .field label{font-size:11px;margin:0 0 2px}
+    .field input,.field select,.field textarea{padding:3px 8px;font-size:12px;line-height:1.3}
+    .field select[multiple]{min-height:72px}
+    .field textarea{min-height:88px}
+    .input-icon input{padding-left:30px}
+    .input-icon b{left:8px;top:4px;font-size:13px}
+    .check-line{height:26px;font-size:12px;gap:6px}
+    .form-footer{padding:6px 8px;gap:6px}
+    .helper{margin-top:2px;margin-bottom:6px;font-size:11px}
+    .subtle-banner{padding:5px 8px;font-size:11px;margin-bottom:6px;line-height:1.35}
+    .rule-help{margin:1px 0 0;font-size:11px;line-height:1.3}
+    .rule-card-title{padding:4px 8px 0;font-size:12px}
+    .rule-tab{padding:4px 0 0}
+    .rule-stack{gap:8px}
+    .rule-split{gap:8px}
+    .rule-options-split{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:10px;padding:0 10px 8px;align-items:start}
+    .rule-option-list{border:1px solid var(--line);border-radius:2px;background:#fff;min-height:160px}
+    .rule-option-list .data-table{min-width:0}
+    .rule-option-list .data-table td,.rule-option-list .data-table th{white-space:normal}
+    .rule-option-save{justify-content:flex-start;border-top:0;padding:4px 0 8px}
+    .rule-options-split > div > .field{max-width:280px;padding-top:4px}
+    .rule-option-picks{display:grid;grid-template-columns:minmax(200px,280px) minmax(220px,1fr);gap:0 16px;align-items:start;padding-top:4px}
+    .rule-option-picks > .field{max-width:none;padding-top:0}
+    #ruleOptionMccHost{display:contents}
+    .rule-option{padding:8px}
+    .rule-option h3{font-size:12px}
+    .rule-band{padding:6px 8px 0;margin:0 0 6px}
+    .rule-band-head,.rule-side-head{margin:0 0 4px}
+    .rule-band-head b,.rule-side-head h3{font-size:12px}
+    .rule-ms .atm-ms-trigger,.atm-ms-trigger{min-height:26px;padding:3px 8px}
+    .atm-select-box{min-height:26px;padding:3px 8px;font-size:12px}
+    .rule-add select{height:26px}
+    .rule-mode{padding:4px 2px;gap:6px 14px}
+    .rule-nest th,.rule-nest td{padding:4px 8px}
+    .rule-vat{margin:0 0 6px 12px;padding:4px 8px 0;border-left:2px solid var(--orange);background:#f7f9fb}
+    .pager{padding:4px 8px;gap:8px}
+    .pager-size,.pager-count{font-size:11px}
+    .pager-btn{min-width:24px;height:24px;padding:0 6px;font-size:11px}
+    .action-text{height:24px;padding:0 8px;font-size:11px}
+    .alert-list{gap:6px}
+    .alert-item{padding:8px 10px;gap:8px}
+    .alert-severity{height:28px}
+    .alert-copy b{font-size:12px}
+    .alert-copy p{margin:2px 0 0}
+    .report-grid{gap:8px}
+    .report-card{padding:8px 10px;min-height:0}
+    .report-card h3{margin:0 0 4px}
+    .report-card button{padding-top:6px}
+    .modal-head{padding:8px 12px}
+    .modal-body{padding:10px 12px}
+    .modal-foot{padding:8px 12px}
+    .drawer-head{padding:10px 12px}
+    .drawer-head h2{font-size:15px}
+    .drawer-body{padding:10px 12px}
+    .detail-grid{gap:8px;margin-bottom:10px}
+    .detail-box{padding:6px 8px}
+    .map-col{min-height:0}
+    .map-grid{gap:8px}
+    .import-note,.map-note{margin:0 0 8px}
+    .canvas.dock{overflow:hidden;display:flex;flex-direction:column}
+    .canvas.dock>.page-head,.canvas.dock>.subtle-banner{flex:0 0 auto}
+    .canvas.dock>.card:not(.card-foot){flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:visible}
+    .canvas.dock>.card.card-foot{flex:0 0 auto;margin-top:6px}
+    .canvas.dock>.card:not(.card-foot)>.table-wrap{flex:1 1 auto;min-height:0;overflow:auto}
+    .canvas.dock>.card:not(.card-foot)>.pager{flex:0 0 auto}
+    .canvas.dock>.card:not(.card-foot):not(:has(.table-wrap)){overflow:auto}
+    .canvas.dock .rule-tab:not(.hidden){flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:visible;padding-top:2px}
+    .canvas.dock #ruleGroupWrap,.canvas.dock #ruleAtmWrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:visible}
+    .canvas.dock #ruleOptionsWrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:auto}
+    .canvas.dock #ruleBinCard,.canvas.dock #ruleGroupCard:not(.hidden),.canvas.dock #ruleAtmCard:not(.hidden){flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+    .canvas.dock #ruleBinCard .table-wrap,.canvas.dock #ruleGroupCard .table-wrap,.canvas.dock #ruleAtmCard .table-wrap{flex:1 1 auto;min-height:120px;overflow:auto}
+    .canvas.dock #ruleOptionsWrap{overflow:auto}
+    .canvas.dock>.card.re-card:not(.card-foot){overflow:auto;display:block;flex:1 1 auto;min-height:0}
+.re-steps{position:sticky;top:0;background:#fff;z-index:2}
+    .re-step{display:inline-flex;align-items:center;gap:6px}
+    .re-step-no{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#e9edf3;color:var(--muted);font-size:10px;font-weight:700}
+    .re-step.active .re-step-no{background:var(--navy);color:#fff}
+    .re-step-no.done{background:var(--green);color:#fff}
+    .re-step-no.bad{background:var(--orange);color:#fff}
+    .re-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:12px;padding:10px}
+    .re-main{min-width:0}
+    .re-aside{position:sticky;top:40px;align-self:start;display:flex;flex-direction:column;gap:8px}
+    .re-sum-block{border:1px solid var(--line);border-radius:3px;padding:8px 10px;background:#fafbfd;display:flex;flex-direction:column;gap:5px}
+    .re-sum-block h4,.re-sum-block h5{margin:0;color:var(--navy);font-size:12px}
+    .re-section{margin:0 0 14px}
+    .re-section h3{margin:0 0 4px;font-size:14px;color:var(--navy)}
+    .re-section h4{margin:10px 0 6px;font-size:12px;color:var(--navy)}
+    .re-sub{border-left:3px solid var(--line);padding-left:10px;margin-top:8px}
+    .re-wrap{overflow:auto}
+    .re-details>summary{cursor:pointer;font-size:12px;font-weight:650;color:var(--navy);margin:0 0 6px;list-style:none}
+    .re-details>summary:before{content:"›";display:inline-block;width:12px;transition:transform .15s}
+    .re-details[open]>summary:before{transform:rotate(90deg)}
+    .re-vaton{display:block;margin-top:3px;font-size:11px;color:var(--muted)}
+    .re-table{width:100%;border-collapse:collapse;font-size:11.5px}
+    .re-table th{background:#f3f5f9;color:var(--navy);text-align:left;font-weight:650;padding:5px 6px;border:1px solid var(--line);white-space:nowrap}
+    .re-table td{padding:5px 6px;border:1px solid var(--line);vertical-align:top}
+    .re-table th.re-group{text-align:center}
+    .re-tiers select,.re-tiers input[type=number]{min-width:96px;max-width:190px;height:28px;font-size:11.5px}
+    .re-fees{display:flex;flex-wrap:wrap;gap:4px;align-items:center;min-width:150px}
+    .re-fees .re-add-fee{min-width:90px;max-width:140px}
+    .atm-ms-chip.re-bad{border-color:var(--orange);color:var(--orange)}
+    .re-inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+    .re-addtier{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:12px}
+    .re-addtier input{width:120px;height:28px}
+    .re-radios{display:flex;flex-wrap:wrap;gap:4px 14px;margin:2px 0 6px}
+    .re-checks{display:flex;flex-wrap:wrap;gap:4px 8px;max-height:150px;overflow:auto;padding:4px 0}
+    .re-check{display:inline-flex;align-items:center;gap:5px;font-size:12px;border:1px solid var(--line);border-radius:3px;padding:3px 7px;background:#fff;cursor:pointer}
+    .re-radios .re-check{border:0;padding:2px 0;background:none}
+    .re-ms{width:100%}
+    .re-ms .atm-ms-trigger{min-height:34px;padding:5px 10px}
+    .re-ms .atm-ms-value{gap:4px;padding:1px 0}
+    .re-ms.readonly .atm-ms-trigger{cursor:default;background:#f6f8fa;box-shadow:none;border-color:var(--line)}
+    .re-ms.open .rule-ms-panel{display:flex;flex-direction:column;max-height:320px}
+    .re-ms .atm-ms-foot [data-count]{margin-left:auto}
+    .search-select{width:100%}
+    .search-select .atm-ms-trigger{min-height:38px;padding:7px 10px}
+    .search-select.open .rule-ms-panel{display:flex;flex-direction:column;max-height:300px;z-index:30}
+    .search-select .atm-ms-list{max-height:240px}
+    .checker-viewing .search-select .atm-ms-trigger{cursor:default;background:#f6f8fa;box-shadow:none;border-color:var(--line)}
+    .re-check input{accent-color:var(--orange)}
+    .re-chips{display:flex;flex-wrap:wrap;gap:6px}
+    .re-chip{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:4px 12px;font-size:12px}
+    .re-chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+    .re-sentence-row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:start;padding:8px 0;border-top:1px dashed var(--line)}
+    .re-label{font-weight:650;color:var(--navy);font-size:12px;padding-top:4px}
+    .re-sentence{background:#f3f6fb;border:1px solid var(--line);border-radius:3px;padding:7px 10px;font-size:12px;margin:6px 0}
+    .re-seg{border:1px solid var(--line);border-radius:3px;padding:8px 10px;margin:0 0 8px;display:flex;flex-direction:column;gap:5px}
+    .re-seg-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+    .re-seg-head .spacer{flex:1}
+    .re-presets{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 10px}
+    .re-presets .spacer{flex:1}
+    .re-issues{margin:4px 0;padding-left:18px;font-size:12px;display:flex;flex-direction:column;gap:3px}
+    .re-issues li.error{color:#b42318}
+    .re-issues li.warn{color:#9a5b00}
+    .re-issues a{font-size:11px;color:var(--navy)}
+    .re-ok{background:#ecf8f3;border:1px solid #bfe7d6;color:#0f6b4b;border-radius:3px;padding:6px 10px;font-size:12px}
+    .re-cardscope{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:12px}
+    .re-test{border:1px solid var(--line);border-radius:3px;padding:10px;background:#fbfcfe}
+    .re-test h4{margin:0 0 4px}
+    .re-test-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px 10px}
+    .re-result{margin:10px 0 6px;padding:7px 10px;border-radius:3px;font-size:12px}
+    .re-result.ok{background:#ecf8f3;border:1px solid #bfe7d6;color:#0f6b4b}
+    .re-result.no{background:#fff3f0;border:1px solid #f6c7bc;color:#9b2c16}
+    .re-quotes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0}
+    .re-quote{border:1px solid var(--line);border-radius:3px;padding:8px 10px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:3px}
+    .re-quote h5{margin:0 0 4px;color:var(--navy);font-size:12px}
+    .re-quote div{display:flex;justify-content:space-between;gap:10px}
+    .re-quote .total{border-top:1px solid var(--line);margin-top:4px;padding-top:5px;font-weight:700;color:var(--navy)}
+    .re-quote.alt h5{color:var(--teal)}
+    .re-trace-box summary{cursor:pointer;font-size:12px;color:var(--navy)}
+    .re-trace{margin:4px 0;padding-left:20px;font-size:11.5px}
+    .re-trace li.ok{color:var(--ink)}
+    .re-trace li.no{color:#b42318;font-weight:650}
+    .re-hist{border:1px solid var(--line);border-radius:3px;padding:8px 10px;margin:0 0 8px;font-size:12px}
+    .re-hist summary{cursor:pointer;color:var(--navy);margin-top:4px}
+    #reNav{align-items:center;padding:10px 12px}
+    #reNav .tab.re-navbtn{padding:6px 12px;border:1px solid var(--line);border-radius:3px;color:var(--navy)}
+    .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:12px auto 0;text-align:left}
+    .sim-grid label{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
+    .sim-grid select{width:100%;height:32px}
+    @media(max-width:1100px){.re-layout{grid-template-columns:1fr}.re-aside{position:static}.re-test-grid{grid-template-columns:1fr 1fr}.re-quotes{grid-template-columns:1fr}}
+    @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.rule-options-split{grid-template-columns:1fr}}
+    @media(max-width:700px){.sidebar{top:40px}.canvas{padding:8px}.page-head h1{font-size:14px}.kpis{grid-template-columns:repeat(2,1fr)}}
+
+.login-card .field{margin:0 0 16px}
+    .login-card .field label{display:block;font-size:12px;font-weight:650;color:var(--navy);margin:0 0 7px}
+    .login-input{display:flex;align-items:stretch;height:44px;background:#fff;border:1px solid #e23d32}
+    .login-ico{width:42px;flex:0 0 42px;height:42px;display:grid;place-items:center;background:#173a5f;color:#fff;border-right:1px solid #e23d32}
+    .login-ico svg{display:block}
+    .login-input-box{position:relative;flex:1;min-width:0;display:flex;align-items:center}
+    .login-card .login-input input{width:100%;height:42px;margin:0;border:0;border-radius:0;background:#fff;color:var(--ink);padding:0 12px;font-size:14px;line-height:42px;box-shadow:none;outline:0}
+    .login-card .login-input-box input{padding-right:40px}
+    .login-card .login-input input::placeholder{color:#8b97a8;font-weight:400}
+    .login-card .login-input input:focus{box-shadow:inset 0 0 0 1px rgba(226,61,50,.45)}
+    .login-card .password-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;display:grid;place-items:center;background:transparent;color:#5d6d82;padding:0}
+    .login-card .password-eye:hover{color:var(--navy)}
+    .login-card .password-eye .eye-shut{display:none}
+    .login-card .password-eye.is-open .eye-open{display:none}
+    .login-card .password-eye.is-open .eye-shut{display:block}
+    @media(prefers-reduced-motion:reduce){.login-ip{animation:none;opacity:.62;transform:none}}
+
+.content:has(.canvas.sim-host){display:flex;flex-direction:column;overflow:hidden}
+.content:has(.canvas.sim-host) .breadcrumb{flex:0 0 auto}
+.canvas.sim-host{flex:1;min-height:0;max-width:none;margin:0;padding:0;overflow:hidden;display:flex;flex-direction:column}
+.canvas.sim-host>.page-head{flex:0 0 auto;margin:0;padding:8px 12px 4px}
+.sim-frame{width:100%;height:100%;flex:1;min-height:0;border:0;display:block;background:#eef1f4}
+.coming-card{padding:28px 20px;text-align:center;color:var(--muted);font-size:12px}
+.kpis.tkn-kpis{grid-template-columns:repeat(6,1fr)}
+@media(max-width:1100px){.kpis.tkn-kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpis.tkn-kpis{grid-template-columns:repeat(2,1fr)}}
+.action-text:disabled,.icon-btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.ops-banner{background:#ecf8f3;border:1px solid #bfe7d6;color:#0f6b4b;padding:10px 12px;border-radius:3px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ops-banner a,.ops-banner button.linkish{color:var(--teal);font-weight:650;cursor:pointer;background:none;border:0;padding:0;font-size:12px}
+.ops-banner .spacer{flex:1}
+.ops-banner.err{background:#fff3f0;border-color:#f6c7bc;color:#9b2c16}
+.payload-row td{white-space:normal!important;background:#f7f9fb;font-family:Consolas,monospace;font-size:11px;line-height:1.55}
+.re-verify-same{background:#ecf8f3;border:1px solid #bfe7d6;color:#0f6b4b;padding:8px 10px;border-radius:3px;font-size:12px;margin:8px 0}
+.re-verify-diff{background:#fff8e8;border:1px solid #f0d9a0;color:#8a5b00;padding:8px 10px;border-radius:3px;font-size:12px;margin:8px 0}
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut-legend{list-style:none;margin:0;padding:0;font-size:12px}
+.donut-legend li{display:flex;align-items:center;gap:8px;margin:6px 0}
+.donut-swatch{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 10px}
+.health-list{list-style:none;margin:0;padding:0}
+.health-list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.health-list a{color:var(--teal);font-weight:650;white-space:nowrap}
+.check-fail td{color:#b42318;font-weight:650}
+.modal-body h4{color:var(--navy);margin:14px 0 8px;font-size:13px}
+.expand-toggle{background:none;border:0;color:var(--teal);font-weight:650;font-size:12px;cursor:pointer;padding:0}
+.nest-actions{display:flex;gap:4px;flex-wrap:nowrap;align-items:center}
+.nest-actions .icon-btn{width:24px;height:24px;font-size:11px}
+.recent-txn{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px}
+.recent-txn .spacer{flex:1}
+  </style>
+</head>
+<body>
+  <section id="loginPage" class="login-page">
+    <canvas id="loginNet" class="login-net" aria-hidden="true"></canvas>
+    <div id="loginIps" class="login-ips" aria-hidden="true"></div>
+    <div class="login-card">
+      <div class="logo">IRIS <span>●</span></div>
+      <h1>Tokenization Operations Portal</h1>
+      <div id="loginError" class="login-error hidden"></div>
+      <form id="loginForm">
+        <div class="field"><label for="username">Username</label><div class="login-input"><span class="login-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.6 19.2c1.15-3.15 3.35-4.7 6.4-4.7s5.25 1.55 6.4 4.7" stroke-linecap="round"/></svg></span><input id="username" autocomplete="username" required placeholder="Username"></div></div>
+        <div class="field"><label for="password">Password</label><div class="login-input"><span class="login-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="8" cy="12" r="3.3"/><path d="M11.1 12H20M16.2 12v3M18.8 12v2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="login-input-box"><input id="password" type="password" autocomplete="current-password" required placeholder="Password"><button type="button" class="password-eye" onclick="togglePassword()" aria-label="Show password"><svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 12S6.2 6.6 12 6.6 21.5 12 21.5 12 17.8 17.4 12 17.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.3"/></svg><svg class="eye-shut" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5l18 14" stroke-linecap="round"/><path d="M9.4 7A9.6 9.6 0 0 1 12 6.6c5.8 0 9.5 5.4 9.5 5.4a16 16 0 0 1-3.1 3.4" stroke-linecap="round"/><path d="M6.2 8.4C3.9 10 2.5 12 2.5 12S6.2 17.4 12 17.4c1.1 0 2.2-.2 3.2-.6" stroke-linecap="round"/><path d="M10 12.2a2.2 2.2 0 0 0 3.1 2" stroke-linecap="round"/></svg></button></div></div></div>
+        <button class="login-btn" type="submit">Login</button>
+      </form>
+      <div class="login-help"><a href="#" onclick="toast('Password reset is available through the bank identity provider in production.');return false">Forgot password?</a></div>
+      <div class="demo-accounts"><b>Prototype access</b><br>Admin: token.admin / Token@IRIS2026</div>
+    </div>
+  </section>
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="logo">IRIS <span>●</span></div>
+      <div class="smart-nav">⌕ <input id="smartSearch" placeholder="Smart Navigation" oninput="smartNav(this.value)"></div>
+      <div class="user-menu" onclick="toggleUserMenu()">
+        <div class="avatar" id="avatar">TA</div>
+        <div class="user-copy"><b id="userName">Token Admin</b><span id="userRole">Administrator</span></div>
+        <span class="chevron">⌄</span>
+        <div id="userDropdown" class="user-dropdown hidden">
+          <button type="button" onclick="event.stopPropagation();openResetDemo()">Reset demo data</button>
+          <button type="button" onclick="event.stopPropagation();logout()">Logout</button>
+        </div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar"><nav id="nav" class="nav-scroll"></nav></aside>
+      <main class="content">
+        <div id="breadcrumb" class="breadcrumb"></div>
+        <div id="screen" class="canvas"></div>
+      </main>
+    </div>
+  </div>
+  <div id="overlay"></div>
+  <script src="config.js"></script>
+  <script>
+const AUTH_KEY='iris-tkn-auth-v1';
+const STAMP='11 Nov 2026, 09:00:00';
+const BY='token.admin';
+const sessionRequestId='TKN-'+Date.now();
+let currentUser=null,currentScreen='Dashboard',restoringSession=false,sidebarCollapsed=false,storeReady=false;
+const accounts={'token.admin':{password:'Token@IRIS2026',name:'Token Admin',role:'Administrator',short:'Admin'}};
+const ALL_SCREENS=[
+  'Dashboard','Institution','Scheme','Card Product','Card','Token Requestor',
+  'Eligibility Rules','ID&V Risk Rules','Step-up and OTP','Notification Templates',
+  'Authorization Rules','Limits','Response Codes','Reason Codes','Card Status Cascade',
+  'Token Management','Transaction Monitor','Audit Log','Simulator'
+];
+const permissions={Administrator:ALL_SCREENS.slice()};
+const navGroups=[
+  {title:'',items:[
+    ['Dashboard','▦'],
+    ['Master Configuration','▣',true,[
+      ['General Configuration','',true,['Institution','Scheme','Card Product','Card']],
+      ['Wallet Configuration','',true,['Token Requestor']],
+      ['Provisioning Configuration','',true,['Eligibility Rules','ID&V Risk Rules','Step-up and OTP','Notification Templates']],
+      ['Authorization Configuration','',true,['Authorization Rules','Limits','Response Codes']],
+      ['Lifecycle Configuration','',true,['Reason Codes','Card Status Cascade']]
+    ]]
+  ]},
+  {title:'Operations',items:[
+    ['Token Management','◉'],
+    ['Transaction Monitor','◉'],
+    ['Audit Log','▤'],
+    ['Simulator','▣']
+  ]}
+];
+const navCollapsed=new Set([
+  'Master Configuration','General Configuration','Wallet Configuration',
+  'Provisioning Configuration','Authorization Configuration','Lifecycle Configuration'
+]);
+
+let institution=[{bankName:'IRIS Issuer Bank',currency:'PKR',currencyDecimals:2,timezone:'Asia/Karachi',ts:STAMP,by:BY,upd:BY}];
+let schemes=[
+  {code:'VISA',name:'Visa',tokenService:'VTS',tokenRefPrefix:'VTSREF0000',panPrefix:'4',tokenValidityMonths:36,cascadeMode:'CARD_LEVEL',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'MC',name:'Mastercard',tokenService:'MDES',tokenRefPrefix:'DAPLMC0000',panPrefix:'5',tokenValidityMonths:36,cascadeMode:'PER_TOKEN',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let products=[
+  {code:'VCLS',name:'Classic Debit',scheme:'VISA',bin:'400012',tokenizationEnabled:true,maxTokensPerCard:5,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'VGLD',name:'Gold Debit',scheme:'VISA',bin:'400013',tokenizationEnabled:true,maxTokensPerCard:5,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'VBSC',name:'Basic Debit',scheme:'VISA',bin:'400014',tokenizationEnabled:false,maxTokensPerCard:5,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'MCLS',name:'Classic Debit',scheme:'MC',bin:'500012',tokenizationEnabled:true,maxTokensPerCard:5,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'MGLD',name:'Gold Debit',scheme:'MC',bin:'500013',tokenizationEnabled:true,maxTokensPerCard:2,disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let cards=[
+  {id:'CARD-0001',customerId:'CUST-000101',product:'VCLS',pan:'4000120000001001',customer:'Demo Customer 01',expiry:'09/29',cvv2:'314',status:'ACTIVE',balance:85000,mobile:'03000000147',email:'customer01@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0002',customerId:'CUST-000102',product:'VGLD',pan:'4000130000002002',customer:'Demo Customer 02',expiry:'03/28',cvv2:'652',status:'ACTIVE',balance:4200,mobile:'03000000219',email:'customer02@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0003',customerId:'CUST-000103',product:'VBSC',pan:'4000140000003003',customer:'Demo Customer 03',expiry:'12/27',cvv2:'907',status:'ACTIVE',balance:60000,mobile:'03000000382',email:'customer03@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0004',customerId:'CUST-000104',product:'MCLS',pan:'5000120000004004',customer:'Demo Customer 04',expiry:'06/29',cvv2:'481',status:'ACTIVE',balance:120000,mobile:'03000000455',email:'customer04@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0005',customerId:'CUST-000105',product:'MGLD',pan:'5000130000005005',customer:'Demo Customer 05',expiry:'01/28',cvv2:'219',status:'WARM',balance:35000,mobile:'03000000526',email:'customer05@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0006',customerId:'CUST-000106',product:'VCLS',pan:'4000120000006006',customer:'Demo Customer 06',expiry:'10/25',cvv2:'730',status:'ACTIVE',balance:15000,mobile:'03000000637',email:'customer06@mail.test',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'CARD-0007',customerId:'CUST-000107',product:'VGLD',pan:'4000130000007007',customer:'Demo Customer 07',expiry:'08/29',cvv2:'164',status:'ACTIVE',balance:40000,mobile:'',email:'',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let tokenRequestors=[
+  {id:'40010075001',name:'OEM Wallet',type:'OEM wallet',schemes:['VISA','MC'],tokenType:'03',deviceTypes:['Mobile','Watch'],channels:['POS contactless','E-commerce'],disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'40010075002',name:'Bank App Wallet',type:'Issuer wallet (HCE)',schemes:['VISA','MC'],tokenType:'03',deviceTypes:['Mobile'],channels:['POS contactless'],disabled:false,ts:STAMP,by:BY,upd:BY},
+  {id:'40010075003',name:'Unapproved Wallet',type:'OEM wallet',schemes:['VISA','MC'],tokenType:'03',deviceTypes:['Mobile'],channels:['POS contactless'],disabled:true,ts:STAMP,by:BY,upd:BY}
+];
+let eligibility=[{allowedCardStatuses:['ACTIVE'],requireProductFlag:true,requireCvv2:true,requireApprovedRequestor:true,rejectExpired:true,enforceMaxTokens:true,oneTokenPerDeviceRequestor:true,unlistedReasonDecision:'YELLOW',assuranceNoStepUp:50,assuranceAfterStepUp:70,ts:STAMP,by:BY,upd:BY}];
+let riskScoreBands=[
+  {score:5,decision:'GREEN',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {score:4,decision:'GREEN',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {score:3,decision:'YELLOW',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {score:2,decision:'YELLOW',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {score:1,decision:'RED',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let riskReasonRules=[
+  {code:'LONG_STANDING_ACCOUNT',description:'Wallet account has a long clean history',decision:'GREEN',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'NEW_DEVICE',description:'Device not seen before',decision:'YELLOW',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'NEW_WALLET_ACCOUNT',description:'Wallet account recently created',decision:'YELLOW',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'DEVICE_FLAGGED',description:'Device flagged by the scheme',decision:'RED',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'ACCOUNT_HIGH_RISK',description:'Wallet account flagged as high risk',decision:'RED',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let stepup=[{smsEnabled:true,emailEnabled:true,callCentreEnabled:false,otpBy:'Scheme',otpLength:6,otpValiditySeconds:180,maxAttempts:3,maxResends:2,ts:STAMP,by:BY,upd:BY}];
+let templates=[
+  {event:'OTP',channel:'SMS',text:'Use OTP {otp} to add your {product} card ending {last4} to {wallet}. This OTP will be valid for {minutes} minutes. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {event:'OTP',channel:'EMAIL',text:'Your one-time code is {otp}. Use it to add your {product} card ending {last4} to {wallet}. Valid for {minutes} minutes. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {event:'CARD_ADDED',channel:'SMS',text:'Your {product} card ending {last4} has been added to {wallet} on your {device}. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {event:'TOKEN_SUSPENDED',channel:'SMS',text:'Your card ending {last4} in {wallet} on your {device} has been suspended. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {event:'TOKEN_RESUMED',channel:'SMS',text:'Your card ending {last4} in {wallet} on your {device} is ready to use again. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {event:'TOKEN_DELETED',channel:'SMS',text:'Your card ending {last4} has been removed from {wallet} on your {device}. {bank}',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let authRules=[{allowedCardStatuses:['ACTIVE'],validateRequestor:true,enforceExpiryMatch:true,requireCryptogram:true,applyLimits:true,checkBalance:true,defaultDeclineCode:'05',ts:STAMP,by:BY,upd:BY}];
+let limits=[
+  {product:'VCLS',channel:'POS contactless',perTxn:25000,dailyAmount:100000,dailyCount:10,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'VCLS',channel:'E-commerce',perTxn:50000,dailyAmount:150000,dailyCount:10,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'MCLS',channel:'POS contactless',perTxn:25000,dailyAmount:100000,dailyCount:10,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'MCLS',channel:'E-commerce',perTxn:50000,dailyAmount:150000,dailyCount:10,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'VGLD',channel:'POS contactless',perTxn:50000,dailyAmount:250000,dailyCount:20,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'VGLD',channel:'E-commerce',perTxn:100000,dailyAmount:300000,dailyCount:20,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'MGLD',channel:'POS contactless',perTxn:50000,dailyAmount:250000,dailyCount:20,disabled:false,ts:STAMP,by:BY,upd:BY},
+  {product:'MGLD',channel:'E-commerce',perTxn:100000,dailyAmount:300000,dailyCount:20,disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let responseCodes=[
+  {reason:'APPROVED',description:'Transaction approved',code:'00',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'TOKENIZATION_DISABLED',description:'Tokenization is disabled for the card product',code:'57',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'TOKEN_NOT_FOUND',description:'Token reference was not found',code:'14',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'TOKEN_NOT_ACTIVE',description:'Token is not in ACTIVE status',code:'62',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'REQUESTOR_INVALID',description:'Token requestor is invalid or disabled',code:'58',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'TOKEN_EXPIRED',description:'Token has expired',code:'54',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'EXPIRY_MISMATCH',description:'Token expiry in the message does not match the record',code:'54',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'CARD_STATUS_NOT_ALLOWED',description:'Card status is not allowed for token payments',code:'62',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'CRYPTOGRAM_FAILED',description:'Cryptogram verification failed',code:'05',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'LIMIT_EXCEEDED_TXN',description:'Per-transaction limit exceeded',code:'61',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'LIMIT_EXCEEDED_DAILY_AMOUNT',description:'Daily amount limit exceeded',code:'61',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'LIMIT_EXCEEDED_DAILY_COUNT',description:'Daily count limit exceeded',code:'65',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {reason:'INSUFFICIENT_FUNDS',description:'Available balance is insufficient',code:'51',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+
+let reasonCodes=[
+  {code:'T',description:'Issuer or cardholder confirmed fraudulent token / confirmed no fraudulent token',actions:['Suspend','Unsuspend','Delete'],schemes:['VISA','MC'],disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'F',description:'Cardholder reported token device found or not stolen',actions:['Unsuspend'],schemes:['VISA','MC'],disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'C',description:'Account closed',actions:['Delete'],schemes:['VISA','MC'],disabled:false,ts:STAMP,by:BY,upd:BY},
+  {code:'Z',description:'Other',actions:['Suspend','Unsuspend','Delete','Activate'],schemes:['VISA','MC'],disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let cascadeRules=[
+  {cardStatus:'ACTIVE',effect:'Resume',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {cardStatus:'WARM',effect:'Suspend',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {cardStatus:'HOT',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {cardStatus:'BLOCKED',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {cardStatus:'DORMANT',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
+  {cardStatus:'EXPIRED',effect:'Suspend',disabled:false,ts:STAMP,by:BY,upd:BY}
+];
+let tokens=[],transactions=[],audits=[];
+let portalUsers=[{username:'token.admin',password:'Token@IRIS2026',name:'Token Admin',role:'Administrator',disabled:false,lastLogin:'',ts:STAMP,by:BY,upd:BY}];
+const SEED_SNAPSHOT=JSON.parse(JSON.stringify({
+  institution,schemes,products,cards,tokenRequestors,eligibility,riskScoreBands,riskReasonRules,
+  stepup,templates,authRules,limits,responseCodes,reasonCodes,cascadeRules,tokens,transactions,audits,portalUsers
+}));
+
+const DATA_BASE=(window.TKN_DATA_BASE||'/database').replace(/\/$/,'');
+const DATA_FILES={
+  'institution.json':{key:'institution'},
+  'schemes.json':{key:'schemes'},
+  'products.json':{key:'products'},
+  'cards.json':{key:'cards'},
+  'token-requestors.json':{key:'tokenRequestors'},
+  'eligibility.json':{key:'eligibility'},
+  'risk-score-bands.json':{key:'riskScoreBands'},
+  'risk-reason-rules.json':{key:'riskReasonRules'},
+  'stepup.json':{key:'stepup'},
+  'templates.json':{key:'templates'},
+  'auth-rules.json':{key:'authRules'},
+  'limits.json':{key:'limits'},
+  'response-codes.json':{key:'responseCodes'},
+  'reason-codes.json':{key:'reasonCodes'},
+  'cascade-rules.json':{key:'cascadeRules'},
+  'tokens.json':{key:'tokens'},
+  'transactions.json':{key:'transactions'},
+  'audits.json':{key:'audits'},
+  'users.json':{key:'portalUsers'}
+};
+let lastSnapshot='',lastParts={},storeRevision=0,seenFileRev={},applyingRemote=false,flushing=false,flushAgain=false,remoteHold=null,sharedNotice=false;
+let localOpsWriteAt={},persistSkipSimPush=false;
+const OPS_FILE_KEYS={'tokens.json':'tokens','transactions.json':'transactions','audits.json':'audits','cards.json':'cards'};
+
+function snapshotState(){
+  return {institution,schemes,products,cards,tokenRequestors,eligibility,riskScoreBands,riskReasonRules,stepup,templates,authRules,limits,responseCodes,reasonCodes,cascadeRules,tokens,transactions,audits,portalUsers};
+}
+function collectionParts(){
+  const parts={};
+  Object.keys(DATA_FILES).forEach(file=>{
+    const key=DATA_FILES[file].key;
+    parts[file]=snapshotState()[key]||[];
+  });
+  return parts;
+}
+function readData(file){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),8000);
+  return fetch(DATA_BASE+'/'+file,{cache:'no-store',signal:ctrl.signal}).then(res=>{
+    clearTimeout(timer);
+    if(res.status===404) return null;
+    if(!res.ok) throw new Error('read failed');
+    return res.json();
+  }).catch(err=>{clearTimeout(timer);throw err});
+}
+function writeCollection(file,rows){
+  return fetch(DATA_BASE+'/'+file,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rows),keepalive:true}).then(res=>{
+    if(!res.ok) throw new Error('write failed');
+    return res.json();
+  });
+}
+function rememberParts(parts){
+  lastParts={};
+  Object.keys(parts).forEach(file=>{lastParts[file]=JSON.stringify(parts[file])});
+  lastSnapshot=JSON.stringify(snapshotState());
+}
+function persistStore(){
+  if(applyingRemote) return;
+  flushStore().catch(()=>{});
+  // Do not echo simulator writes straight back into the iframe — that races in-flight flows.
+  if(!persistSkipSimPush&&currentScreen==='Simulator'){
+    const frame=document.getElementById('simFrame');
+    if(frame&&frame.contentWindow) setTimeout(()=>pushStoreToSimulator(frame.contentWindow),0);
+  }
+}
+function flushStore(){
+  if(flushing){flushAgain=true;return Promise.resolve()}
+  const parts=collectionParts();
+  const changed=Object.keys(parts).filter(file=>JSON.stringify(parts[file])!==lastParts[file]);
+  if(!changed.length) return Promise.resolve();
+  const previous={};
+  changed.forEach(file=>{previous[file]=lastParts[file];lastParts[file]=JSON.stringify(parts[file])});
+  flushing=true;
+  let chain=writeCollection(changed[0],parts[changed[0]]);
+  for(let i=1;i<changed.length;i++){
+    const file=changed[i];
+    chain=chain.then(()=>writeCollection(file,parts[file]));
+  }
+  return chain.then(meta=>{
+    if(meta&&meta.files){
+      changed.forEach(file=>{if(meta.files[file]!=null) seenFileRev[file]=meta.files[file]});
+      storeRevision=meta.revision||storeRevision;
+    }
+    lastSnapshot=JSON.stringify(snapshotState());
+  }).catch(err=>{
+    changed.forEach(file=>{if(previous[file]===undefined) delete lastParts[file]; else lastParts[file]=previous[file]});
+    throw err;
+  }).finally(()=>{
+    flushing=false;
+    if(flushAgain){flushAgain=false;persistStore()}
+    else pollSharedStore().catch(()=>{});
+  });
+}
+function applySnapshot(s){
+  if(!s||typeof s!=='object') return;
+  if(Array.isArray(s.institution)) institution=s.institution;
+  if(Array.isArray(s.schemes)) schemes=s.schemes;
+  if(Array.isArray(s.products)) products=s.products;
+  if(Array.isArray(s.cards)) cards=s.cards;
+  if(Array.isArray(s.tokenRequestors)) tokenRequestors=s.tokenRequestors;
+  if(Array.isArray(s.eligibility)) eligibility=s.eligibility;
+  if(Array.isArray(s.riskScoreBands)) riskScoreBands=s.riskScoreBands;
+  if(Array.isArray(s.riskReasonRules)) riskReasonRules=s.riskReasonRules;
+  if(Array.isArray(s.stepup)) stepup=s.stepup;
+  if(Array.isArray(s.templates)) templates=s.templates;
+  if(Array.isArray(s.authRules)) authRules=s.authRules;
+  if(Array.isArray(s.limits)) limits=s.limits;
+  if(Array.isArray(s.responseCodes)) responseCodes=s.responseCodes;
+  if(Array.isArray(s.reasonCodes)) reasonCodes=s.reasonCodes;
+  if(Array.isArray(s.cascadeRules)) cascadeRules=s.cascadeRules;
+  if(Array.isArray(s.tokens)) tokens=s.tokens;
+  if(Array.isArray(s.transactions)) transactions=s.transactions;
+  if(Array.isArray(s.audits)) audits=s.audits;
+  if(Array.isArray(s.portalUsers)) portalUsers=s.portalUsers;
+}
+function draftOpen(){
+  const overlay=document.getElementById('overlay');
+  return !!(overlay&&overlay.innerHTML.trim());
+}
+async function loadSharedStore(){
+  const meta=await readData('meta.json');
+  if(!meta||!meta.revision) return false;
+  const snap={};
+  const files=Object.keys(DATA_FILES);
+  for(let i=0;i<files.length;i++){
+    const file=files[i];
+    const data=await readData(file);
+    const spec=DATA_FILES[file];
+    if(!Array.isArray(data)) continue;
+    snap[spec.key]=data;
+  }
+  applySnapshot(snap);
+  storeRevision=meta.revision;
+  seenFileRev=Object.assign({},meta.files||{});
+  rememberParts(collectionParts());
+  return true;
+}
+async function applyRemote(meta){
+  if(!meta) return;
+  if(flushing){remoteHold=meta;return}
+  const pending=meta.files||{};
+  const pendingNames=Object.keys(DATA_FILES).filter(file=>pending[file]!==seenFileRev[file]);
+  if(!pendingNames.length){storeRevision=meta.revision||storeRevision;return}
+  applyingRemote=true;
+  try{
+    const files=meta.files||{};
+    const snap=snapshotState();
+    const now=Date.now();
+    for(let i=0;i<pendingNames.length;i++){
+      const file=pendingNames[i];
+      // Ignore stale disk reloads of ops collections just written by the simulator bridge.
+      const opsKey=OPS_FILE_KEYS[file];
+      if(opsKey&&localOpsWriteAt[opsKey]&&(now-localOpsWriteAt[opsKey]<8000)){
+        seenFileRev[file]=files[file];
+        continue;
+      }
+      const data=await readData(file);
+      const spec=DATA_FILES[file];
+      if(!Array.isArray(data)) continue;
+      snap[spec.key]=data;
+    }
+    applySnapshot(snap);
+    storeRevision=meta.revision;
+    seenFileRev=Object.assign({},files);
+    rememberParts(collectionParts());
+    sharedNotice=false;
+    remoteHold=null;
+    if(currentUser&&currentScreen) renderScreen();
+  }finally{applyingRemote=false}
+}
+function releaseSharedHold(){
+  setTimeout(()=>{
+    if(!remoteHold||draftOpen()) return;
+    const meta=remoteHold;
+    if(flushing) return;
+    remoteHold=null;
+    applyRemote(meta).catch(()=>{});
+  },0);
+}
+async function pollSharedStore(){
+  if(flushing||applyingRemote) return;
+  const meta=await readData('meta.json');
+  if(!meta||!meta.revision) return;
+  const files=meta.files||{};
+  const dirty=Object.keys(DATA_FILES).some(file=>files[file]!==seenFileRev[file]);
+  if(!dirty){storeRevision=meta.revision;return}
+  if(draftOpen()){
+    remoteHold=meta;
+    if(!sharedNotice){sharedNotice=true;toast('A colleague changed the shared data. It will show when this form is closed.')}
+    return;
+  }
+  await applyRemote(meta);
+}
+function watchStore(names){
+  names.forEach(name=>{
+    const fn=window[name];
+    if(typeof fn!=='function'||fn.__stores) return;
+    const wrapped=function(){try{return fn.apply(this,arguments)}finally{persistStore()}};
+    wrapped.__stores=true;
+    window[name]=wrapped;
+  });
+}
+async function bootSharedStore(){
+  let loaded=false;
+  try{loaded=await loadSharedStore()}catch(e){loaded=false}
+  if(!loaded){
+    try{await flushStore()}catch(e){}
+  }
+  watchStore(['saveMaster','toggleMaster','saveInstitution','saveEligibility','saveStepup','saveAuthRules','saveIdvBand','toggleIdvBand','saveIdvReason','toggleIdvReason']);
+  storeReady=true;
+  resumeSession();
+  setInterval(()=>{pollSharedStore().catch(()=>{})},3000);
+}
+function tknLiveStore(){return snapshotState()}
+function tknWrite(name,rows){
+  if(!['tokens','transactions','cards','audits'].includes(name)||!Array.isArray(rows)) return;
+  let cloned=rows;
+  try{cloned=JSON.parse(JSON.stringify(rows))}catch(e){cloned=rows.slice()}
+  if(name==='tokens') tokens=cloned;
+  else if(name==='transactions') transactions=cloned;
+  else if(name==='cards') cards=cloned;
+  else if(name==='audits') audits=cloned;
+  localOpsWriteAt[name]=Date.now();
+  // Force persist even when a simulator push / remote apply is in flight
+  applyingRemote=false;
+  persistSkipSimPush=true;
+  try{persistStore()}finally{persistSkipSimPush=false}
+  if(['Token Management','Transaction Monitor','Dashboard','Audit Log'].includes(currentScreen)) renderScreen();
+}
+window.tknLiveStore=tknLiveStore;
+window.tknWrite=tknWrite;
+
+function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function nowStamp(){const d=new Date(),months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],p=n=>String(n).padStart(2,'0');return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}, ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2900)}
+function showDrawer(html,wide){document.getElementById('overlay').innerHTML=`<div class="drawer-backdrop" onclick="closeOverlay()"><div class="drawer${wide?' wide':''}" onclick="event.stopPropagation()">${html}</div></div>`}
+function showModal(html,wide){document.getElementById('overlay').innerHTML=`<div class="modal-backdrop" onclick="closeOverlay()"><div class="modal${wide?' wide':''}" onclick="event.stopPropagation()">${html}</div></div>`}
+function closeOverlay(){document.getElementById('overlay').innerHTML='';releaseSharedHold&&releaseSharedHold()}
+function toggleSidebar(){sidebarCollapsed=!sidebarCollapsed;document.getElementById('sidebar').classList.toggle('collapsed',sidebarCollapsed)}
+function toggleUserMenu(){document.getElementById('userDropdown').classList.toggle('hidden')}
+function togglePassword(){const i=document.getElementById('password');const open=i.type==='password';i.type=open?'text':'password';const btn=i.parentElement.querySelector('.password-eye');btn.classList.toggle('is-open',open);btn.setAttribute('aria-label',open?'Hide password':'Show password')}
+function showApp(account){
+  currentUser={...account,username:account.username,requestId:sessionRequestId};
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('userName').textContent=account.name;
+  document.getElementById('userRole').textContent=account.role;
+  document.getElementById('avatar').textContent=account.name.split(' ').map(x=>x[0]).join('').slice(0,2);
+}
+function persistAuth(){if(!currentUser)return;try{sessionStorage.setItem(AUTH_KEY,JSON.stringify({username:currentUser.username,screen:currentScreen||'Dashboard'}))}catch(e){}}
+function resumeSession(){
+  try{
+    const raw=sessionStorage.getItem(AUTH_KEY);if(!raw)return;
+    const saved=JSON.parse(raw);
+    const account=accounts[saved.username];if(!account)return;
+    showApp({...account,username:saved.username});
+    const screen=saved.screen&&(saved.screen==='Dashboard'||permissions[account.role].includes(saved.screen))?saved.screen:'Dashboard';
+    restoringSession=true;navigate(screen);restoringSession=false;
+  }catch(e){restoringSession=false}
+}
+function logout(){
+  try{
+    if(currentUser){
+      pushAudit('LOGOUT','Authentication','Success','Signed out',null,{username:currentUser.username,role:currentUser.role});
+      persistStore();
+    }
+    sessionStorage.removeItem(AUTH_KEY);
+  }catch(e){}
+  location.reload();
+}
+function openResetDemo(){
+  document.getElementById('userDropdown').classList.add('hidden');
+  showModal(`<div class="modal-head"><h2>Reset demo data</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <p style="margin:0;font-size:13px;line-height:1.5">Restore every collection to seed data? Tokens, transactions and audits will be cleared.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="secondary" onclick="closeOverlay()">Cancel</button>
+      <button type="button" class="primary" onclick="confirmResetDemo()">Restore</button>
+    </div>`);
+}
+function confirmResetDemo(){
+  applySnapshot(JSON.parse(JSON.stringify(SEED_SNAPSHOT)));
+  tknExpanded=new Set();
+  opsBanner=null;
+  auditFilter='';
+  tknMgmtQuery='';
+  tknMgmtShowDeleted=false;
+  txnMonQuery='';
+  txnMonType='';
+  txnMonStatus='';
+  pendingTokenAction=null;
+  pendingCardStatus=null;
+  pushAudit('RESET_DEMO_DATA','System','Success','Restored all collections to seed data',null,{tokens:0,transactions:0,auditsCleared:true});
+  persistStore();
+  closeOverlay();
+  toast('Demo data restored to seed');
+  if(currentUser) renderScreen();
+}
+function allowed(s){return permissions[currentUser.role].includes(s)}
+function caretIcon(){return `<span class="nav-chevron nav-caret" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2.2 4.4 L6 8.2 L9.8 4.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`}
+function parseNavItem(x){
+  if(typeof x==='string') return {name:x,label:x,icon:'',children:null};
+  const children=x[2]===true?x[3]||[]:null;
+  return {name:x[0],label:x[0],icon:x[1]||'',children};
+}
+function navItemVisible(x){
+  const item=parseNavItem(x);
+  if(item.children) return item.children.some(navItemVisible);
+  return item.name==='Dashboard'||allowed(item.name);
+}
+function buildNav(){
+  const n=document.getElementById('nav');
+  n.innerHTML='';
+  const appendItems=(items,parent)=>{
+    items.forEach(x=>{
+      if(!navItemVisible(x)) return;
+      const item=parseNavItem(x);
+      const closed=!!(item.children&&navCollapsed.has(item.name));
+      const b=document.createElement('button');
+      b.className='nav-item'+(closed?' collapsed':'')+(item.children||currentScreen!==item.name?'':' active');
+      b.innerHTML=`${item.icon?`<span class="nav-icon">${item.icon}</span>`:''}<span class="nav-label">${item.label}</span>${item.children?caretIcon():''}`;
+      b.onclick=()=>{if(!item.children){navigate(item.name);return}const sub=document.getElementById('sub-'+item.name);if(!sub)return;const nowClosed=sub.classList.toggle('hidden');b.classList.toggle('collapsed',nowClosed);if(nowClosed)navCollapsed.add(item.name);else navCollapsed.delete(item.name)};
+      parent.appendChild(b);
+      if(item.children){
+        const s=document.createElement('div');
+        s.id='sub-'+item.name;
+        s.className='subnav'+(closed?' hidden':'');
+        appendItems(item.children,s);
+        parent.appendChild(s);
+      }
+    });
+  };
+  navGroups.forEach(g=>{
+    if(g.title){const h=document.createElement('div');h.className='section-title';h.textContent=g.title;n.appendChild(h)}
+    appendItems(g.items,n);
+  });
+}
+function navigate(s){
+  if(!allowed(s)&&s!=='Dashboard'){toast('Your role has view access only to its assigned modules.');return}
+  currentScreen=s;persistAuth();buildNav();
+  document.getElementById('userDropdown').classList.add('hidden');
+  document.getElementById('smartSearch').value='';
+  const paths={
+    Dashboard:['Dashboard'],
+    Institution:['Master Configuration','General Configuration','Institution'],
+    Scheme:['Master Configuration','General Configuration','Scheme'],
+    'Card Product':['Master Configuration','General Configuration','Card Product'],
+    Card:['Master Configuration','General Configuration','Card'],
+    'Token Requestor':['Master Configuration','Wallet Configuration','Token Requestor'],
+    'Eligibility Rules':['Master Configuration','Provisioning Configuration','Eligibility Rules'],
+    'ID&V Risk Rules':['Master Configuration','Provisioning Configuration','ID&V Risk Rules'],
+    'Step-up and OTP':['Master Configuration','Provisioning Configuration','Step-up and OTP'],
+    'Notification Templates':['Master Configuration','Provisioning Configuration','Notification Templates'],
+    'Authorization Rules':['Master Configuration','Authorization Configuration','Authorization Rules'],
+    Limits:['Master Configuration','Authorization Configuration','Limits'],
+    'Response Codes':['Master Configuration','Authorization Configuration','Response Codes'],
+    'Reason Codes':['Master Configuration','Lifecycle Configuration','Reason Codes'],
+    'Card Status Cascade':['Master Configuration','Lifecycle Configuration','Card Status Cascade'],
+    'Token Management':['Operations','Token Management'],
+    'Transaction Monitor':['Operations','Transaction Monitor'],
+    'Audit Log':['Operations','Audit Log'],
+    Simulator:['Operations','Simulator']
+  };
+  const p=paths[s]||[s];
+  document.getElementById('breadcrumb').innerHTML=`<span class="crumb-home">⌂</span>${p.map((x,i)=>`${i?' <b>›</b> ':''}<span>${x}</span>`).join('')}`;
+  renderScreen();
+}
+function pageHead(title,actions=''){return `<div class="page-head"><h1>${title}</h1><div class="head-actions">${actions}</div></div>`}
+function stubScreen(el,title){el.innerHTML=pageHead(title)+`<div class="card coming-card">Coming in later phase</div>`}
+let masterIndex=null,idvTab='bands',auditFilter='';
+let tknMgmtQuery='',tknMgmtShowDeleted=false,tknExpanded=new Set(),opsBanner=null;
+let txnMonQuery='',txnMonType='',txnMonStatus='',txnViewFocus='',txnReVerifyHtml='';
+let pendingTokenAction=null,pendingCardStatus=null;
+const CARD_STATUSES=['ACTIVE','WARM','HOT','BLOCKED','DORMANT','EXPIRED'];
+const TOKEN_ACTIONS=['Suspend','Unsuspend','Delete','Activate'];
+const TXN_STATUSES=['STARTED','NOT_ELIGIBLE','TERMS_DECLINED','STEP_UP_PENDING','STEP_UP_FAILED','CANCELLED','DECLINED','PENDING_ACTIVATION','COMPLETED','RECEIVED','APPROVED','FAILED','PENDING','DELETED','UPDATED'];
+const ALLOWED_TEMPLATE_VARS=['bank','otp','minutes','product','last4','wallet','device'];
+const COLLECTION_REF={
+  schemes:'schemes',products:'products',cards:'cards',tokenRequestors:'tokenRequestors',
+  templates:'templates',limits:'limits',responseCodes:'responseCodes',reasonCodes:'reasonCodes',
+  cascadeRules:'cascadeRules',riskScoreBands:'riskScoreBands',riskReasonRules:'riskReasonRules',
+  institution:'institution',eligibility:'eligibility',stepup:'stepup',authRules:'authRules'
+};
+
+function maskPan(pan){
+  const s=String(pan||'').replace(/\s/g,'');
+  if(s.length<10) return s;
+  return s.slice(0,6)+'******'+s.slice(-4);
+}
+function actorOf(username){
+  const u=username||(currentUser&&currentUser.username)||'system';
+  const known=accounts[u]||portalUsers.find(x=>x.username===u);
+  return {id:u,name:known?known.name:u,type:u==='system'?'System':'User'};
+}
+function nextAuditId(){return 'AUD-'+Date.now()+'-'+Math.floor(Math.random()*900+100)}
+function activitySnap(v){
+  if(v==null) return null;
+  try{
+    const copy=JSON.parse(JSON.stringify(v));
+    const scrub=o=>{
+      if(!o||typeof o!=='object') return;
+      if(Array.isArray(o)){o.forEach(scrub);return}
+      Object.keys(o).forEach(k=>{
+        const key=k.toLowerCase();
+        if(key==='pan'||key==='card'||key==='token') o[k]=maskPan(o[k]);
+        else if(key==='cvv2'||key==='otp'||key==='password') o[k]='***';
+        else scrub(o[k]);
+      });
+    };
+    scrub(copy);
+    return copy;
+  }catch(e){return null}
+}
+function pushAudit(action,module,result,summary,before,after,extra){
+  extra=extra||{};
+  const username=extra.actor||(currentUser?currentUser.username:'system');
+  const actor=actorOf(username);
+  const outcome=(result==='Success'||result==='SUCCESS')?'SUCCESS':(result==='Failure'||result==='FAILURE')?'FAILURE':(result==='Denied'||result==='DENIED')?'DENIED':String(result||'SUCCESS').toUpperCase();
+  audits.unshift({
+    id:nextAuditId(),
+    ts:new Date().toISOString(),
+    actorId:actor.id,
+    actorName:actor.name,
+    actorType:extra.actorType||actor.type,
+    action:action||'',
+    module:module||'',
+    source:extra.source||(actor.type==='System'?'System':'Web UI'),
+    before:activitySnap(before),
+    after:activitySnap(after),
+    summary:summary||'',
+    outcome,
+    reason:extra.reason||'',
+    ip:extra.ip!=null?extra.ip:(actor.type==='System'?'':'10.20.1.15')
+  });
+}
+function tableHead(cols){return `<thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>`}
+function masterPill(v){const c=['Active','Enabled','Effective','SUCCESS','Success'].includes(v)?'green':(v==='Rejected'||v==='FAILURE'||v==='Failure'||v==='DENIED')?'red':['Inactive','Disabled','Archived'].includes(v)?'gray':'orange';return `<span class="status ${c}">${escHtml(v)}</span>`}
+function rowActions(update,toggle,disabled){const label=disabled?'Enable':'Disable';return `<div class="actions"><button class="icon-btn" title="Update" onclick="${update}">✎</button><button type="button" class="action-text" onclick="${toggle}">${label}</button></div>`}
+function liveRows(name){
+  const snap=snapshotState();
+  return snap[name]||[];
+}
+function setLiveRows(name,rows){
+  if(name==='schemes') schemes=rows;
+  else if(name==='products') products=rows;
+  else if(name==='cards') cards=rows;
+  else if(name==='tokenRequestors') tokenRequestors=rows;
+  else if(name==='templates') templates=rows;
+  else if(name==='limits') limits=rows;
+  else if(name==='responseCodes') responseCodes=rows;
+  else if(name==='reasonCodes') reasonCodes=rows;
+  else if(name==='cascadeRules') cascadeRules=rows;
+  else if(name==='riskScoreBands') riskScoreBands=rows;
+  else if(name==='riskReasonRules') riskReasonRules=rows;
+  else if(name==='institution') institution=rows;
+  else if(name==='eligibility') eligibility=rows;
+  else if(name==='stepup') stepup=rows;
+  else if(name==='authRules') authRules=rows;
+}
+
+const masterSpecs={
+  Scheme:{
+    singular:'Scheme',collection:'schemes',updateOnly:true,unique:'code',
+    label:r=>r.code+' — '+r.name,
+    fields:[
+      {key:'code',label:'Code',required:true,readonly:true},
+      {key:'name',label:'Name',required:true},
+      {key:'tokenService',label:'Token service',required:true},
+      {key:'tokenRefPrefix',label:'Token reference prefix',required:true},
+      {key:'panPrefix',label:'PAN prefix',required:true},
+      {key:'tokenValidityMonths',label:'Token validity (months)',type:'number',required:true},
+      {key:'cascadeMode',label:'Cascade mode',type:'select',required:true,options:()=>['CARD_LEVEL','PER_TOKEN']}
+    ],
+    columns:[
+      {h:'Code',v:r=>escHtml(r.code),strong:true},
+      {h:'Name',v:r=>escHtml(r.name)},
+      {h:'Token service',v:r=>escHtml(r.tokenService)},
+      {h:'Ref prefix',v:r=>escHtml(r.tokenRefPrefix)},
+      {h:'PAN prefix',v:r=>escHtml(r.panPrefix)},
+      {h:'Validity (months)',v:r=>escHtml(r.tokenValidityMonths)},
+      {h:'Cascade mode',v:r=>escHtml(r.cascadeMode)},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Card Product':{
+    singular:'Card Product',collection:'products',unique:'code',
+    label:r=>r.code+' — '+r.name,
+    fields:[
+      {key:'code',label:'Product code',required:true},
+      {key:'name',label:'Product name',required:true},
+      {key:'scheme',label:'Scheme',type:'select',required:true,options:()=>schemes.filter(s=>!s.disabled).map(s=>s.code)},
+      {key:'bin',label:'BIN',required:true},
+      {key:'tokenizationEnabled',label:'Tokenization enabled',type:'check'},
+      {key:'maxTokensPerCard',label:'Maximum tokens per card',type:'number',required:true}
+    ],
+    columns:[
+      {h:'Code',v:r=>escHtml(r.code),strong:true},
+      {h:'Name',v:r=>escHtml(r.name)},
+      {h:'Scheme',v:r=>escHtml(r.scheme)},
+      {h:'BIN',v:r=>escHtml(r.bin)},
+      {h:'Tokenization',v:r=>r.tokenizationEnabled?'Yes':'No'},
+      {h:'Max tokens',v:r=>escHtml(r.maxTokensPerCard)},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  Card:{
+    singular:'Card',collection:'cards',unique:'pan',
+    label:r=>r.id+' '+maskPan(r.pan),
+    fields:[
+      {key:'id',label:'Card ID',readonly:true},
+      {key:'pan',label:'Card number',required:true},
+      {key:'product',label:'Product',type:'select',required:true,options:()=>products.filter(p=>!p.disabled).map(p=>p.code)},
+      {key:'customer',label:'Customer name',required:true},
+      {key:'customerId',label:'Customer ID',required:true},
+      {key:'expiry',label:'Expiry (MM/YY)',required:true},
+      {key:'cvv2',label:'CVV2',required:true},
+      {key:'balance',label:'Available balance',type:'number',required:true},
+      {key:'mobile',label:'Registered mobile'},
+      {key:'email',label:'Registered email'},
+      {key:'status',label:'Card status',readonly:true}
+    ],
+    columns:[
+      {h:'Card ID',v:r=>escHtml(r.id),strong:true},
+      {h:'Card number',v:r=>escHtml(maskPan(r.pan))},
+      {h:'Product',v:r=>escHtml(r.product)},
+      {h:'Customer',v:r=>escHtml(r.customer)},
+      {h:'Expiry',v:r=>escHtml(r.expiry)},
+      {h:'Status',v:r=>escHtml(r.status)},
+      {h:'Balance',v:r=>escHtml(r.balance)},
+      {h:'Enabled',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Token Requestor':{
+    singular:'Token Requestor',collection:'tokenRequestors',unique:'id',
+    label:r=>r.id+' — '+r.name,
+    fields:[
+      {key:'id',label:'Token requestor ID',required:true},
+      {key:'name',label:'Name',required:true},
+      {key:'type',label:'Type',type:'select',required:true,options:()=>['OEM wallet','Issuer wallet (HCE)','Merchant card-on-file']},
+      {key:'schemes',label:'Schemes',type:'multiselect',options:()=>['VISA','MC']},
+      {key:'tokenType',label:'Token type',type:'select',required:true,options:()=>['02','03'],optionLabel:o=>o==='02'?'02 Secure element':'03 HCE'},
+      {key:'deviceTypes',label:'Device types allowed',type:'multiselect',options:()=>['Mobile','Watch','Tablet']},
+      {key:'channels',label:'Payment channels',type:'multiselect',options:()=>['POS contactless','E-commerce']}
+    ],
+    columns:[
+      {h:'ID',v:r=>escHtml(r.id),strong:true},
+      {h:'Name',v:r=>escHtml(r.name)},
+      {h:'Type',v:r=>escHtml(r.type)},
+      {h:'Schemes',v:r=>escHtml((r.schemes||[]).join(', '))},
+      {h:'Token type',v:r=>escHtml(r.tokenType)},
+      {h:'Devices',v:r=>escHtml((r.deviceTypes||[]).join(', '))},
+      {h:'Channels',v:r=>escHtml((r.channels||[]).join(', '))},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Notification Templates':{
+    singular:'Notification Template',collection:'templates',updateOnly:true,unique:['event','channel'],
+    label:r=>r.event+' / '+r.channel,
+    fields:[
+      {key:'event',label:'Event',readonly:true},
+      {key:'channel',label:'Channel',readonly:true},
+      {key:'text',label:'Template text',type:'textarea',required:true,full:true}
+    ],
+    columns:[
+      {h:'Event',v:r=>escHtml(r.event),strong:true},
+      {h:'Channel',v:r=>escHtml(r.channel)},
+      {h:'Template',v:r=>escHtml((r.text||'').slice(0,60))+((r.text||'').length>60?'…':'')},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  Limits:{
+    singular:'Limit',collection:'limits',unique:['product','channel'],
+    label:r=>r.product+' / '+r.channel,
+    fields:[
+      {key:'product',label:'Card product',type:'select',required:true,options:()=>products.filter(p=>!p.disabled).map(p=>p.code)},
+      {key:'channel',label:'Channel',type:'select',required:true,options:()=>['POS contactless','E-commerce']},
+      {key:'perTxn',label:'Per-transaction limit',type:'number',required:true},
+      {key:'dailyAmount',label:'Daily amount limit',type:'number',required:true},
+      {key:'dailyCount',label:'Daily count limit',type:'number',required:true}
+    ],
+    columns:[
+      {h:'Product',v:r=>escHtml(r.product),strong:true},
+      {h:'Channel',v:r=>escHtml(r.channel)},
+      {h:'Per txn',v:r=>escHtml(r.perTxn)},
+      {h:'Daily amount',v:r=>escHtml(r.dailyAmount)},
+      {h:'Daily count',v:r=>escHtml(r.dailyCount)},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Response Codes':{
+    singular:'Response Code',collection:'responseCodes',updateOnly:true,unique:'reason',
+    label:r=>r.reason+' → '+r.code,
+    fields:[
+      {key:'reason',label:'Reason',readonly:true},
+      {key:'description',label:'Description',required:true},
+      {key:'code',label:'Response code',required:true}
+    ],
+    columns:[
+      {h:'Reason',v:r=>escHtml(r.reason),strong:true},
+      {h:'Description',v:r=>escHtml(r.description)},
+      {h:'Code',v:r=>escHtml(r.code)},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Reason Codes':{
+    singular:'Reason Code',collection:'reasonCodes',unique:'code',
+    label:r=>r.code+' — '+r.description,
+    fields:[
+      {key:'code',label:'Code',required:true},
+      {key:'description',label:'Description',required:true},
+      {key:'actions',label:'Applies to actions',type:'multiselect',options:()=>['Suspend','Unsuspend','Delete','Activate']},
+      {key:'schemes',label:'Schemes',type:'multiselect',options:()=>['VISA','MC']}
+    ],
+    columns:[
+      {h:'Code',v:r=>escHtml(r.code),strong:true},
+      {h:'Description',v:r=>escHtml(r.description)},
+      {h:'Actions',v:r=>escHtml((r.actions||[]).join(', '))},
+      {h:'Schemes',v:r=>escHtml((r.schemes||[]).join(', '))},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  },
+  'Card Status Cascade':{
+    singular:'Cascade Rule',collection:'cascadeRules',updateOnly:true,unique:'cardStatus',
+    label:r=>r.cardStatus+' → '+r.effect,
+    fields:[
+      {key:'cardStatus',label:'New card status',readonly:true},
+      {key:'effect',label:'Effect on tokens',type:'select',required:true,options:()=>['None','Suspend','Resume','Delete']}
+    ],
+    columns:[
+      {h:'Card status',v:r=>escHtml(r.cardStatus),strong:true},
+      {h:'Effect',v:r=>escHtml(r.effect)},
+      {h:'Status',v:r=>r.disabled?'Disabled':'Enabled',pill:true},
+      {h:'Timestamp',v:r=>escHtml(r.ts||'')},
+      {h:'Updated By',v:r=>escHtml(r.upd||r.by||'')}
+    ]
+  }
+};
+
+function masterRowDisabled(r){return !!r.disabled}
+function getMasterRows(screen){
+  const spec=masterSpecs[screen];
+  return liveRows(spec.collection);
+}
+function masterOptions(f,value){
+  const list=(f.options?f.options():[]);
+  const blank=f.placeholder?`<option value="">${escHtml(f.placeholder)}</option>`:'';
+  return blank+list.map(o=>{
+    const label=f.optionLabel?f.optionLabel(o):o;
+    return `<option value="${escHtml(o)}"${String(o)===String(value)?' selected':''}>${escHtml(label)}</option>`;
+  }).join('');
+}
+function masterField(f,row){
+  const req=f.required?' <span class="required">*</span>':'';
+  const value=row[f.key];
+  const full=f.full?' style="grid-column:1/-1"':'';
+  if(f.type==='check'){
+    const on=value!==false&&value!==undefined?!!value:!!f.defaultOn;
+    return `<div class="check-line"${full}><input id="mf-${f.key}" type="checkbox"${on?' checked':''}> <span>${escHtml(f.label)}</span></div>`;
+  }
+  if(f.type==='select'){
+    return `<div class="field"${full}><label>${escHtml(f.label)}${req}</label><select id="mf-${f.key}"${f.readonly?' disabled':''}>${masterOptions(f,value)}</select></div>`;
+  }
+  if(f.type==='multiselect'){
+    const selected=Array.isArray(value)?value:[];
+    const opts=(f.options?f.options():[]).map(o=>`<label class="check-line" style="height:auto;margin:0 12px 4px 0"><input type="checkbox" class="mf-ms-${f.key}" value="${escHtml(o)}"${selected.includes(o)?' checked':''}> ${escHtml(o)}</label>`).join('');
+    return `<div class="field"${full||' style="grid-column:1/-1"'}><label>${escHtml(f.label)}${req}</label><div class="notify-grid">${opts}</div></div>`;
+  }
+  if(f.type==='textarea'){
+    return `<div class="field"${full||' style="grid-column:1/-1"'}><label>${escHtml(f.label)}${req}</label><textarea id="mf-${f.key}" maxlength="300">${escHtml(value||'')}</textarea></div>`;
+  }
+  const ro=f.readonly?' readonly class="readonly"':'';
+  return `<div class="field"${full}><label>${escHtml(f.label)}${req}</label><input id="mf-${f.key}" type="${f.type||'text'}" value="${escHtml(value==null?'':value)}"${ro}></div>`;
+}
+function masterScreen(el){
+  const screen=currentScreen;
+  const spec=masterSpecs[screen];
+  const rows=getMasterRows(screen);
+  const create=spec.updateOnly?'':`<button class="add-btn" title="Create" onclick="openMasterForm()">+</button>`;
+  el.innerHTML=pageHead(screen,create)+
+    `<div class="card"><div class="toolbar"><input class="search-field" placeholder="Search ${escHtml(screen)}" oninput="filterTable(this,'master-table')"><span class="spacer"></span><span class="count">${rows.length} records</span></div>`+
+    `<div class="table-wrap"><table id="master-table" class="data-table"><thead><tr>${spec.columns.map(c=>`<th>${c.h}</th>`).join('')}<th>Actions</th></tr></thead>`+
+    `<tbody>${rows.map((r,i)=>`<tr class="${masterRowDisabled(r)?'row-off':''}">${spec.columns.map(c=>{const v=c.v(r,i);return `<td${c.strong?' class="strong"':''}>${c.pill?masterPill(v):v}</td>`}).join('')}<td>${rowActions(`openMasterForm(${i})`,`toggleMaster(${i})`,masterRowDisabled(r))}</td></tr>`).join('')}</tbody></table></div></div>`;
+  initPagers(el);
+}
+function openMasterForm(i){
+  const screen=currentScreen;
+  const spec=masterSpecs[screen];
+  masterIndex=i===undefined?null:i;
+  const rows=getMasterRows(screen);
+  let row=masterIndex===null?{}:Object.assign({},rows[masterIndex]);
+  if(screen==='Card'&&masterIndex===null){
+    const next=rows.reduce((m,r)=>{const n=Number(String(r.id||'').replace(/\D/g,''));return n>m?n:m},0)+1;
+    row={status:'ACTIVE',balance:0,mobile:'',email:'',id:'CARD-'+String(next).padStart(4,'0')};
+  }
+  if(screen==='Card Product'&&masterIndex===null) row={tokenizationEnabled:true,maxTokensPerCard:5};
+  if(screen==='Token Requestor'&&masterIndex===null) row={type:'OEM wallet',schemes:['VISA','MC'],tokenType:'03',deviceTypes:['Mobile','Watch'],channels:['POS contactless','E-commerce']};
+  if(screen==='Limits'&&masterIndex===null) row={perTxn:0,dailyAmount:0,dailyCount:0};
+  if(screen==='Reason Codes'&&masterIndex===null) row={actions:['Suspend','Unsuspend','Delete'],schemes:['VISA','MC']};
+  const title=masterIndex===null?`Create ${spec.singular}`:`Update ${spec.singular}`;
+  const fields=spec.fields.filter(f=>{
+    if(screen==='Card'&&f.key==='id'&&masterIndex===null) return true;
+    if(screen==='Card'&&f.key==='status') return masterIndex!==null;
+    return true;
+  }).map(f=>{
+    if(masterIndex!==null&&((screen==='Card Product'&&f.key==='code')||(screen==='Token Requestor'&&f.key==='id')||(screen==='Reason Codes'&&f.key==='code')||(screen==='Card'&&f.key==='id'))){
+      return Object.assign({},f,{readonly:true});
+    }
+    return f;
+  });
+  showDrawer(`<div class="drawer-head"><h2>${escHtml(title)}</h2><button class="close" onclick="closeOverlay()">×</button></div><div class="drawer-body"><div class="form-grid">${fields.map(f=>masterField(f,row)).join('')}</div></div><div class="form-footer"><button class="secondary" onclick="closeOverlay()">Cancel</button><button class="primary" onclick="saveMaster()">Save</button></div>`);
+}
+function readMasterForm(spec){
+  const out={};
+  for(const f of spec.fields){
+    if(f.type==='multiselect'){
+      out[f.key]=[...document.querySelectorAll('.mf-ms-'+f.key+':checked')].map(el=>el.value);
+      if(f.required&&!out[f.key].length){toast(f.label+' is required');return null}
+      continue;
+    }
+    const el=document.getElementById('mf-'+f.key);
+    if(!el){if(f.readonly) continue; continue}
+    if(f.type==='check') out[f.key]=el.checked;
+    else if(f.type==='number') out[f.key]=el.value.trim()===''?'':Number(el.value);
+    else out[f.key]=el.value.trim();
+    if(f.required&&(out[f.key]===''||out[f.key]==null||(typeof out[f.key]==='number'&&Number.isNaN(out[f.key])))){toast(f.label+' is required');return null}
+  }
+  return out;
+}
+function validateTemplateText(text){
+  if(!text||!String(text).trim()) return 'Template text is required';
+  if(String(text).length>300) return 'Template text must be at most 300 characters';
+  const found=[...String(text).matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map(m=>m[1]);
+  const bad=found.filter(v=>!ALLOWED_TEMPLATE_VARS.includes(v));
+  if(bad.length) return 'Unknown placeholder: {'+bad[0]+'}';
+  return '';
+}
+function saveMaster(){
+  const screen=currentScreen;
+  const spec=masterSpecs[screen];
+  const data=readMasterForm(spec);
+  if(!data) return;
+  const rows=getMasterRows(screen).slice();
+  const user=currentUser?currentUser.username:'token.admin';
+
+  if(screen==='Scheme'){
+    const months=Number(data.tokenValidityMonths);
+    if(!Number.isFinite(months)||months<1||months>60){toast('Token validity must be 1 to 60');return}
+    if(!/^\d$/.test(String(data.panPrefix))){toast('PAN prefix must be 1 digit');return}
+    data.tokenValidityMonths=months;
+  }
+  if(screen==='Card Product'){
+    if(!/^\d{6}$/.test(String(data.bin))){toast('BIN must be 6 digits');return}
+    const max=Number(data.maxTokensPerCard);
+    if(!Number.isFinite(max)||max<1||max>20){toast('Maximum tokens must be 1 to 20');return}
+    data.maxTokensPerCard=max;
+    data.tokenizationEnabled=!!data.tokenizationEnabled;
+  }
+  if(screen==='Card'){
+    if(!/^\d{16}$/.test(String(data.pan))){toast('Card number must be 16 digits');return}
+    const prod=products.find(p=>p.code===data.product);
+    if(!prod){toast('Select a product');return}
+    if(!String(data.pan).startsWith(String(prod.bin))){toast('Card number must start with product BIN '+prod.bin);return}
+    if(!/^\d{2}\/\d{2}$/.test(String(data.expiry))){toast('Expiry must be MM/YY');return}
+    if(!/^\d{3}$/.test(String(data.cvv2))){toast('CVV2 must be 3 digits');return}
+    const bal=Number(data.balance);
+    if(!Number.isFinite(bal)||bal<0){toast('Balance must be 0 or greater');return}
+    data.balance=bal;
+    if(masterIndex===null){
+      data.id=data.id||('CARD-'+String(rows.length+1).padStart(4,'0'));
+      data.status='ACTIVE';
+    }else{
+      data.id=rows[masterIndex].id;
+      data.status=rows[masterIndex].status;
+    }
+  }
+  if(screen==='Token Requestor'){
+    if(!/^\d{11}$/.test(String(data.id))){toast('Token requestor ID must be 11 digits');return}
+    if(!data.schemes.length){toast('Select at least one scheme');return}
+    if(!data.deviceTypes.length){toast('Select at least one device type');return}
+    if(!data.channels.length){toast('Select at least one payment channel');return}
+  }
+  if(screen==='Notification Templates'){
+    const err=validateTemplateText(data.text);
+    if(err){toast(err);return}
+    data.event=rows[masterIndex].event;
+    data.channel=rows[masterIndex].channel;
+  }
+  if(screen==='Limits'){
+    ['perTxn','dailyAmount','dailyCount'].forEach(k=>{data[k]=Number(data[k]);if(!Number.isFinite(data[k])||data[k]<0){toast('Limits must be 0 or greater');data._bad=true}});
+    if(data._bad) return;
+    delete data._bad;
+  }
+  if(screen==='Response Codes'){
+    if(!/^[0-9A-Za-z]{2}$/.test(String(data.code))){toast('Response code must be 2 characters');return}
+    data.reason=rows[masterIndex].reason;
+  }
+  if(screen==='Reason Codes'){
+    if(!/^[A-Za-z0-9]{1,2}$/.test(String(data.code))){toast('Code must be 1 to 2 characters');return}
+    if(!data.actions.length){toast('Select at least one action');return}
+    if(!data.schemes.length){toast('Select at least one scheme');return}
+  }
+  if(screen==='Card Status Cascade'){
+    data.cardStatus=rows[masterIndex].cardStatus;
+  }
+
+  const keys=Array.isArray(spec.unique)?spec.unique:[spec.unique];
+  if(spec.unique){
+    const dup=rows.findIndex((r,idx)=>idx!==masterIndex&&keys.every(k=>String(r[k]||'').toLowerCase()===String(data[k]||'').toLowerCase()));
+    if(dup>=0){toast(spec.singular+' already exists');return}
+  }
+
+  if(masterIndex===null){
+    const row=Object.assign({},data,{disabled:false,ts:nowStamp(),by:user,upd:user});
+    rows.push(row);
+    setLiveRows(spec.collection,rows);
+    pushAudit('CREATE',screen,'Success',spec.singular+' created: '+spec.label(row),null,row);
+    toast(spec.singular+' created');
+  }else{
+    const prev=Object.assign({},rows[masterIndex]);
+    const next=Object.assign({},rows[masterIndex],data,{ts:nowStamp(),upd:user});
+    rows[masterIndex]=next;
+    setLiveRows(spec.collection,rows);
+    pushAudit('UPDATE',screen,'Success',spec.singular+' updated: '+spec.label(next),prev,next);
+    toast(spec.singular+' updated');
+  }
+  closeOverlay();
+  persistStore();
+  renderScreen();
+}
+function toggleMaster(i){
+  const screen=currentScreen;
+  const spec=masterSpecs[screen];
+  const rows=getMasterRows(screen).slice();
+  const row=rows[i];
+  if(!row) return;
+  const prev=Object.assign({},row);
+  row.disabled=!row.disabled;
+  row.ts=nowStamp();
+  row.upd=currentUser?currentUser.username:'token.admin';
+  rows[i]=row;
+  setLiveRows(spec.collection,rows);
+  pushAudit(row.disabled?'DISABLE':'ENABLE',screen,'Success',spec.singular+' '+(row.disabled?'disabled':'enabled')+': '+spec.label(row),prev,row);
+  toast(spec.singular+' '+(row.disabled?'disabled':'enabled'));
+  persistStore();
+  renderScreen();
+}
+/* —— Settings screens —— */
+function settingsSave(collection,buildRow,module,label){
+  const before=liveRows(collection)[0]?Object.assign({},liveRows(collection)[0]):null;
+  const row=buildRow(before||{});
+  if(!row) return;
+  const user=currentUser?currentUser.username:'token.admin';
+  row.ts=nowStamp();row.by=before&&before.by?before.by:user;row.upd=user;
+  setLiveRows(collection,[row]);
+  pushAudit('UPDATE',module,'Success',label+' saved',before,row);
+  toast(label+' saved');
+  persistStore();
+  renderScreen();
+}
+function institutionScreen(el){
+  const r=institution[0]||{};
+  el.innerHTML=pageHead('Institution',`<button class="primary" onclick="saveInstitution()">Save</button>`)+
+    `<div class="card"><div class="form-body"><div class="form-section"><h3>Institution</h3><div class="form-grid">
+      <div class="field"><label>Bank name <span class="required">*</span></label><input id="set-bankName" value="${escHtml(r.bankName||'')}"></div>
+      <div class="field"><label>Currency code <span class="required">*</span></label><input id="set-currency" maxlength="3" value="${escHtml(r.currency||'')}"></div>
+      <div class="field"><label>Currency decimals <span class="required">*</span></label><input id="set-currencyDecimals" type="number" min="0" max="3" value="${escHtml(r.currencyDecimals==null?2:r.currencyDecimals)}"></div>
+      <div class="field"><label>Timezone</label><input id="set-timezone" value="${escHtml(r.timezone||'')}"></div>
+    </div></div></div></div>`;
+}
+function saveInstitution(){
+  settingsSave('institution',()=>{
+    const bankName=document.getElementById('set-bankName').value.trim();
+    const currency=document.getElementById('set-currency').value.trim().toUpperCase();
+    const currencyDecimals=Number(document.getElementById('set-currencyDecimals').value);
+    const timezone=document.getElementById('set-timezone').value.trim();
+    if(!bankName){toast('Bank name is required');return null}
+    if(!/^[A-Z]{3}$/.test(currency)){toast('Currency code must be 3 letters');return null}
+    if(!Number.isFinite(currencyDecimals)||currencyDecimals<0||currencyDecimals>3){toast('Currency decimals must be 0 to 3');return null}
+    return {bankName,currency,currencyDecimals,timezone};
+  },'Institution','Institution');
+}
+function eligibilityScreen(el){
+  const r=eligibility[0]||{};
+  const statuses=CARD_STATUSES.map(s=>`<label class="check-line" style="height:auto"><input type="checkbox" class="set-status" value="${s}"${(r.allowedCardStatuses||[]).includes(s)?' checked':''}> ${s}</label>`).join('');
+  el.innerHTML=pageHead('Eligibility Rules',`<button class="primary" onclick="saveEligibility()">Save</button>`)+
+    `<div class="card"><div class="form-body">
+      <div class="form-section"><h3>Eligibility checks</h3><div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>Card statuses allowed for provisioning</label><div class="notify-grid">${statuses}</div></div>
+        <div class="check-line"><input id="set-requireProductFlag" type="checkbox"${r.requireProductFlag!==false?' checked':''}> <span>Require product tokenization flag</span></div>
+        <div class="check-line"><input id="set-requireCvv2" type="checkbox"${r.requireCvv2!==false?' checked':''}> <span>Require CVV2 match</span></div>
+        <div class="check-line"><input id="set-requireApprovedRequestor" type="checkbox"${r.requireApprovedRequestor!==false?' checked':''}> <span>Require an approved token requestor</span></div>
+        <div class="check-line"><input id="set-rejectExpired" type="checkbox"${r.rejectExpired!==false?' checked':''}> <span>Reject expired cards</span></div>
+        <div class="check-line"><input id="set-enforceMaxTokens" type="checkbox"${r.enforceMaxTokens!==false?' checked':''}> <span>Enforce maximum tokens per card</span></div>
+        <div class="check-line"><input id="set-oneTokenPerDeviceRequestor" type="checkbox"${r.oneTokenPerDeviceRequestor!==false?' checked':''}> <span>Allow only one token per card per device per requestor</span></div>
+      </div></div>
+      <div class="form-section"><h3>ID&amp;V defaults</h3><div class="form-grid">
+        <div class="field"><label>Unlisted reason code decision</label><select id="set-unlistedReasonDecision">${['GREEN','YELLOW','RED'].map(x=>`<option value="${x}"${(r.unlistedReasonDecision||'YELLOW')===x?' selected':''}>${x}</option>`).join('')}</select></div>
+        <div class="field"><label>Assurance without step-up</label><input id="set-assuranceNoStepUp" type="number" min="0" max="99" value="${escHtml(r.assuranceNoStepUp==null?50:r.assuranceNoStepUp)}"></div>
+        <div class="field"><label>Assurance after step-up</label><input id="set-assuranceAfterStepUp" type="number" min="0" max="99" value="${escHtml(r.assuranceAfterStepUp==null?70:r.assuranceAfterStepUp)}"></div>
+      </div></div>
+    </div></div>`;
+}
+function saveEligibility(){
+  settingsSave('eligibility',()=>{
+    const allowedCardStatuses=[...document.querySelectorAll('.set-status:checked')].map(el=>el.value);
+    const assuranceNoStepUp=Number(document.getElementById('set-assuranceNoStepUp').value);
+    const assuranceAfterStepUp=Number(document.getElementById('set-assuranceAfterStepUp').value);
+    if(!allowedCardStatuses.length){toast('Select at least one allowed card status');return null}
+    if(!Number.isFinite(assuranceNoStepUp)||assuranceNoStepUp<0||assuranceNoStepUp>99){toast('Assurance without step-up must be 0 to 99');return null}
+    if(!Number.isFinite(assuranceAfterStepUp)||assuranceAfterStepUp<0||assuranceAfterStepUp>99){toast('Assurance after step-up must be 0 to 99');return null}
+    return {
+      allowedCardStatuses,
+      requireProductFlag:document.getElementById('set-requireProductFlag').checked,
+      requireCvv2:document.getElementById('set-requireCvv2').checked,
+      requireApprovedRequestor:document.getElementById('set-requireApprovedRequestor').checked,
+      rejectExpired:document.getElementById('set-rejectExpired').checked,
+      enforceMaxTokens:document.getElementById('set-enforceMaxTokens').checked,
+      oneTokenPerDeviceRequestor:document.getElementById('set-oneTokenPerDeviceRequestor').checked,
+      unlistedReasonDecision:document.getElementById('set-unlistedReasonDecision').value,
+      assuranceNoStepUp,assuranceAfterStepUp
+    };
+  },'Eligibility Rules','Eligibility Rules');
+}
+function stepupScreen(el){
+  const r=stepup[0]||{};
+  el.innerHTML=pageHead('Step-up and OTP',`<button class="primary" onclick="saveStepup()">Save</button>`)+
+    `<div class="card"><div class="form-body"><div class="form-section"><h3>Step-up and OTP</h3><div class="form-grid">
+      <div class="check-line"><input id="set-smsEnabled" type="checkbox"${r.smsEnabled!==false?' checked':''}> <span>SMS enabled</span></div>
+      <div class="check-line"><input id="set-emailEnabled" type="checkbox"${r.emailEnabled!==false?' checked':''}> <span>Email enabled</span></div>
+      <div class="check-line"><input id="set-callCentreEnabled" type="checkbox"${r.callCentreEnabled?' checked':''}> <span>Call centre enabled</span></div>
+      <div class="field"><label>OTP generated and validated by</label><select id="set-otpBy">${['Scheme','Issuer'].map(x=>`<option${(r.otpBy||'Scheme')===x?' selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>OTP length</label><input id="set-otpLength" type="number" min="4" max="8" value="${escHtml(r.otpLength==null?6:r.otpLength)}"></div>
+      <div class="field"><label>OTP validity (seconds)</label><input id="set-otpValiditySeconds" type="number" min="30" max="600" value="${escHtml(r.otpValiditySeconds==null?180:r.otpValiditySeconds)}"></div>
+      <div class="field"><label>Maximum attempts</label><input id="set-maxAttempts" type="number" min="1" max="5" value="${escHtml(r.maxAttempts==null?3:r.maxAttempts)}"></div>
+      <div class="field"><label>Maximum resends</label><input id="set-maxResends" type="number" min="0" max="5" value="${escHtml(r.maxResends==null?2:r.maxResends)}"></div>
+    </div></div></div></div>`;
+}
+function saveStepup(){
+  settingsSave('stepup',()=>{
+    const otpLength=Number(document.getElementById('set-otpLength').value);
+    const otpValiditySeconds=Number(document.getElementById('set-otpValiditySeconds').value);
+    const maxAttempts=Number(document.getElementById('set-maxAttempts').value);
+    const maxResends=Number(document.getElementById('set-maxResends').value);
+    if(!Number.isFinite(otpLength)||otpLength<4||otpLength>8){toast('OTP length must be 4 to 8');return null}
+    if(!Number.isFinite(otpValiditySeconds)||otpValiditySeconds<30||otpValiditySeconds>600){toast('OTP validity must be 30 to 600');return null}
+    if(!Number.isFinite(maxAttempts)||maxAttempts<1||maxAttempts>5){toast('Maximum attempts must be 1 to 5');return null}
+    if(!Number.isFinite(maxResends)||maxResends<0||maxResends>5){toast('Maximum resends must be 0 to 5');return null}
+    return {
+      smsEnabled:document.getElementById('set-smsEnabled').checked,
+      emailEnabled:document.getElementById('set-emailEnabled').checked,
+      callCentreEnabled:document.getElementById('set-callCentreEnabled').checked,
+      otpBy:document.getElementById('set-otpBy').value,
+      otpLength,otpValiditySeconds,maxAttempts,maxResends
+    };
+  },'Step-up and OTP','Step-up and OTP');
+}
+function authRulesScreen(el){
+  const r=authRules[0]||{};
+  const statuses=CARD_STATUSES.map(s=>`<label class="check-line" style="height:auto"><input type="checkbox" class="set-auth-status" value="${s}"${(r.allowedCardStatuses||[]).includes(s)?' checked':''}> ${s}</label>`).join('');
+  el.innerHTML=pageHead('Authorization Rules',`<button class="primary" onclick="saveAuthRules()">Save</button>`)+
+    `<div class="card"><div class="form-body"><div class="form-section"><h3>Authorization Rules</h3><div class="form-grid">
+      <div class="field" style="grid-column:1/-1"><label>Card statuses allowed for token payments</label><div class="notify-grid">${statuses}</div></div>
+      <div class="check-line"><input id="set-validateRequestor" type="checkbox"${r.validateRequestor!==false?' checked':''}> <span>Validate token requestor ID</span></div>
+      <div class="check-line"><input id="set-enforceExpiryMatch" type="checkbox"${r.enforceExpiryMatch!==false?' checked':''}> <span>Enforce token expiry match</span></div>
+      <div class="check-line"><input id="set-requireCryptogram" type="checkbox"${r.requireCryptogram!==false?' checked':''}> <span>Require cryptogram (CAM) result to be good</span></div>
+      <div class="check-line"><input id="set-applyLimits" type="checkbox"${r.applyLimits!==false?' checked':''}> <span>Apply limits</span></div>
+      <div class="check-line"><input id="set-checkBalance" type="checkbox"${r.checkBalance!==false?' checked':''}> <span>Check available balance</span></div>
+      <div class="field"><label>Default decline response code</label><input id="set-defaultDeclineCode" maxlength="2" value="${escHtml(r.defaultDeclineCode||'05')}"></div>
+    </div></div></div></div>`;
+}
+function saveAuthRules(){
+  settingsSave('authRules',()=>{
+    const allowedCardStatuses=[...document.querySelectorAll('.set-auth-status:checked')].map(el=>el.value);
+    const defaultDeclineCode=document.getElementById('set-defaultDeclineCode').value.trim();
+    if(!/^[0-9A-Za-z]{2}$/.test(defaultDeclineCode)){toast('Default decline code must be 2 characters');return null}
+    return {
+      allowedCardStatuses,
+      validateRequestor:document.getElementById('set-validateRequestor').checked,
+      enforceExpiryMatch:document.getElementById('set-enforceExpiryMatch').checked,
+      requireCryptogram:document.getElementById('set-requireCryptogram').checked,
+      applyLimits:document.getElementById('set-applyLimits').checked,
+      checkBalance:document.getElementById('set-checkBalance').checked,
+      defaultDeclineCode
+    };
+  },'Authorization Rules','Authorization Rules');
+}
+/* —— ID&V Risk Rules (tabbed) —— */
+function idvRiskScreen(el){
+  const tabs=`<div class="tabs"><button class="tab${idvTab==='bands'?' active':''}" onclick="switchIdvTab('bands')">Device score bands</button><button class="tab${idvTab==='reasons'?' active':''}" onclick="switchIdvTab('reasons')">Reason code rules</button></div>`;
+  let body='';
+  if(idvTab==='bands'){
+    const rows=riskScoreBands.slice().sort((a,b)=>b.score-a.score);
+    body=`<div class="card"><div class="toolbar"><span class="count">${rows.length} bands · update only</span></div><div class="table-wrap"><table class="data-table" id="idv-bands-table"><thead><tr><th>Score</th><th>Decision</th><th>Status</th><th>Timestamp</th><th>Updated By</th><th>Actions</th></tr></thead><tbody>${rows.map((r,i)=>{
+      const idx=riskScoreBands.indexOf(r);
+      return `<tr class="${r.disabled?'row-off':''}"><td class="strong">${r.score}</td><td>${escHtml(r.decision)}</td><td>${masterPill(r.disabled?'Disabled':'Enabled')}</td><td>${escHtml(r.ts||'')}</td><td>${escHtml(r.upd||r.by||'')}</td><td>${rowActions(`openIdvBand(${idx})`,`toggleIdvBand(${idx})`,!!r.disabled)}</td></tr>`;
+    }).join('')}</tbody></table></div></div>`;
+  }else{
+    const rows=riskReasonRules;
+    body=`<div class="card"><div class="toolbar"><input class="search-field" placeholder="Search reason codes" oninput="filterTable(this,'idv-reason-table')"><span class="spacer"></span><span class="count">${rows.length} records</span><button class="add-btn" title="Create" onclick="openIdvReason()">+</button></div><div class="table-wrap"><table class="data-table" id="idv-reason-table"><thead><tr><th>Code</th><th>Description</th><th>Decision</th><th>Status</th><th>Timestamp</th><th>Updated By</th><th>Actions</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${r.disabled?'row-off':''}"><td class="strong">${escHtml(r.code)}</td><td>${escHtml(r.description)}</td><td>${escHtml(r.decision)}</td><td>${masterPill(r.disabled?'Disabled':'Enabled')}</td><td>${escHtml(r.ts||'')}</td><td>${escHtml(r.upd||r.by||'')}</td><td>${rowActions(`openIdvReason(${i})`,`toggleIdvReason(${i})`,!!r.disabled)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  }
+  el.innerHTML=pageHead('ID&V Risk Rules')+tabs+body;
+  initPagers(el);
+}
+function switchIdvTab(tab){idvTab=tab;renderScreen()}
+function openIdvBand(i){
+  const r=riskScoreBands[i];
+  showDrawer(`<div class="drawer-head"><h2>Update score band</h2><button class="close" onclick="closeOverlay()">×</button></div><div class="drawer-body"><div class="form-grid">
+    <div class="field"><label>Score</label><input class="readonly" readonly value="${r.score}"></div>
+    <div class="field"><label>Decision <span class="required">*</span></label><select id="mf-decision">${['GREEN','YELLOW','RED'].map(x=>`<option${r.decision===x?' selected':''}>${x}</option>`).join('')}</select></div>
+  </div></div><div class="form-footer"><button class="secondary" onclick="closeOverlay()">Cancel</button><button class="primary" onclick="saveIdvBand(${i})">Save</button></div>`);
+}
+function saveIdvBand(i){
+  const prev=Object.assign({},riskScoreBands[i]);
+  const decision=document.getElementById('mf-decision').value;
+  riskScoreBands[i]=Object.assign({},riskScoreBands[i],{decision,ts:nowStamp(),upd:currentUser?currentUser.username:'token.admin'});
+  pushAudit('UPDATE','ID&V Risk Rules','Success','Score band '+prev.score+' set to '+decision,prev,riskScoreBands[i]);
+  toast('Score band updated');
+  closeOverlay();persistStore();renderScreen();
+}
+function toggleIdvBand(i){
+  const prev=Object.assign({},riskScoreBands[i]);
+  riskScoreBands[i].disabled=!riskScoreBands[i].disabled;
+  riskScoreBands[i].ts=nowStamp();
+  riskScoreBands[i].upd=currentUser?currentUser.username:'token.admin';
+  pushAudit(riskScoreBands[i].disabled?'DISABLE':'ENABLE','ID&V Risk Rules','Success','Score band '+prev.score+' '+(riskScoreBands[i].disabled?'disabled':'enabled'),prev,riskScoreBands[i]);
+  toast('Score band '+(riskScoreBands[i].disabled?'disabled':'enabled'));
+  persistStore();renderScreen();
+}
+function openIdvReason(i){
+  masterIndex=i===undefined?null:i;
+  const r=masterIndex===null?{decision:'YELLOW'}:riskReasonRules[masterIndex];
+  const title=masterIndex===null?'Create reason code rule':'Update reason code rule';
+  showDrawer(`<div class="drawer-head"><h2>${title}</h2><button class="close" onclick="closeOverlay()">×</button></div><div class="drawer-body"><div class="form-grid">
+    <div class="field"><label>Reason code <span class="required">*</span></label><input id="mf-code" value="${escHtml(r.code||'')}" ${masterIndex!==null?'readonly class="readonly"':''}></div>
+    <div class="field"><label>Decision <span class="required">*</span></label><select id="mf-decision">${['GREEN','YELLOW','RED'].map(x=>`<option${(r.decision||'YELLOW')===x?' selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="field" style="grid-column:1/-1"><label>Description <span class="required">*</span></label><input id="mf-description" value="${escHtml(r.description||'')}"></div>
+  </div></div><div class="form-footer"><button class="secondary" onclick="closeOverlay()">Cancel</button><button class="primary" onclick="saveIdvReason()">Save</button></div>`);
+}
+function saveIdvReason(){
+  const code=document.getElementById('mf-code').value.trim();
+  const description=document.getElementById('mf-description').value.trim();
+  const decision=document.getElementById('mf-decision').value;
+  if(!code){toast('Reason code is required');return}
+  if(!description){toast('Description is required');return}
+  const dup=riskReasonRules.findIndex((r,idx)=>idx!==masterIndex&&r.code.toLowerCase()===code.toLowerCase());
+  if(dup>=0){toast('Reason code already exists');return}
+  const user=currentUser?currentUser.username:'token.admin';
+  if(masterIndex===null){
+    const row={code,description,decision,disabled:false,ts:nowStamp(),by:user,upd:user};
+    riskReasonRules.push(row);
+    pushAudit('CREATE','ID&V Risk Rules','Success','Reason rule created: '+code,null,row);
+    toast('Reason rule created');
+  }else{
+    const prev=Object.assign({},riskReasonRules[masterIndex]);
+    riskReasonRules[masterIndex]=Object.assign({},riskReasonRules[masterIndex],{code,description,decision,ts:nowStamp(),upd:user});
+    pushAudit('UPDATE','ID&V Risk Rules','Success','Reason rule updated: '+code,prev,riskReasonRules[masterIndex]);
+    toast('Reason rule updated');
+  }
+  closeOverlay();persistStore();renderScreen();
+}
+function toggleIdvReason(i){
+  const prev=Object.assign({},riskReasonRules[i]);
+  riskReasonRules[i].disabled=!riskReasonRules[i].disabled;
+  riskReasonRules[i].ts=nowStamp();
+  riskReasonRules[i].upd=currentUser?currentUser.username:'token.admin';
+  pushAudit(riskReasonRules[i].disabled?'DISABLE':'ENABLE','ID&V Risk Rules','Success','Reason rule '+(riskReasonRules[i].disabled?'disabled':'enabled')+': '+prev.code,prev,riskReasonRules[i]);
+  toast('Reason rule '+(riskReasonRules[i].disabled?'disabled':'enabled'));
+  persistStore();renderScreen();
+}
+/* —— Audit Log —— */
+function formatAuditTs(iso){
+  if(!iso) return '';
+  const d=new Date(iso);
+  if(Number.isNaN(d.getTime())) return escHtml(iso);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const p=n=>String(n).padStart(2,'0');
+  return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}, ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+function auditLog(el){
+  const q=(auditFilter||'').toLowerCase();
+  const rows=audits.filter(a=>{
+    if(!q) return true;
+    const hay=[a.actorName,a.actorId,a.action,a.module,a.summary,a.outcome].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  el.innerHTML=pageHead('Audit Log')+
+    `<div class="card"><div class="toolbar"><input class="search-field" placeholder="Filter user, action or module" value="${escHtml(auditFilter)}" oninput="auditFilter=this.value;filterTable(this,'audit-table')"><span class="spacer"></span><span class="count">${rows.length} events · immutable</span></div>`+
+    `<div class="table-wrap"><table id="audit-table" class="data-table">${tableHead(['Timestamp','User','Action','Module','Result','Summary','Actions'])}<tbody>${rows.map((a,i)=>{
+      const idx=audits.indexOf(a);
+      const outcome=a.outcome||'SUCCESS';
+      return `<tr><td>${escHtml(formatAuditTs(a.ts))}</td><td>${escHtml(a.actorName||a.actorId||'')}</td><td>${escHtml(a.action||'')}</td><td>${escHtml(a.module||'')}</td><td>${masterPill(outcome==='SUCCESS'?'Success':outcome)}</td><td class="audit-clip">${escHtml(a.summary||'')}</td><td><button type="button" class="action-text" onclick="openAudit(${idx})">View</button></td></tr>`;
+    }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">No audit events yet.</td></tr>'}</tbody></table></div></div>`;
+  initPagers(el);
+}
+function openAudit(i){
+  const a=audits[i];
+  if(!a) return;
+  const outcome=a.outcome||'SUCCESS';
+  showModal(`<div class="modal-head"><h2>Audit Entry</h2><button class="close" onclick="closeOverlay()">×</button></div><div class="modal-body">
+    <span class="status ${outcome==='SUCCESS'?'green':outcome==='DENIED'?'orange':'red'}">${escHtml(outcome)} · immutable</span>
+    <div class="detail-grid" style="margin-top:12px">
+      <div class="detail-box"><label>Timestamp</label><b>${escHtml(formatAuditTs(a.ts))}</b></div>
+      <div class="detail-box"><label>Actor</label><b>${escHtml(a.actorName||'')} (${escHtml(a.actorId||'')})</b></div>
+      <div class="detail-box"><label>Action</label><b>${escHtml(a.action||'')}</b></div>
+      <div class="detail-box"><label>Module</label><b>${escHtml(a.module||'')}</b></div>
+      <div class="detail-box"><label>Source</label><b>${escHtml(a.source||'')}</b></div>
+      <div class="detail-box"><label>IP</label><b>${escHtml(a.ip||'')}</b></div>
+    </div>
+    <p class="tiny muted">${escHtml(a.summary||'')}</p>
+    <h4 style="color:var(--navy);margin:12px 0 6px">Before value</h4><div class="json">${escHtml(a.before==null?'{ }':JSON.stringify(a.before,null,2))}</div>
+    <h4 style="color:var(--navy);margin:12px 0 6px">After value</h4><div class="json">${escHtml(a.after==null?'{ }':JSON.stringify(a.after,null,2))}</div>
+  </div><div class="modal-foot"><button class="secondary" onclick="closeOverlay()">Close</button></div>`,true);
+}
+
+/* —— Simplified pager / filter —— */
+const pagerStates={};
+function pagerState(table){
+  if(!table.id) table.id='grid-'+Math.random().toString(36).slice(2,8);
+  if(!pagerStates[table.id]) pagerStates[table.id]={page:1,size:10,query:''};
+  return pagerStates[table.id];
+}
+function filterTable(input,id){
+  const table=document.getElementById(id);
+  if(!table) return;
+  const state=pagerState(table);
+  state.query=input.value||'';
+  state.page=1;
+  paintPager(table);
+}
+function paintPager(table){
+  const state=pagerState(table);
+  const tbody=table.tBodies[0];
+  if(!tbody) return;
+  const q=(state.query||'').toLowerCase();
+  const all=[...tbody.rows];
+  const matched=all.filter(tr=>{
+    if(!q) return true;
+    return tr.textContent.toLowerCase().includes(q);
+  });
+  all.forEach(tr=>tr.style.display='none');
+  const start=(state.page-1)*state.size;
+  const pageRows=matched.slice(start,start+state.size);
+  pageRows.forEach(tr=>tr.style.display='');
+  let pager=table.parentElement&&table.parentElement.parentElement?table.parentElement.parentElement.querySelector('.pager'):null;
+  const card=table.closest('.card');
+  if(card){
+    pager=card.querySelector('.pager');
+    if(!pager){pager=document.createElement('div');pager.className='pager';card.appendChild(pager)}
+    const pages=Math.max(1,Math.ceil(matched.length/state.size)||1);
+    if(state.page>pages) state.page=pages;
+    pager.innerHTML=`<div class="pager-size">Rows <select onchange="setTablePageSize('${table.id}',this.value)"><option${state.size===10?' selected':''}>10</option><option${state.size===25?' selected':''}>25</option><option${state.size===50?' selected':''}>50</option></select></div><div class="pager-count">${matched.length? (start+1)+'–'+Math.min(start+state.size,matched.length)+' of '+matched.length : '0 records'}</div><div class="pager-nav"><button class="pager-btn" ${state.page<=1?'disabled':''} onclick="setTablePage('${table.id}',${state.page-1})">‹</button><button class="pager-btn active">${state.page}</button><button class="pager-btn" ${state.page>=pages?'disabled':''} onclick="setTablePage('${table.id}',${state.page+1})">›</button></div>`;
+  }
+}
+function setTablePage(id,page){const table=document.getElementById(id);if(!table)return;pagerState(table).page=Number(page)||1;paintPager(table)}
+function setTablePageSize(id,size){const table=document.getElementById(id);if(!table)return;const state=pagerState(table);state.size=Number(size)||10;state.page=1;paintPager(table)}
+function initPagers(root){
+  (root||document).querySelectorAll('table.data-table').forEach(table=>paintPager(table));
+}
+
+Object.assign(window,{saveMaster,toggleMaster,openMasterForm,saveInstitution,saveEligibility,saveStepup,saveAuthRules,switchIdvTab,openIdvBand,saveIdvBand,toggleIdvBand,openIdvReason,saveIdvReason,toggleIdvReason,openAudit,filterTable,setTablePage,setTablePageSize,initPagers,pushAudit,tokenManagement,transactionMonitor,dashboard,toggleTokenExpand,viewTokenDetails,openTokenAction,confirmTokenAction,runTokenAction,openCardStatusChange,refreshCardStatusPreview,confirmCardStatusChange,runCardStatusChange,viewTransaction,viewTxnById,reVerifyTransaction,exportTransactions,clearOpsBanner,downloadExcel,fmtMoney,nextTxnId,openResetDemo,confirmResetDemo,openSimulatorWindow,pushStoreToSimulator,bindSimulatorFrame,tknLiveStore,tknWrite});
+
+
+
+
+
+
+/* —— Phase 5 helpers: Token Management / Transaction Monitor / Dashboard —— */
+function fmtMoney(n){
+  const inst=institution[0]||{};
+  const dec=inst.currencyDecimals!=null?Number(inst.currencyDecimals):2;
+  const cur=inst.currency||'PKR';
+  const num=Number(n);
+  if(!Number.isFinite(num)) return '—';
+  return cur+' '+num.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+function nextTxnId(type){
+  const d=new Date();
+  const yy=String(d.getFullYear()).slice(-2);
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  const kind=type==='PROVISIONING'?'PRV':type==='AUTHORIZATION'?'AUT':'LCM';
+  const rnd=String(Math.floor(Math.random()*1e6)).padStart(6,'0');
+  return 'TKN-'+yy+mm+dd+'-'+kind+'-'+rnd;
+}
+function productOfCard(card){return card?products.find(p=>p.code===card.product):null}
+function schemeOfCard(card){const p=productOfCard(card);return p?schemes.find(s=>s.code===p.scheme):null}
+function requestorOf(id){return tokenRequestors.find(r=>r.id===id)}
+function tokensForCard(cardId,includeDeleted){
+  return tokens.filter(t=>t&&String(t.cardId)===String(cardId)&&(includeDeleted||t.status!=='DELETED'));
+}
+function cardStatusPill(s){
+  const u=String(s||'').toUpperCase();
+  const c=u==='ACTIVE'?'green':(u==='WARM'||u==='DORMANT'||u==='EXPIRED')?'orange':(u==='HOT'||u==='BLOCKED')?'red':'gray';
+  return `<span class="status ${c}">${escHtml(s||'—')}</span>`;
+}
+function tokenStatusPill(s){
+  const u=String(s||'').toUpperCase();
+  const c=u==='ACTIVE'?'green':(u==='SUSPENDED'||u==='PENDING')?'orange':u==='DELETED'?'gray':'blue';
+  return `<span class="status ${c}">${escHtml(s||'—')}</span>`;
+}
+function txnTypePill(type){
+  const labels={PROVISIONING:'Provisioning',AUTHORIZATION:'Authorization',LIFECYCLE:'Lifecycle'};
+  return `<span class="status blue">${escHtml(labels[type]||type||'—')}</span>`;
+}
+function txnStatusPill(status){
+  const s=String(status||'');
+  let c='gray';
+  if(['COMPLETED','APPROVED','ACTIVE'].includes(s)) c='green';
+  else if(['NOT_ELIGIBLE','STEP_UP_FAILED','DECLINED','FAILED','DELETED'].includes(s)) c='red';
+  else if(['STEP_UP_PENDING','PENDING_ACTIVATION','PENDING','UPDATED'].includes(s)) c='orange';
+  else if(['STARTED','RECEIVED'].includes(s)) c='blue';
+  else if(['TERMS_DECLINED','CANCELLED'].includes(s)) c='gray';
+  return `<span class="status ${c}">${escHtml(s||'—')}</span>`;
+}
+function decisionPill(d){
+  const s=String(d||'');
+  let c='blue';
+  if(['GREEN','APPROVED','COMPLETED','Unsuspend','Activate','Resume'].includes(s)) c='green';
+  else if(['YELLOW','Suspend','CARD_STATUS_CHANGE','WARM'].includes(s)) c='orange';
+  else if(['RED','DECLINED','Delete','FAILED','HOT'].includes(s)) c='red';
+  return `<span class="status ${c}">${escHtml(s||'—')}</span>`;
+}
+function transitionAllowed(action,status){
+  const a=String(action||'');
+  const s=String(status||'');
+  if(a==='Suspend') return s==='ACTIVE';
+  if(a==='Unsuspend') return s==='SUSPENDED';
+  if(a==='Activate') return s==='PENDING';
+  if(a==='Delete') return s!=='DELETED';
+  return false;
+}
+function reasonCodesFor(action,scheme){
+  return reasonCodes.filter(r=>!r.disabled&&Array.isArray(r.actions)&&r.actions.includes(action)&&Array.isArray(r.schemes)&&r.schemes.includes(scheme));
+}
+function downloadExcel(filename,headers,rows){
+  const esc=v=>{
+    const s=String(v==null?'':v);
+    if(/[",\n\r]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
+    return s;
+  };
+  const lines=[headers.map(esc).join(',')].concat((rows||[]).map(r=>r.map(esc).join(',')));
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=/\.csv$/i.test(filename)?filename:filename+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function applyEngineEffects(effects){
+  if(!Array.isArray(effects)) return;
+  const stamp=nowStamp();
+  const user=currentUser?currentUser.username:'token.admin';
+  effects.forEach(e=>{
+    if(!e) return;
+    if(e.type==='UPDATE_TOKEN'&&e.tokenRef){
+      const i=tokens.findIndex(t=>t.ref===e.tokenRef);
+      if(i>=0) tokens[i]=Object.assign({},tokens[i],e.patch||{},{updatedAt:stamp});
+    }else if(e.type==='CREATE_TOKEN'&&e.token){
+      tokens=tokens.filter(t=>t.ref!==e.token.ref);
+      tokens.unshift(e.token);
+    }else if(e.type==='UPDATE_CARD'&&e.cardId){
+      const i=cards.findIndex(c=>c.id===e.cardId);
+      if(i>=0) cards[i]=Object.assign({},cards[i],{status:e.status,ts:stamp,upd:user});
+    }else if(e.type==='DEBIT'&&e.cardId){
+      const i=cards.findIndex(c=>c.id===e.cardId);
+      if(i>=0) cards[i]=Object.assign({},cards[i],{balance:Math.max(0,Number(cards[i].balance)-Number(e.amount||0))});
+    }
+  });
+}
+function previewCascade(cardId,newStatus){
+  const rule=cascadeRules.find(r=>r.cardStatus===newStatus);
+  if(!rule||rule.disabled||!rule.effect||rule.effect==='None'){
+    return {effect:'None',count:0,label:'No effect on tokens'};
+  }
+  const list=tokens.filter(t=>t&&t.cardId===cardId&&t.status!=='DELETED');
+  let count=0;
+  list.forEach(t=>{
+    if(rule.effect==='Suspend'&&t.status==='ACTIVE') count++;
+    else if(rule.effect==='Resume'&&t.status==='SUSPENDED'&&t.suspendedBy==='CARD') count++;
+    else if(rule.effect==='Delete') count++;
+  });
+  const verb=rule.effect==='Suspend'?'suspended':rule.effect==='Resume'?'resumed':'deleted';
+  return {effect:rule.effect,count,label:count?`${count} token(s) will be ${verb}`:'No effect on tokens'};
+}
+function buildLifecycleSteps(opts){
+  opts=opts||{};
+  const steps=[];
+  let n=1;
+  const token=opts.token;
+  const card=opts.card;
+  const action=opts.action||'';
+  const scheme=opts.scheme;
+  const cascadeMode=(scheme&&scheme.cascadeMode)||'CARD_LEVEL';
+  if(opts.channel==='CARD_EVENT'){
+    steps.push({n:n++,from:'CMS',to:'ITC',title:'Card status change submitted',kind:'Internal',payload:{cardId:card&&card.id,newStatus:opts.newStatus,actor:currentUser&&currentUser.username},source:'R4 A5'});
+    const affected=(opts.affected||[]);
+    if(cascadeMode==='CARD_LEVEL'){
+      steps.push({n:n++,from:'ITC',to:(scheme&&scheme.tokenService)||'Scheme',title:'Card-level cascade call ('+cascadeMode+')',kind:'API',payload:{cardId:card&&card.id,effect:opts.effect,tokens:affected.length},source:'R4 Card Status Cascade'});
+    }else{
+      affected.forEach(ref=>{
+        steps.push({n:n++,from:'ITC',to:(scheme&&scheme.tokenService)||'Scheme',title:'Per-token cascade for '+ref,kind:'API',payload:{tokenReferenceId:ref,cardStatus:opts.newStatus},source:'R4 Card Status Cascade'});
+      });
+    }
+    steps.push({n:n++,from:'ITC',to:'CMS',title:'Card and token records updated',kind:'Internal',payload:{cardId:card&&card.id,status:opts.newStatus,affected:affected.length},source:'R4 A5'});
+    return steps;
+  }
+  steps.push({n:n++,from:'CMS',to:'CMS',title:'Operator submits Update Token Status: '+action,kind:'Internal',payload:{tokenReference:token&&token.ref,action,reasonCode:opts.reasonCode,user:currentUser&&currentUser.username},source:'R4 A5; R4 HT-04'});
+  steps.push({n:n++,from:'CMS',to:'ITC',title:'Lifecycle request passed to Tokenization Connect',kind:'Internal',payload:{tokenReference:token&&token.ref,action},source:'R2 Phase 03'});
+  steps.push({n:n++,from:'ITC',to:(scheme&&scheme.tokenService)||'Scheme',title:'Lifecycle API: '+String(action).toUpperCase(),kind:'API',payload:{tokenReferenceId:token&&token.ref,action,reasonCode:opts.reasonCode,initiatedBy:'ISSUER'},source:'R3 Phase 01; R4 Visa/MDES'});
+  if(opts.ok){
+    steps.push({n:n++,from:(scheme&&scheme.tokenService)||'Scheme',to:'ITC',title:'Status change confirmed',kind:'ISO',payload:{tokenReferenceId:token&&token.ref,status:opts.newStatus},source:'R5 slide 47'});
+    steps.push({n:n++,from:'ITC',to:'CMS',title:'Token record and audit trail updated',kind:'Internal',payload:{tokenReference:token&&token.ref,status:opts.newStatus},source:'R4 HT-04'});
+    if(opts.messageText){
+      steps.push({n:n++,from:'CMS',to:'SMS',title:'Send lifecycle notification',kind:'SMS',payload:{text:opts.messageText},source:'R4 HT-04 to HT-06'});
+    }
+  }else{
+    steps.push({n:n++,from:'ITC',to:'CMS',title:'Lifecycle rejected',kind:'Internal',payload:{reason:opts.reason,message:opts.message},source:'R4 A6'});
+  }
+  return steps;
+}
+function appendLifecycleTxn(row){
+  transactions.unshift(row);
+  return row;
+}
+function setOpsBanner(kind,msg,txnId){
+  opsBanner={kind:kind||'ok',msg:msg||'',txnId:txnId||''};
+}
+function clearOpsBanner(){opsBanner=null}
+function opsBannerHtml(){
+  if(!opsBanner) return '';
+  const cls=opsBanner.kind==='err'?'ops-banner err':'ops-banner';
+  const link=opsBanner.txnId?`<button type="button" class="linkish" onclick="viewTxnById('${escHtml(opsBanner.txnId)}','flow')">View flow</button>`:'';
+  return `<div class="${cls}"><span>${escHtml(opsBanner.msg)}</span>${link}<span class="spacer"></span><button type="button" class="linkish" onclick="clearOpsBanner();renderScreen()">Dismiss</button></div>`;
+}
+function isSameDayStamp(stamp,d){
+  if(!stamp) return false;
+  const m=String(stamp).match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+  if(!m){
+    const dt=new Date(stamp);
+    if(Number.isNaN(dt.getTime())) return false;
+    return dt.getFullYear()===d.getFullYear()&&dt.getMonth()===d.getMonth()&&dt.getDate()===d.getDate();
+  }
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mi=months.indexOf(m[2]);
+  if(mi<0) return false;
+  return Number(m[3])===d.getFullYear()&&mi===d.getMonth()&&Number(m[1])===d.getDate();
+}
+function findTxnIndex(id){return transactions.findIndex(t=>t&&t.id===id)}
+function viewTxnById(id,focus){
+  const i=findTxnIndex(id);
+  if(i<0){toast('Transaction not found');return}
+  txnViewFocus=focus||'';
+  viewTransaction(i);
+}
+
+/* —— Token Management —— */
+function tokenManagement(el){
+  const q=(tknMgmtQuery||'').trim().toLowerCase();
+  const rows=cards.filter(c=>{
+    if(!c||c.disabled) return false;
+    if(!q) return true;
+    const last4=String(c.pan||'').slice(-4);
+    const hay=[c.customer,c.customerId,c.id,last4,maskPan(c.pan)].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  el.innerHTML=pageHead('Token Management')+
+    opsBannerHtml()+
+    `<div class="card"><div class="toolbar">
+      <input class="search-field" style="min-width:260px" placeholder="Search customer, customer ID or last 4" value="${escHtml(tknMgmtQuery)}" oninput="tknMgmtQuery=this.value;renderScreen()">
+      <label class="check-line" style="height:auto;margin:0"><input type="checkbox" ${tknMgmtShowDeleted?'checked':''} onchange="tknMgmtShowDeleted=this.checked;renderScreen()"> Show deleted tokens</label>
+      <span class="spacer"></span><span class="count">${rows.length} cards</span>
+    </div>
+    <div class="table-wrap"><table class="data-table" id="tkn-mgmt-table">
+      <thead><tr><th>Card No.</th><th>Customer</th><th>Product</th><th>Scheme</th><th>Expiry</th><th>Balance</th><th>Card status</th><th>Tokens</th></tr></thead>
+      <tbody>${rows.map(card=>{
+        const product=productOfCard(card);
+        const scheme=schemeOfCard(card);
+        const tokList=tokensForCard(card.id,tknMgmtShowDeleted);
+        const activeCount=tokensForCard(card.id,false).length;
+        const expanded=tknExpanded.has(card.id);
+        const tokOff=product&&!product.tokenizationEnabled?` <span class="status gray">Tokenization off</span>`:'';
+        const hotLocked=String(card.status).toUpperCase()==='HOT';
+        const nest=expanded?`<tr class="rule-group-atms"><td colspan="8">${renderTokenNest(card,tokList)}</td></tr>`:'';
+        return `<tr>
+          <td class="strong">${escHtml(maskPan(card.pan))}</td>
+          <td>${escHtml(card.customer||'')}<div class="tiny muted">${escHtml(card.customerId||'')}</div></td>
+          <td>${escHtml(product?product.name:card.product||'')}${tokOff}</td>
+          <td>${escHtml(scheme?scheme.code:(product&&product.scheme)||'')}</td>
+          <td>${escHtml(card.expiry||'')}</td>
+          <td>${escHtml(fmtMoney(card.balance))}</td>
+          <td>${cardStatusPill(card.status)} ${hotLocked?'':`<button type="button" class="action-text" onclick="openCardStatusChange('${escHtml(card.id)}')">Change</button>`}</td>
+          <td><button type="button" class="expand-toggle" onclick="toggleTokenExpand('${escHtml(card.id)}')">${expanded?'▾':'▸'} ${activeCount}</button></td>
+        </tr>${nest}`;
+      }).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--muted)">No cards match the search.</td></tr>'}</tbody>
+    </table></div></div>`;
+  initPagers(el);
+}
+function toggleTokenExpand(cardId){
+  if(tknExpanded.has(cardId)) tknExpanded.delete(cardId); else tknExpanded.add(cardId);
+  renderScreen();
+}
+function renderTokenNest(card,tokList){
+  if(!tokList.length) return `<div class="tiny muted" style="padding:10px 0">No device tokens yet. Run the simulator to provision one.</div>`;
+  return `<table class="rule-nest"><thead><tr>
+    <th>Device ID</th><th>Device Type</th><th>Token Reference</th><th>Channel</th><th>Status</th>
+    <th>Provisioning Date</th><th>Token Expiry</th><th>Last Updated</th><th>Last Event / Reason</th><th>Action</th>
+  </tr></thead><tbody>${tokList.map(t=>{
+    const canSus=transitionAllowed('Suspend',t.status);
+    const canUn=transitionAllowed('Unsuspend',t.status);
+    const canDel=transitionAllowed('Delete',t.status);
+    const canAct=transitionAllowed('Activate',t.status);
+    const refJs=escHtml(t.ref).replace(/'/g,"\\'");
+    return `<tr>
+      <td>${escHtml(t.deviceId||'')}</td>
+      <td>${escHtml(t.deviceType||'')}</td>
+      <td><code>${escHtml(t.ref||'')}</code></td>
+      <td>${escHtml(t.channel||'')}</td>
+      <td>${tokenStatusPill(t.status)}</td>
+      <td>${escHtml(t.provisionedAt||'')}</td>
+      <td>${escHtml(t.tokenExpiry||'')}</td>
+      <td>${escHtml(t.updatedAt||'')}</td>
+      <td>${escHtml(t.lastReason||'')}</td>
+      <td><div class="nest-actions">
+        <button type="button" class="icon-btn" title="View" onclick="viewTokenDetails('${refJs}')">👁</button>
+        <button type="button" class="icon-btn" title="Suspend" ${canSus?'':'disabled'} onclick="openTokenAction('${refJs}','Suspend')">✕</button>
+        <button type="button" class="icon-btn" title="Unsuspend" ${canUn?'':'disabled'} onclick="openTokenAction('${refJs}','Unsuspend')">✓</button>
+        <button type="button" class="icon-btn" title="Delete" ${canDel?'':'disabled'} onclick="openTokenAction('${refJs}','Delete')">🗑</button>
+        <button type="button" class="action-text" ${canAct?'':'disabled'} onclick="openTokenAction('${refJs}','Activate')">Activate</button>
+      </div></td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+function viewTokenDetails(ref){
+  const t=tokens.find(x=>x.ref===ref);
+  if(!t){toast('Token not found');return}
+  const card=cards.find(c=>c.id===t.cardId);
+  const recent=transactions.filter(x=>x&&x.tokenRef===ref).slice(0,5);
+  pushAudit('VIEW','Token Management','Success','Viewed token '+ref,null,{ref,status:t.status,cardId:t.cardId});
+  persistStore();
+  showModal(`<div class="modal-head"><h2>Card Device Token Details</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-box"><label>Scheme</label><b>${escHtml(t.scheme||'')}</b></div>
+        <div class="detail-box"><label>Channel</label><b>${escHtml(t.channel||'')}</b></div>
+        <div class="detail-box"><label>Token Reference</label><b><code>${escHtml(t.ref||'')}</code></b></div>
+        <div class="detail-box"><label>Token</label><b>${escHtml(maskPan(t.token))}</b></div>
+        <div class="detail-box"><label>Device</label><b>${escHtml((t.deviceType||'')+' / '+(t.deviceId||''))}</b></div>
+        <div class="detail-box"><label>Status</label><b>${tokenStatusPill(t.status)}</b></div>
+        <div class="detail-box"><label>PAN expiry</label><b>${escHtml(card?card.expiry:'')}</b></div>
+        <div class="detail-box"><label>Token expiry</label><b>${escHtml(t.tokenExpiry||'')}</b></div>
+        <div class="detail-box"><label>ID&amp;V path</label><b>${escHtml(t.idvPath||'')}</b></div>
+        <div class="detail-box"><label>Assurance level</label><b>${escHtml(t.assurance||'')}</b></div>
+        <div class="detail-box"><label>Last event reason</label><b>${escHtml(t.lastReason||'—')}</b></div>
+        <div class="detail-box"><label>Suspended by</label><b>${escHtml(t.suspendedBy||'—')}</b></div>
+      </div>
+      <h4>Last 5 transactions</h4>
+      <div class="table-wrap"><table class="data-table" style="min-width:0">
+        <thead><tr><th>ID</th><th>Type</th><th>Decision</th><th>Status</th><th>Time</th></tr></thead>
+        <tbody>${recent.map(x=>`<tr><td class="strong">${escHtml(x.id)}</td><td>${txnTypePill(x.type)}</td><td>${decisionPill(x.decision)}</td><td>${txnStatusPill(x.status)}</td><td>${escHtml(x.time||'')}</td></tr>`).join('')||'<tr><td colspan="5" class="muted" style="text-align:center">No transactions for this token yet.</td></tr>'}</tbody>
+      </table></div>
+    </div>
+    <div class="modal-foot"><button class="secondary" onclick="closeOverlay()">Close</button></div>`,true);
+}
+function openTokenAction(ref,action){
+  const t=tokens.find(x=>x.ref===ref);
+  if(!t){toast('Token not found');return}
+  if(!transitionAllowed(action,t.status)){toast('Transition not allowed');return}
+  const card=cards.find(c=>c.id===t.cardId);
+  const newStatus=action==='Suspend'?'SUSPENDED':action==='Delete'?'DELETED':'ACTIVE';
+  const codes=reasonCodesFor(action,t.scheme);
+  pendingTokenAction={ref,action,error:''};
+  showModal(`<div class="modal-head"><h2>Update Token Status</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <div id="tokenActionError" class="login-error ${pendingTokenAction.error?'':'hidden'}">${escHtml(pendingTokenAction.error||'')}</div>
+      <div class="detail-grid">
+        <div class="detail-box"><label>Card</label><b>${escHtml(card?maskPan(card.pan):t.cardId)}</b></div>
+        <div class="detail-box"><label>Token Reference</label><b><code>${escHtml(t.ref)}</code></b></div>
+        <div class="detail-box"><label>Device</label><b>${escHtml((t.deviceType||'')+' / '+(t.deviceId||''))}</b></div>
+        <div class="detail-box"><label>Current status</label><b>${tokenStatusPill(t.status)}</b></div>
+        <div class="detail-box"><label>New status</label><b>${tokenStatusPill(newStatus)}</b></div>
+      </div>
+      <div class="field"><label>Reason Code <span class="required">*</span></label>
+        <select id="tok-reason-code">${codes.map(r=>`<option value="${escHtml(r.code)}">${escHtml(r.code)} — ${escHtml(r.description)}</option>`).join('')||'<option value="">No enabled codes</option>'}</select>
+      </div>
+      <div class="field"><label>Reason text <span class="required">*</span></label>
+        <input id="tok-reason-text" placeholder="Include the ticket number (min 5 characters)">
+        <div class="helper" style="margin-top:6px">Include the ticket number. Minimum 5 characters.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="secondary" onclick="closeOverlay()">Cancel</button>
+      <button class="primary" onclick="confirmTokenAction()">Continue</button>
+    </div>`);
+}
+function confirmTokenAction(){
+  if(!pendingTokenAction) return;
+  const codeEl=document.getElementById('tok-reason-code');
+  const textEl=document.getElementById('tok-reason-text');
+  if(codeEl) pendingTokenAction.reasonCode=codeEl.value||'';
+  if(textEl) pendingTokenAction.reasonText=(textEl.value||'').trim();
+  const newStatus=pendingTokenAction.action==='Suspend'?'SUSPENDED':pendingTokenAction.action==='Delete'?'DELETED':'ACTIVE';
+  showModal(`<div class="modal-head"><h2>Confirm</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <div id="tokenActionError" class="login-error ${pendingTokenAction.error?'':'hidden'}">${escHtml(pendingTokenAction.error||'')}</div>
+      <p style="margin:0;font-size:13px;line-height:1.5">Token status will be updated to '<strong>${escHtml(newStatus)}</strong>'. Are you sure to continue?</p>
+    </div>
+    <div class="modal-foot">
+      <button class="secondary" onclick="openTokenAction('${escHtml(pendingTokenAction.ref)}','${escHtml(pendingTokenAction.action)}')">Back</button>
+      <button class="primary" onclick="runTokenAction()">Confirm</button>
+    </div>`);
+}
+function runTokenAction(){
+  if(!pendingTokenAction) return;
+  const Eng=window.TknEngine;
+  if(!Eng){toast('tkn-engine.js not loaded');return}
+  const t=tokens.find(x=>x.ref===pendingTokenAction.ref);
+  if(!t){toast('Token not found');return}
+  const beforeStatus=t.status;
+  const card=cards.find(c=>c.id===t.cardId);
+  const product=productOfCard(card);
+  const scheme=schemeOfCard(card);
+  const action=pendingTokenAction.action;
+  const reasonCode=pendingTokenAction.reasonCode||'';
+  const reasonText=pendingTokenAction.reasonText||'';
+  const now=nowStamp();
+  const inputs={tokenRef:t.ref,action,reasonCode,reasonText,initiator:'OPERATOR'};
+  const life=Eng.lifecycle(snapshotState(),inputs);
+  const ok=!!life.ok;
+  const newStatus=ok&&life.token?life.token.status:(action==='Suspend'?'SUSPENDED':action==='Delete'?'DELETED':'ACTIVE');
+  if(ok) applyEngineEffects(life.effects);
+  const steps=buildLifecycleSteps({
+    token:t,card,action,scheme,ok,reasonCode,
+    newStatus:ok?newStatus:'',
+    reason:life.reason,message:life.message,messageText:life.text||'',
+    channel:'BACKOFFICE'
+  });
+  const txn={
+    id:nextTxnId('LIFECYCLE'),type:'LIFECYCLE',time:now,scheme:t.scheme||(scheme&&scheme.code)||'',
+    channel:'BACKOFFICE',actor:currentUser?currentUser.username:'operator',
+    cardId:t.cardId,card:card?maskPan(card.pan):'',product:product?product.name:'',
+    tokenRef:t.ref,token:maskPan(t.token),requestorId:t.requestorId||'',requestor:t.channel||'',
+    deviceId:t.deviceId||'',deviceType:t.deviceType||'',merchant:'',entryMode:'',
+    amount:null,currency:(institution[0]&&institution[0].currency)||'PKR',rrn:'',
+    status:ok?'COMPLETED':'FAILED',decision:action,reason:life.reason||'',responseCode:'',
+    message:life.message||'',inputs,checks:life.checks||[],steps,
+    cycle:[{status:'RECEIVED',time:now},{status:ok?'COMPLETED':'FAILED',time:now}],
+    configRev:storeRevision
+  };
+  appendLifecycleTxn(txn);
+  pushAudit(action.toUpperCase(),'Token Management',ok?'Success':'Failure',
+    ok?(action==='Delete'?'Device token deleted successfully':'Device token status has been updated successfully'):(life.message||'Lifecycle failed'),
+    {ref:t.ref,status:beforeStatus},{ref:t.ref,status:ok?newStatus:beforeStatus,reasonCode,reasonText},
+    {reason:life.reason||''});
+  persistStore();
+  if(!ok){
+    pendingTokenAction.error=life.message||life.reason||'Lifecycle failed';
+    const err=document.getElementById('tokenActionError');
+    if(err){err.textContent=pendingTokenAction.error;err.classList.remove('hidden')}
+    else confirmTokenAction();
+    toast('Lifecycle failed — transaction recorded');
+    return;
+  }
+  pendingTokenAction=null;
+  closeOverlay();
+  const msg=action==='Delete'?'Device token deleted successfully':'Device token status has been updated successfully';
+  setOpsBanner('ok',msg,txn.id);
+  toast(msg);
+  renderScreen();
+}
+function openCardStatusChange(cardId){
+  const card=cards.find(c=>c.id===cardId);
+  if(!card) return;
+  if(String(card.status).toUpperCase()==='HOT'){toast('HOT is final — status cannot be changed');return}
+  const options=CARD_STATUSES.filter(s=>s!==card.status);
+  pendingCardStatus={cardId,error:'',newStatus:options[0]||'WARM'};
+  const preview=previewCascade(cardId,pendingCardStatus.newStatus);
+  showModal(`<div class="modal-head"><h2>Change Card Status</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <div id="cardStatusError" class="login-error ${pendingCardStatus.error?'':'hidden'}">${escHtml(pendingCardStatus.error||'')}</div>
+      <div class="detail-grid">
+        <div class="detail-box"><label>Card</label><b>${escHtml(maskPan(card.pan))}</b></div>
+        <div class="detail-box"><label>Customer</label><b>${escHtml(card.customer||'')}</b></div>
+        <div class="detail-box"><label>Current status</label><b>${cardStatusPill(card.status)}</b></div>
+      </div>
+      <div class="field"><label>New status <span class="required">*</span></label>
+        <select id="card-new-status" onchange="refreshCardStatusPreview()">${options.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')}</select>
+      </div>
+      <div class="subtle-banner" id="card-cascade-preview">${escHtml(preview.label)}</div>
+    </div>
+    <div class="modal-foot">
+      <button class="secondary" onclick="closeOverlay()">Cancel</button>
+      <button class="primary" onclick="confirmCardStatusChange()">Continue</button>
+    </div>`);
+}
+function refreshCardStatusPreview(){
+  if(!pendingCardStatus) return;
+  const sel=document.getElementById('card-new-status');
+  pendingCardStatus.newStatus=sel?sel.value:pendingCardStatus.newStatus;
+  const preview=previewCascade(pendingCardStatus.cardId,pendingCardStatus.newStatus);
+  const el=document.getElementById('card-cascade-preview');
+  if(el) el.textContent=preview.label;
+}
+function confirmCardStatusChange(){
+  if(!pendingCardStatus) return;
+  refreshCardStatusPreview();
+  const preview=previewCascade(pendingCardStatus.cardId,pendingCardStatus.newStatus);
+  showModal(`<div class="modal-head"><h2>Confirm Card Status</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body">
+      <div id="cardStatusError" class="login-error ${pendingCardStatus.error?'':'hidden'}">${escHtml(pendingCardStatus.error||'')}</div>
+      <p style="margin:0 0 10px;font-size:13px;line-height:1.5">Card status will be updated to '<strong>${escHtml(pendingCardStatus.newStatus)}</strong>'.</p>
+      <div class="subtle-banner">${escHtml(preview.label)}</div>
+    </div>
+    <div class="modal-foot">
+      <button class="secondary" onclick="openCardStatusChange('${escHtml(pendingCardStatus.cardId)}')">Back</button>
+      <button class="primary" onclick="runCardStatusChange()">Confirm</button>
+    </div>`);
+}
+function runCardStatusChange(){
+  if(!pendingCardStatus) return;
+  const Eng=window.TknEngine;
+  if(!Eng){toast('tkn-engine.js not loaded');return}
+  const card=cards.find(c=>c.id===pendingCardStatus.cardId);
+  if(!card) return;
+  if(String(card.status).toUpperCase()==='HOT'){
+    pendingCardStatus.error='HOT is final — status cannot be changed';
+    const err=document.getElementById('cardStatusError');
+    if(err){err.textContent=pendingCardStatus.error;err.classList.remove('hidden')}
+    return;
+  }
+  const newStatus=pendingCardStatus.newStatus;
+  const beforeStatus=card.status;
+  const product=productOfCard(card);
+  const scheme=schemeOfCard(card);
+  const now=nowStamp();
+  const inputs={cardId:card.id,newStatus};
+  const res=Eng.cascade(snapshotState(),inputs);
+  const ok=!!res.ok;
+  const affected=(res.effects||[]).filter(e=>e&&e.type==='UPDATE_TOKEN').map(e=>e.tokenRef);
+  if(ok) applyEngineEffects(res.effects);
+  const rule=cascadeRules.find(r=>r.cardStatus===newStatus);
+  const steps=buildLifecycleSteps({
+    card,scheme,channel:'CARD_EVENT',newStatus,ok,affected,
+    effect:rule?rule.effect:'None',reason:res.reason,message:res.message
+  });
+  const txn={
+    id:nextTxnId('LIFECYCLE'),type:'LIFECYCLE',time:now,scheme:scheme?scheme.code:'',
+    channel:'CARD_EVENT',actor:currentUser?currentUser.username:'operator',
+    cardId:card.id,card:maskPan(card.pan),product:product?product.name:'',
+    tokenRef:affected[0]||'',token:'',requestorId:'',requestor:'',
+    deviceId:'',deviceType:'',merchant:'',entryMode:'',
+    amount:null,currency:(institution[0]&&institution[0].currency)||'PKR',rrn:'',
+    status:ok?'COMPLETED':'FAILED',decision:'CARD_STATUS_CHANGE',reason:res.reason||'',responseCode:'',
+    message:res.message||'',inputs,checks:res.checks||[],steps,
+    cycle:[{status:'RECEIVED',time:now},{status:ok?'COMPLETED':'FAILED',time:now}],
+    configRev:storeRevision,affectedTokens:affected
+  };
+  appendLifecycleTxn(txn);
+  pushAudit('CARD_STATUS_CHANGE','Token Management',ok?'Success':'Failure',
+    ok?`Card ${card.id} status ${beforeStatus} → ${newStatus} (${affected.length} token(s) affected)`:(res.message||'Cascade failed'),
+    {id:card.id,status:beforeStatus},{id:card.id,status:ok?newStatus:beforeStatus,affected},
+    {reason:res.reason||''});
+  persistStore();
+  if(!ok){
+    pendingCardStatus.error=res.message||res.reason||'Cascade failed';
+    const err=document.getElementById('cardStatusError');
+    if(err){err.textContent=pendingCardStatus.error;err.classList.remove('hidden')}
+    toast('Cascade failed — transaction recorded');
+    return;
+  }
+  pendingCardStatus=null;
+  closeOverlay();
+  setOpsBanner('ok',`Card status updated to ${newStatus}. ${affected.length} token(s) affected.`,txn.id);
+  toast('Card status updated');
+  renderScreen();
+}
+
+/* —— Transaction Monitor —— */
+function filteredTransactions(){
+  const q=(txnMonQuery||'').trim().toLowerCase();
+  return transactions.filter(t=>{
+    if(!t) return false;
+    if(txnMonType&&t.type!==txnMonType) return false;
+    if(txnMonStatus&&t.status!==txnMonStatus) return false;
+    if(!q) return true;
+    const hay=[t.id,t.card,t.tokenRef,t.token,t.merchant,t.reason,t.decision,t.message,t.channel].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+function transactionMonitor(el){
+  const rows=filteredTransactions();
+  const statusOpts=['',...new Set(TXN_STATUSES.concat(transactions.map(t=>t&&t.status).filter(Boolean)))];
+  el.innerHTML=pageHead('Transaction Monitor',`<button type="button" class="secondary" onclick="exportTransactions()">Export</button>`)+
+    `<div class="card"><div class="toolbar">
+      <input class="search-field" style="min-width:280px" placeholder="Search ID, card, token reference, merchant or reason" value="${escHtml(txnMonQuery)}" oninput="txnMonQuery=this.value;renderScreen()">
+      <select class="select-mini" onchange="txnMonType=this.value;renderScreen()">
+        <option value="">All types</option>
+        <option value="PROVISIONING"${txnMonType==='PROVISIONING'?' selected':''}>PROVISIONING</option>
+        <option value="AUTHORIZATION"${txnMonType==='AUTHORIZATION'?' selected':''}>AUTHORIZATION</option>
+        <option value="LIFECYCLE"${txnMonType==='LIFECYCLE'?' selected':''}>LIFECYCLE</option>
+      </select>
+      <select class="select-mini quote-status" onchange="txnMonStatus=this.value;renderScreen()">
+        <option value="">All statuses</option>
+        ${statusOpts.filter(Boolean).map(s=>`<option value="${escHtml(s)}"${txnMonStatus===s?' selected':''}>${escHtml(s)}</option>`).join('')}
+      </select>
+      <span class="spacer"></span><span class="count">${rows.length} records</span>
+    </div>
+    <div class="table-wrap"><table class="data-table" id="txn-table">
+      <thead><tr>
+        <th>Transaction ID</th><th>Type</th><th>Channel</th><th>Card Number</th><th>Token Reference</th>
+        <th>Timestamp</th><th>Amount</th><th>Decision</th><th>Status</th><th>Reason Code</th><th>Resp.</th><th>View</th>
+      </tr></thead>
+      <tbody>${rows.map(t=>{
+        const idx=transactions.indexOf(t);
+        const amount=t.type==='AUTHORIZATION'&&t.amount!=null?fmtMoney(t.amount):'';
+        const resp=t.type==='AUTHORIZATION'?escHtml(t.responseCode||''):'';
+        return `<tr>
+          <td class="strong">${escHtml(t.id||'')}</td>
+          <td>${txnTypePill(t.type)}</td>
+          <td>${escHtml(t.channel||'')}</td>
+          <td>${escHtml(t.card||'')}</td>
+          <td><code>${escHtml(t.tokenRef||'')}</code></td>
+          <td>${escHtml(t.time||'')}</td>
+          <td>${escHtml(amount)}</td>
+          <td>${decisionPill(t.decision)}</td>
+          <td>${txnStatusPill(t.status)}</td>
+          <td>${escHtml(t.reason||'')}</td>
+          <td>${resp}</td>
+          <td><button type="button" class="action-text" onclick="viewTransaction(${idx})">View</button></td>
+        </tr>`;
+      }).join('')||'<tr><td colspan="12" style="text-align:center;color:var(--muted)">No transactions yet. Run the simulator or perform a token action.</td></tr>'}</tbody>
+    </table></div></div>`;
+  initPagers(el);
+}
+function exportTransactions(){
+  const rows=filteredTransactions();
+  downloadExcel('transactions-export.csv',
+    ['Transaction ID','Type','Channel','Card Number','Token Reference','Timestamp','Amount','Decision','Status','Reason Code','Resp.','Message','Configuration revision'],
+    rows.map(t=>[t.id,t.type,t.channel,t.card,t.tokenRef||'',t.time||'',t.amount!=null?t.amount:'',t.decision||'',t.status||'',t.reason||'',t.responseCode||'',t.message||'',t.configRev!=null?t.configRev:'']));
+  toast('Exported '+rows.length+' row(s)');
+}
+function detailBox(label,value){
+  if(value==null||value===''||value==='—') return '';
+  return `<div class="detail-box"><label>${escHtml(label)}</label><b>${value}</b></div>`;
+}
+function viewTransaction(i){
+  const t=transactions[i];
+  if(!t) return;
+  txnReVerifyHtml='';
+  const card=cards.find(c=>c.id===t.cardId);
+  const failed=!t.checks||!t.checks.length?false:t.checks.some(c=>c&&c.ok===false)||['DECLINED','FAILED','NOT_ELIGIBLE','STEP_UP_FAILED'].includes(t.status);
+  const canReverify=t.type==='AUTHORIZATION'||t.type==='PROVISIONING';
+  const checksOpen=failed?' open':'';
+  const focusFlow=txnViewFocus==='flow';
+  txnViewFocus='';
+  const checksHtml=(t.checks||[]).map((c,n)=>{
+    const bad=c&&c.ok===false;
+    const screen=c&&c.screen?`<a href="#" onclick="event.preventDefault();closeOverlay();navigate('${String(c.screen).replace(/'/g,"\\'")}')">${escHtml(c.screen)}</a>`:'';
+    return `<tr class="${bad?'check-fail':''}"><td>${n+1}</td><td>${c&&c.ok?'✓':'✕'}</td><td>${escHtml(c&&c.text||'')}</td><td>${screen}</td><td>${escHtml(c&&c.setting||'')}</td><td>${escHtml(c&&c.value!=null?String(c.value):'')}</td></tr>`;
+  }).join('')||'<tr><td colspan="6" class="muted" style="text-align:center">No checks recorded</td></tr>';
+  const stepsHtml=(t.steps||[]).map((s,n)=>{
+    const payload=s&&s.payload!=null?escHtml(typeof s.payload==='string'?s.payload:JSON.stringify(s.payload,null,2)):'';
+    const src=s&&s.source?escHtml(s.source):'';
+    return `<tr style="cursor:pointer" onclick="this.nextElementSibling&&this.nextElementSibling.classList.toggle('hidden')">
+      <td>${s&&s.n!=null?s.n:n+1}</td><td>${escHtml(s&&s.from||'')}</td><td>${escHtml(s&&s.to||'')}</td>
+      <td>${escHtml(s&&s.title||s&&s.message||'')}</td><td>${escHtml(s&&s.kind||'')}</td>
+    </tr>
+    <tr class="payload-row ${focusFlow&&n===0?'':'hidden'}"><td colspan="5"><div>${payload||'<span class="muted">No payload</span>'}</div><div class="tiny muted" style="margin-top:4px">Source: ${src||'—'}</div></td></tr>`;
+  }).join('')||'<tr><td colspan="5" class="muted" style="text-align:center">No message flow recorded</td></tr>';
+  const cycleHtml=(t.cycle||[]).map((c,n,arr)=>{
+    const last=n===arr.length-1;
+    return `<tr class="${last?'cycle-current':''}"><td>${n+1}</td><td>${txnStatusPill(c.status)}</td><td>${escHtml(c.time||'')}</td></tr>`;
+  }).join('')||'<tr><td colspan="3" class="muted" style="text-align:center">No cycle</td></tr>';
+  const decisionOk=['APPROVED','GREEN','YELLOW','COMPLETED','ACTIVE'].includes(String(t.decision))||(t.status==='COMPLETED'||t.status==='APPROVED');
+  const decisionBanner=decisionOk&&!['DECLINED','FAILED','RED','NOT_ELIGIBLE'].includes(String(t.status))
+    ?`<div class="re-result ok">${escHtml(t.decision||t.status||'OK')}${t.message?' — '+escHtml(t.message):''}</div>`
+    :`<div class="re-result no">${escHtml(t.decision||t.status||'FAILED')}${t.reason?` <code>${escHtml(t.reason)}</code>`:''}${t.message?' — '+escHtml(t.message):''}</div>`;
+  showModal(`<div class="modal-head"><h2>Transaction</h2><button class="close" onclick="closeOverlay()">×</button></div>
+    <div class="modal-body" id="txn-detail-body">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px">
+        <div>
+          <div class="strong" style="font-size:14px;color:var(--navy)">${escHtml(t.id||'')}</div>
+          <div class="tiny muted">${txnTypePill(t.type)} · ${escHtml(t.card||'')}${t.amount!=null?' · '+escHtml(fmtMoney(t.amount)):''}</div>
+        </div>
+        ${txnStatusPill(t.status)}
+      </div>
+      <h4>Transaction context</h4>
+      <div class="detail-grid">
+        ${detailBox('Scheme',escHtml(t.scheme||''))}
+        ${detailBox('Channel',escHtml(t.channel||''))}
+        ${detailBox('Actor',escHtml(t.actor||''))}
+        ${detailBox('Product',escHtml(t.product||''))}
+        ${detailBox('Card number',escHtml(t.card||''))}
+        ${detailBox('Card status',card?cardStatusPill(card.status):'')}
+        ${detailBox('Wallet',escHtml((t.requestor||'')+(t.requestorId?' / '+t.requestorId:'')))}
+        ${detailBox('Device',escHtml((t.deviceType||'')+(t.deviceId?' / '+t.deviceId:'')))}
+        ${detailBox('Merchant',escHtml(t.merchant||''))}
+        ${detailBox('Entry mode',escHtml(t.entryMode||''))}
+      </div>
+      <h4>Token</h4>
+      <div class="detail-grid">
+        ${detailBox('Token reference',t.tokenRef?`<code>${escHtml(t.tokenRef)}</code>`:'')}
+        ${detailBox('Token',escHtml(t.token||''))}
+        ${detailBox('Token type',escHtml((tokens.find(x=>x.ref===t.tokenRef)||{}).tokenType||''))}
+        ${detailBox('Token expiry',escHtml((tokens.find(x=>x.ref===t.tokenRef)||{}).tokenExpiry||''))}
+        ${detailBox('Assurance',escHtml((tokens.find(x=>x.ref===t.tokenRef)||{}).assurance||''))}
+        ${detailBox('ID&amp;V path',escHtml((tokens.find(x=>x.ref===t.tokenRef)||{}).idvPath||''))}
+      </div>
+      ${t.type==='AUTHORIZATION'?`<h4>Amounts</h4><div class="detail-grid">
+        ${detailBox('Amount',escHtml(fmtMoney(t.amount)))}
+        ${detailBox('Response code',escHtml(t.responseCode||''))}
+        ${detailBox('RRN',escHtml(t.rrn||''))}
+        ${detailBox('Currency',escHtml(t.currency||''))}
+      </div>`:''}
+      <h4>Decision</h4>
+      ${decisionBanner}
+      <div id="txn-reverify-slot">${txnReVerifyHtml}</div>
+      <details class="re-trace-box"${checksOpen}><summary>Configuration checks</summary>
+        <div class="table-wrap" style="margin-top:8px"><table class="data-table" style="min-width:0">
+          <thead><tr><th>#</th><th>Result</th><th>Check</th><th>Configuration screen</th><th>Setting</th><th>Value used</th></tr></thead>
+          <tbody>${checksHtml}</tbody>
+        </table></div>
+      </details>
+      <h4 id="txn-flow-block">Message flow</h4>
+      <div class="table-wrap"><table class="data-table" style="min-width:0">
+        <thead><tr><th>#</th><th>From</th><th>To</th><th>Message</th><th>Kind</th></tr></thead>
+        <tbody>${stepsHtml}</tbody>
+      </table></div>
+      <h4>Status cycle</h4>
+      <div class="table-wrap"><table class="data-table" style="min-width:0">
+        <thead><tr><th>Step</th><th>Status</th><th>Time</th></tr></thead>
+        <tbody>${cycleHtml}</tbody>
+      </table></div>
+      <p class="tiny muted" style="margin-top:12px">Configuration revision at decision time: ${escHtml(t.configRev!=null?t.configRev:'—')}. Current revision: ${escHtml(storeRevision)}.</p>
+    </div>
+    <div class="modal-foot">
+      ${canReverify?`<button type="button" class="secondary" onclick="reVerifyTransaction(${i})">Re-verify</button>`:''}
+      <button class="secondary" onclick="closeOverlay()">Close</button>
+    </div>`,true);
+  if(focusFlow){
+    setTimeout(()=>{
+      const block=document.getElementById('txn-flow-block');
+      if(block) block.scrollIntoView({behavior:'smooth',block:'start'});
+    },50);
+  }
+}
+function reVerifyTransaction(i){
+  const t=transactions[i];
+  if(!t) return;
+  const Eng=window.TknEngine;
+  if(!Eng){toast('tkn-engine.js not loaded');return}
+  const store=snapshotState();
+  const inputs=Object.assign({},t.inputs||{});
+  const now=new Date();
+  let freshDecision='',freshReason='',freshChecks=[],freshMessage='';
+  if(t.type==='AUTHORIZATION'){
+    const res=Eng.authorize(store,Object.assign({},inputs,{now}));
+    freshDecision=res.decision||(res.ok?'APPROVED':'DECLINED');
+    freshReason=res.reason||'';
+    freshMessage=res.message||'';
+    freshChecks=res.checks||[];
+  }else if(t.type==='PROVISIONING'){
+    const elig=Eng.checkEligibility(store,Object.assign({},inputs,{now}));
+    if(!elig.ok){
+      freshDecision='DECLINED';
+      freshReason=elig.reason||'';
+      freshMessage=elig.message||'';
+      freshChecks=elig.checks||[];
+    }else{
+      const idv=Eng.decideIdv(store,{
+        cardId:inputs.cardId,
+        deviceScore:inputs.deviceScore,
+        reasonCodes:inputs.reasonCodes||[]
+      });
+      freshDecision=idv.decision||(idv.ok?'GREEN':'RED');
+      freshReason=idv.reason||'';
+      freshMessage=idv.message||'';
+      freshChecks=(elig.checks||[]).concat(idv.checks||[]);
+    }
+  }else{
+    toast('Re-verify is only for AUTHORIZATION and PROVISIONING');
+    return;
+  }
+  const oldDecision=String(t.decision||'');
+  const oldReason=String(t.reason||'');
+  const same=String(freshDecision)===oldDecision&&(String(freshReason)===oldReason||(!oldReason&&freshDecision===oldDecision));
+  let html='';
+  if(same){
+    html=`<div class="re-verify-same">Verified: the current configuration gives the same decision.</div>`;
+  }else{
+    let diffCheck=null;
+    const oldChecks=t.checks||[];
+    for(let n=0;n<Math.max(oldChecks.length,freshChecks.length);n++){
+      const a=oldChecks[n],b=freshChecks[n];
+      if(!a||!b||a.ok!==b.ok||String(a.value)!==String(b.value)||a.text!==b.text){
+        diffCheck={old:a,neu:b,n:n+1};
+        break;
+      }
+    }
+    html=`<div class="re-verify-diff">The current configuration would give: <strong>${escHtml(freshDecision)}</strong>${freshReason?', '+escHtml(freshReason):''}${freshMessage?' — '+escHtml(freshMessage):''}.
+      ${diffCheck?`<div style="margin-top:6px">First differing check (#${diffCheck.n}): old value <code>${escHtml(diffCheck.old&&diffCheck.old.value!=null?String(diffCheck.old.value):'—')}</code> → new value <code>${escHtml(diffCheck.neu&&diffCheck.neu.value!=null?String(diffCheck.neu.value):'—')}</code>
+      <div class="tiny">${escHtml((diffCheck.neu&&diffCheck.neu.text)||(diffCheck.old&&diffCheck.old.text)||'')}</div></div>`:''}
+    </div>`;
+  }
+  pushAudit('RE_VERIFY','Transaction Monitor','Success',
+    same?`Re-verify same for ${t.id}`:`Re-verify different for ${t.id}: now ${freshDecision}/${freshReason}`,
+    {decision:t.decision,reason:t.reason,configRev:t.configRev},
+    {decision:freshDecision,reason:freshReason,configRev:storeRevision});
+  persistStore();
+  const slot=document.getElementById('txn-reverify-slot');
+  if(slot) slot.innerHTML=html;
+  else{txnReVerifyHtml=html;viewTransaction(i)}
+  toast(same?'Re-verify: same decision':'Re-verify: decision would differ');
+}
+
+/* —— Dashboard —— */
+function configHealthWarnings(){
+  const warns=[];
+  const otpSms=templates.find(t=>t.event==='OTP'&&t.channel==='SMS'&&!t.disabled);
+  if(!otpSms) warns.push({text:'No enabled OTP template for SMS',screen:'Notification Templates'});
+  const otpEmail=templates.find(t=>t.event==='OTP'&&t.channel==='EMAIL'&&!t.disabled);
+  if(!otpEmail) warns.push({text:'No enabled OTP template for EMAIL',screen:'Notification Templates'});
+  products.filter(p=>p&&!p.disabled&&p.tokenizationEnabled).forEach(p=>{
+    ['POS contactless','E-commerce'].forEach(ch=>{
+      const lim=limits.find(l=>l.product===p.code&&l.channel===ch&&!l.disabled);
+      if(!lim) warns.push({text:`${p.name} has no Limits row for ${ch}`,screen:'Limits'});
+    });
+  });
+  ['Suspend','Unsuspend','Delete','Activate'].forEach(act=>{
+    ['VISA','MC'].forEach(sch=>{
+      const ok=reasonCodes.some(r=>!r.disabled&&Array.isArray(r.actions)&&r.actions.includes(act)&&Array.isArray(r.schemes)&&r.schemes.includes(sch));
+      if(!ok) warns.push({text:`No reason code is enabled for ${act} on ${sch==='MC'?'Mastercard':'Visa'}`,screen:'Reason Codes'});
+    });
+  });
+  const step=stepup[0]||{};
+  if(!step.smsEnabled&&!step.emailEnabled&&!step.callCentreEnabled){
+    warns.push({text:'All step-up methods are disabled',screen:'Step-up and OTP'});
+  }
+  return warns.slice(0,8);
+}
+function donutSvg(parts){
+  const sum=parts.reduce((s,p)=>s+Number(p.value||0),0);
+  const total=sum||0;
+  const colors={Active:'#18a875',Suspended:'#e9a52c',Pending:'#3273c8',Deleted:'#65748a'};
+  const r=42,cx=50,cy=50;
+  const toXY=(deg)=>{const rad=deg*Math.PI/180;return [cx+r*Math.cos(rad),cy+r*Math.sin(rad)]};
+  let angle=-90;
+  const slices=[];
+  if(total>0){
+    parts.forEach(p=>{
+      const val=Number(p.value||0);
+      if(val<=0) return;
+      const sweep=(val/total)*360;
+      const start=angle;
+      const end=angle+sweep;
+      angle=end;
+      const large=sweep>180?1:0;
+      const [x1,y1]=toXY(start);
+      const [x2,y2]=toXY(end);
+      const d=`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+      slices.push({d,color:colors[p.label]||'#728096'});
+    });
+  }
+  const legend=parts.map(p=>`<li><span class="donut-swatch" style="background:${colors[p.label]||'#728096'}"></span>${escHtml(p.label)} <b>${p.value}</b></li>`).join('');
+  return `<div class="donut-wrap"><svg width="110" height="110" viewBox="0 0 100 100" aria-hidden="true">
+    ${!total?`<circle cx="50" cy="50" r="42" fill="#edf0f4"/>`:slices.map(s=>`<path d="${s.d}" fill="${s.color}"></path>`).join('')}
+    <circle cx="50" cy="50" r="24" fill="#fff"></circle>
+    <text x="50" y="54" text-anchor="middle" font-size="12" font-weight="700" fill="#16233d">${total}</text>
+  </svg><ul class="donut-legend">${legend}</ul></div>`;
+}
+function dashboard(el){
+  const today=new Date();
+  const active=tokens.filter(t=>t.status==='ACTIVE').length;
+  const suspended=tokens.filter(t=>t.status==='SUSPENDED').length;
+  const pending=tokens.filter(t=>t.status==='PENDING').length;
+  const deleted=tokens.filter(t=>t.status==='DELETED').length;
+  const provAll=transactions.filter(t=>t.type==='PROVISIONING');
+  const provToday=provAll.filter(t=>isSameDayStamp(t.time,today));
+  const provFinished=provAll.filter(t=>!['STARTED','STEP_UP_PENDING','RECEIVED'].includes(t.status));
+  const provOk=provFinished.filter(t=>['COMPLETED','APPROVED','PENDING_ACTIVATION','PENDING'].includes(t.status));
+  const successPct=provFinished.length?Math.round((provOk.length/provFinished.length)*100):0;
+  const idvDecided=provAll.filter(t=>['GREEN','YELLOW','RED'].includes(String(t.decision)));
+  const yellow=idvDecided.filter(t=>t.decision==='YELLOW').length;
+  const stepUpRate=idvDecided.length?Math.round((yellow/idvDecided.length)*100):0;
+  const auths=transactions.filter(t=>t.type==='AUTHORIZATION');
+  const authApproved=auths.filter(t=>t.status==='APPROVED'||t.decision==='APPROVED');
+  const authPct=auths.length?Math.round((authApproved.length/auths.length)*100):0;
+  const payToday=auths.filter(t=>(t.status==='APPROVED'||t.decision==='APPROVED')&&isSameDayStamp(t.time,today));
+  const payValue=payToday.reduce((s,t)=>s+Number(t.amount||0),0);
+  const declineReasons={};
+  transactions.forEach(t=>{
+    if(!t) return;
+    const declined=['DECLINED','FAILED','NOT_ELIGIBLE','STEP_UP_FAILED','RED'].includes(t.status)||t.decision==='DECLINED'||t.decision==='RED';
+    if(!declined||!t.reason) return;
+    declineReasons[t.reason]=(declineReasons[t.reason]||0)+1;
+  });
+  const topReasons=Object.keys(declineReasons).map(k=>({k,v:declineReasons[k]})).sort((a,b)=>b.v-a.v).slice(0,5);
+  const maxReason=topReasons[0]?topReasons[0].v:1;
+  const recent=transactions.slice(0,8);
+  const warns=configHealthWarnings();
+  el.innerHTML=pageHead('Dashboard')+
+    `<div class="kpis tkn-kpis">
+      <div class="card kpi"><div class="kpi-label">Active tokens</div><div class="kpi-value">${active}</div><div class="kpi-note${suspended?' warn':''}">${suspended} suspended</div></div>
+      <div class="card kpi"><div class="kpi-label">Provisioning requests</div><div class="kpi-value">${provToday.length}</div><div class="kpi-note muted">Today · ${provAll.length} all-time</div></div>
+      <div class="card kpi"><div class="kpi-label">Provisioning success</div><div class="kpi-value">${successPct}%</div><div class="kpi-note muted">${provOk.length}/${provFinished.length||0} finished</div></div>
+      <div class="card kpi"><div class="kpi-label">Step-up rate</div><div class="kpi-value">${stepUpRate}%</div><div class="kpi-note muted">${yellow} YELLOW of ${idvDecided.length} ID&amp;V</div></div>
+      <div class="card kpi"><div class="kpi-label">Authorization approval</div><div class="kpi-value">${authPct}%</div><div class="kpi-note muted">${authApproved.length}/${auths.length||0} authorizations</div></div>
+      <div class="card kpi"><div class="kpi-label">Token payments value</div><div class="kpi-value" style="font-size:18px">${escHtml(fmtMoney(payValue))}</div><div class="kpi-note muted">Approved today</div></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="card section-card"><h2>Tokens by status</h2>${donutSvg([
+        {label:'Active',value:active},{label:'Suspended',value:suspended},{label:'Pending',value:pending},{label:'Deleted',value:deleted}
+      ])}</div>
+      <div class="card section-card"><h2>Declines by reason</h2>
+        ${topReasons.length?topReasons.map(r=>`<div class="metric-row"><div class="metric-name" title="${escHtml(r.k)}">${escHtml(r.k)}</div><div class="bar"><i style="width:${Math.max(6,Math.round(r.v/maxReason*100))}%"></i></div><div class="metric-val">${r.v}</div></div>`).join(''):'<p class="muted" style="margin:0;font-size:12px">No declines recorded yet.</p>'}
+      </div>
+      <div class="card section-card"><h2>Recent transactions</h2>
+        ${recent.length?recent.map(t=>{
+          return `<div class="recent-txn">${txnTypePill(t.type)}<span>${escHtml(t.card||t.id||'')}</span>${decisionPill(t.decision)} ${txnStatusPill(t.status)}<span class="spacer"></span><button type="button" class="action-text" onclick="navigate('Transaction Monitor');setTimeout(()=>viewTxnById('${String(t.id||'').replace(/'/g,"\\'")}'),0)">Open</button></div>`;
+        }).join(''):'<p class="muted" style="margin:0;font-size:12px">No transactions yet.</p>'}
+        <div style="margin-top:10px"><button type="button" class="secondary" onclick="navigate('Transaction Monitor')">Open Transaction Monitor</button></div>
+      </div>
+      <div class="card section-card"><h2>Configuration health</h2>
+        ${warns.length?`<ul class="health-list">${warns.map(w=>`<li><span>${escHtml(w.text)}</span><a href="#" onclick="event.preventDefault();navigate('${w.screen.replace(/'/g,"\\'")}')">Open</a></li>`).join('')}</ul>`:'<p class="muted" style="margin:0;font-size:12px">No configuration warnings.</p>'}
+      </div>
+    </div>`;
+}
+
+function pushStoreToSimulator(win){
+  if(!win) return;
+  let snap;
+  try{snap=JSON.parse(JSON.stringify(snapshotState()))}catch(e){snap=snapshotState()}
+  try{if(typeof win.tknReceiveStore==='function') win.tknReceiveStore(snap)}catch(e){}
+  try{win.postMessage({type:'tkn-store',store:snap},'*')}catch(e){}
+}
+function openSimulatorWindow(){
+  const w=window.open('IRIS-Tokenization-Simulator.html','tknSim');
+  if(!w){toast('Pop-up blocked — allow pop-ups for the simulator window');return}
+  const push=()=>pushStoreToSimulator(w);
+  setTimeout(push,200); setTimeout(push,600); setTimeout(push,1200);
+}
+function bindSimulatorFrame(frame){
+  if(!frame||frame.__tknBound) return;
+  frame.__tknBound=true;
+  const push=()=>pushStoreToSimulator(frame.contentWindow);
+  frame.addEventListener('load',()=>{push(); setTimeout(push,150); setTimeout(push,500)});
+}
+if(!window.__tknStoreRequestBound){
+  window.__tknStoreRequestBound=true;
+  window.addEventListener('message',(e)=>{
+    if(!e||!e.data) return;
+    if(e.data.type==='tkn-store-request'){
+      try{pushStoreToSimulator(e.source)}catch(err){}
+      return;
+    }
+    if(e.data.type==='tkn-write'&&e.data.name&&Array.isArray(e.data.rows)){
+      try{tknWrite(e.data.name,e.data.rows)}catch(err){}
+      return;
+    }
+  });
+}
+function simulator(el){
+  // Preserve an existing simulator iframe across re-entry to this screen.
+  const existing=document.getElementById('simFrame');
+  if(existing){
+    existing.remove();
+    el.innerHTML=pageHead('Simulator',`<button type="button" class="secondary" onclick="openSimulatorWindow()">Open in new window</button>`);
+    el.appendChild(existing);
+    bindSimulatorFrame(existing);
+    pushStoreToSimulator(existing.contentWindow);
+    setTimeout(()=>pushStoreToSimulator(existing.contentWindow),200);
+    return;
+  }
+  el.innerHTML=pageHead('Simulator',`<button type="button" class="secondary" onclick="openSimulatorWindow()">Open in new window</button>`)+
+    `<iframe id="simFrame" class="sim-frame" src="IRIS-Tokenization-Simulator.html" title="Tokenization Simulator"></iframe>`;
+  bindSimulatorFrame(document.getElementById('simFrame'));
+}
+function renderScreen(){
+  const target=document.getElementById('screen');
+  target.classList.toggle('dock',currentScreen!=='Dashboard'&&currentScreen!=='Simulator');
+  target.classList.toggle('sim-host',currentScreen==='Simulator');
+  const map={
+    Dashboard:dashboard,
+    Institution:institutionScreen,
+    Scheme:masterScreen,
+    'Card Product':masterScreen,
+    Card:masterScreen,
+    'Token Requestor':masterScreen,
+    'Eligibility Rules':eligibilityScreen,
+    'ID&V Risk Rules':idvRiskScreen,
+    'Step-up and OTP':stepupScreen,
+    'Notification Templates':masterScreen,
+    'Authorization Rules':authRulesScreen,
+    Limits:masterScreen,
+    'Response Codes':masterScreen,
+    'Reason Codes':masterScreen,
+    'Card Status Cascade':masterScreen,
+    'Audit Log':auditLog,
+    Simulator:simulator,
+    'Token Management':tokenManagement,
+    'Transaction Monitor':transactionMonitor
+  };
+  (map[currentScreen]||dashboard)(target);
+  if(currentScreen!=='Simulator') initPagers(target);
+}
+
+function smartNav(v){
+  if(!v){document.getElementById('smartResults')?.remove();return}
+  const hits=ALL_SCREENS.filter(x=>x.toLowerCase().includes(v.toLowerCase())&&allowed(x));
+  let box=document.getElementById('smartResults');
+  if(!box){box=document.createElement('div');box.id='smartResults';box.style='position:fixed;top:42px;right:160px;width:290px;background:#fff;border:1px solid #dce2ea;box-shadow:0 10px 25px rgba(0,0,0,.16);z-index:20;border-radius:3px;overflow:hidden';document.body.appendChild(box)}
+  box.innerHTML=hits.length?hits.map(x=>`<button style="display:block;width:100%;padding:10px 13px;text-align:left;background:#fff;border:0;border-bottom:1px solid #edf0f4;font-size:12px;color:#263449" onclick="document.getElementById('smartResults').remove();navigate('${x.replace(/'/g,"\\'")}')">${escHtml(x)}</button>`).join(''):'<div style="padding:12px;font-size:12px;color:#728096">No matching screens</div>';
+}
+function startLoginBackdrop(){
+  const page=document.getElementById('loginPage');
+  const canvas=document.getElementById('loginNet');
+  if(!page||!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w=0,h=0,nodes=[],raf=0,dpr=1;
+  function resize(){
+    const box=page.getBoundingClientRect();
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    w=Math.max(1,box.width);h=Math.max(1,box.height);
+    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+    canvas.style.width=w+'px';canvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    nodes=[];
+    const n=Math.max(40,Math.round((w*h)/18000));
+    for(let i=0;i<n;i++) nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:1+Math.random()*1.6});
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      if(!reduce){a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>w)a.vx*=-1;if(a.y<0||a.y>h)a.vy*=-1}
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+        if(d<110){ctx.strokeStyle=`rgba(214,198,154,${.35*(1-d/110)})`;ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+      }
+      ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fillStyle='rgba(236,226,198,.85)';ctx.fill();
+    }
+    if(!page.classList.contains('hidden')&&!reduce) raf=requestAnimationFrame(draw);
+  }
+  resize();
+  window.addEventListener('resize',()=>{resize();if(reduce)draw()});
+  draw();
+}
+
+document.getElementById('loginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!storeReady){toast('Shared data is still loading');return}
+  const u=document.getElementById('username').value.trim(),p=document.getElementById('password').value;
+  const a=accounts[u];
+  if(!a||a.password!==p){
+    pushAudit('LOGIN','Authentication','Failure','Invalid username or password',null,{username:u});
+    try{persistStore()}catch(err){}
+    const el=document.getElementById('loginError');el.textContent='Invalid username or password';el.classList.remove('hidden');return;
+  }
+  pushAudit('LOGIN','Authentication','Success','Successful login',null,{username:u,role:a.role});
+  showApp({...a,username:u});
+  const signed=portalUsers.find(x=>x.username===u);
+  if(signed)signed.lastLogin=nowStamp();
+  try{persistStore()}catch(err){}
+  navigate('Dashboard');
+});
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('userDropdown');
+  if(menu&&!menu.classList.contains('hidden')&&!e.target.closest('.user-menu')) menu.classList.add('hidden');
+  if(!e.target.closest('.smart-nav')&&!e.target.closest('#smartResults')) document.getElementById('smartResults')?.remove();
+});
+startLoginBackdrop();
+bootSharedStore();
+  </script>
+  <script src="tkn-engine.js"></script>
+</body>
+</html>
