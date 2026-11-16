@@ -116,6 +116,205 @@ button,input,select,textarea{font:inherit;color:inherit}
 .is-watch .bigres .mark{width:46px;height:46px;font-size:22px}
 .is-watch .bigres p{font-size:11.5px}
 
+/* ===== Device skins (design-only; scoped under [data-skin]) ===== */
+#device[data-skin] .screen{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+#device[data-skin] .ph-top .skin-walname{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%}
+.is-watch #device[data-skin] .ph-top .skin-walname{max-width:82%;text-align:center}
+#device[data-skin] .wcard .pn,#device[data-skin] .art span{font-family:ui-monospace,Menlo,Consolas,monospace}
+#device[data-skin] .pbtn:focus-visible,#device[data-skin] .wcard .acts button:focus-visible,
+#device[data-skin] .field input:focus-visible,#device[data-skin] .field select:focus-visible,
+#device[data-skin] .sms button:focus-visible{outline:2px solid var(--skin-focus,var(--tkn));outline-offset:2px}
+
+/* --- bank: issuer mobile app (portal navy / orange) --- */
+#device[data-skin="bank"]{
+  --skin-bg:#F4F6F9;--skin-ink:#16233d;--skin-muted:#5A6A82;--skin-line:#D5DCE6;
+  --skin-accent:#e8492f;--skin-card:#16233d;--skin-card-ink:#FFFFFF;--skin-focus:#e8492f;
+  --skin-ok:#1F6B3A;--skin-bad:#B3261E;--skin-warn:#9A6200;
+}
+#device[data-skin="bank"] .screen{background:var(--skin-bg);color:var(--skin-ink)}
+#device[data-skin="bank"] .ph-top{background:#16233d;color:#F4F6F9;padding:10px 14px 8px;border-radius:22px 22px 0 0}
+#device[data-skin="bank"] .ph-top .skin-walname,#device[data-skin="bank"] .ph-top .num{color:#F4F6F9}
+#device[data-skin="bank"] .ph-body{gap:12px}
+#device[data-skin="bank"] .skin-bank-hero{background:#16233d;color:#F4F6F9;margin:-6px -14px 4px;padding:12px 14px 16px}
+#device[data-skin="bank"] .skin-bank-name{font-size:15px;font-weight:700;letter-spacing:.02em}
+#device[data-skin="bank"] .skin-bank-greet{margin:4px 0 0;font-size:12px;color:#C5D0E0}
+#device[data-skin="bank"] .skin-bank-hero-compact{padding:8px 14px 10px}
+#device[data-skin="bank"] .skin-bank-hero-compact .skin-bank-name{font-size:13px}
+#device[data-skin="bank"] .skin-mycards-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--skin-muted);margin:2px 0 4px}
+#device[data-skin="bank"] .ph-body h3{font-size:16px;color:var(--skin-ink);border-bottom:2px solid var(--skin-accent);padding-bottom:6px;display:inline-block}
+#device[data-skin="bank"] .hint{color:var(--skin-muted)}
+#device[data-skin="bank"] .wcard,#device[data-skin="bank"] .art{
+  background:linear-gradient(135deg,#16233d 0%,#1b2a45 55%,#243552 100%);color:var(--skin-card-ink);
+  border-radius:6px;border-left:4px solid var(--skin-accent);box-shadow:0 4px 12px rgba(22,35,61,.18)
+}
+#device[data-skin="bank"] .wcard .acts button{border-radius:4px;border-color:rgba(255,255,255,.4)}
+#device[data-skin="bank"] .wcard .acts button.solid{background:var(--skin-accent);border-color:var(--skin-accent);color:#fff}
+#device[data-skin="bank"] .pbtn{background:var(--skin-accent);border-color:var(--skin-accent);border-radius:4px;color:#fff}
+#device[data-skin="bank"] .pbtn.ghost{background:transparent;color:var(--skin-ink);border-color:var(--skin-line)}
+#device[data-skin="bank"] .pbtn.ghost:hover{border-color:var(--skin-accent);color:var(--skin-accent)}
+#device[data-skin="bank"] .field>span{color:var(--skin-muted)}
+#device[data-skin="bank"] .field input,#device[data-skin="bank"] .field select{border-radius:4px;border-color:var(--skin-line)}
+#device[data-skin="bank"] .pill.ok{background:#E3F4EA;color:var(--skin-ok)}
+#device[data-skin="bank"] .pill.warn{background:#FBF0D9;color:var(--skin-warn)}
+#device[data-skin="bank"] .sms{border-radius:4px;border-left-color:var(--skin-accent);box-shadow:0 2px 8px rgba(22,35,61,.12)}
+#device[data-skin="bank"] .bigres .mark{border-radius:6px;font-size:28px}
+#device[data-skin="bank"] .bigres.ok .mark{background:var(--skin-accent);color:#fff}
+#device[data-skin="bank"] .bigres.bad .mark{background:var(--skin-bad);color:#fff}
+#device[data-skin="bank"] .bigres.wait .mark{background:#16233d;color:#fff;animation:skin-pulse 1.2s ease-in-out infinite}
+#device[data-skin="bank"] .hist div{border-bottom-color:var(--skin-line);border-bottom-style:solid}
+.is-watch #device[data-skin="bank"] .ph-top{border-radius:50px 50px 0 0;justify-content:center;padding:12px 22px 4px}
+.is-watch #device[data-skin="bank"] .skin-bank-hero{margin:-2px -20px 2px;padding:8px 20px 10px;text-align:center}
+.is-watch #device[data-skin="bank"] .skin-bank-name{font-size:12px}
+.is-watch #device[data-skin="bank"] .skin-bank-greet{font-size:10.5px}
+.is-watch #device[data-skin="bank"] .wcard,.is-watch #device[data-skin="bank"] .art{border-radius:8px}
+.is-watch #device[data-skin="bank"] .pbtn{border-radius:8px}
+
+/* --- aurora: light teal, large radius, pills, soft shadow --- */
+#device[data-skin="aurora"]{
+  --skin-bg:#F3FAF9;--skin-ink:#14353A;--skin-muted:#4F6F74;--skin-line:#C9E4E1;
+  --skin-accent:#0D8F8A;--skin-card:#127F7A;--skin-card-ink:#FFFFFF;--skin-focus:#0D8F8A;
+  --skin-ok:#1F7A4D;--skin-bad:#B3261E;--skin-warn:#9A6200;--skin-radius:18px;
+}
+#device[data-skin="aurora"] .screen{background:var(--skin-bg);color:var(--skin-ink)}
+#device[data-skin="aurora"] .ph-top{color:var(--skin-muted);padding:10px 16px 6px}
+#device[data-skin="aurora"] .ph-body{gap:12px;padding:8px 16px 16px}
+#device[data-skin="aurora"] .ph-body h3{font-size:18px;font-weight:700;letter-spacing:-.01em}
+#device[data-skin="aurora"] .hint{color:var(--skin-muted)}
+#device[data-skin="aurora"] .wcard,#device[data-skin="aurora"] .art{
+  background:linear-gradient(160deg,#0D8F8A,#1AA8A1 55%,#3BC4B8);color:var(--skin-card-ink);
+  border-radius:var(--skin-radius);box-shadow:0 10px 24px rgba(13,143,138,.22);padding:14px
+}
+#device[data-skin="aurora"] .wcard .acts button{border-radius:99px;border:0;background:rgba(255,255,255,.22);padding:7px 8px}
+#device[data-skin="aurora"] .wcard .acts button.solid{background:#fff;color:var(--skin-accent)}
+#device[data-skin="aurora"] .pbtn{background:var(--skin-accent);border:0;border-radius:99px;box-shadow:0 6px 14px rgba(13,143,138,.28);padding:10px 12px}
+#device[data-skin="aurora"] .pbtn.ghost{background:#E5F5F3;color:var(--skin-accent);box-shadow:none}
+#device[data-skin="aurora"] .field input,#device[data-skin="aurora"] .field select{border-radius:14px;border-color:var(--skin-line);background:#fff;box-shadow:0 2px 8px rgba(20,53,58,.05)}
+#device[data-skin="aurora"] .pill{border-radius:99px}
+#device[data-skin="aurora"] .pill.ok{background:#D8F3E6;color:var(--skin-ok)}
+#device[data-skin="aurora"] .sms{border-radius:16px;border:0;border-left:0;box-shadow:0 8px 20px rgba(20,53,58,.1);background:#fff}
+#device[data-skin="aurora"] .sms::before{content:"";width:4px;border-radius:99px;background:var(--skin-accent);align-self:stretch;flex:0 0 4px}
+#device[data-skin="aurora"] .bigres .mark{border-radius:50%;box-shadow:0 8px 20px rgba(13,143,138,.2)}
+#device[data-skin="aurora"] .bigres.ok .mark{background:#D8F3E6;color:var(--skin-ok)}
+#device[data-skin="aurora"] .bigres.bad .mark{background:#FBE7E4;color:var(--skin-bad)}
+#device[data-skin="aurora"] .bigres.wait .mark{background:#E5F5F3;color:var(--skin-accent);animation:skin-pulse 1.1s ease-in-out infinite}
+#device[data-skin="aurora"] .hist div{border:0;background:#fff;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(20,53,58,.06);margin-bottom:4px}
+.is-watch #device[data-skin="aurora"] .ph-body{padding:2px 22px 24px}
+.is-watch #device[data-skin="aurora"] .wcard,.is-watch #device[data-skin="aurora"] .art{border-radius:16px;padding:10px}
+.is-watch #device[data-skin="aurora"] .pbtn{border-radius:99px;padding:7px 10px}
+
+/* --- graphite: dark charcoal, amber, tight corners, thin dividers --- */
+#device[data-skin="graphite"]{
+  --skin-bg:#1A1C1E;--skin-ink:#F2F2F0;--skin-muted:#A3A6A9;--skin-line:#2E3236;
+  --skin-accent:#E0A24A;--skin-card:#24272B;--skin-card-ink:#F2F2F0;--skin-focus:#E0A24A;
+  --skin-ok:#7BC47F;--skin-bad:#F08A80;--skin-warn:#E0A24A;
+}
+#device[data-skin="graphite"] .screen{background:var(--skin-bg);color:var(--skin-ink)}
+#device[data-skin="graphite"] .ph-top{color:var(--skin-muted);border-bottom:1px solid var(--skin-line);padding:8px 12px 6px}
+#device[data-skin="graphite"] .ph-body{gap:8px;padding:8px 12px 12px}
+#device[data-skin="graphite"] .ph-body h3{font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--skin-line);padding-bottom:6px;width:100%}
+#device[data-skin="graphite"] .hint{color:var(--skin-muted)}
+#device[data-skin="graphite"] .wcard,#device[data-skin="graphite"] .art{
+  background:var(--skin-card);color:var(--skin-card-ink);border-radius:4px;border:1px solid var(--skin-line);
+  box-shadow:none;padding:10px 12px
+}
+#device[data-skin="graphite"] .wcard .r{border-bottom:1px solid var(--skin-line);padding-bottom:6px;margin-bottom:2px}
+#device[data-skin="graphite"] .wcard .acts{border-top:1px solid var(--skin-line);padding-top:8px}
+#device[data-skin="graphite"] .wcard .acts button{border-radius:2px;border:1px solid var(--skin-line);background:transparent;color:var(--skin-ink)}
+#device[data-skin="graphite"] .wcard .acts button.solid{background:var(--skin-accent);border-color:var(--skin-accent);color:#1A1C1E}
+#device[data-skin="graphite"] .pbtn{background:var(--skin-accent);border:1px solid var(--skin-accent);border-radius:2px;color:#1A1C1E;font-weight:700}
+#device[data-skin="graphite"] .pbtn.ghost{background:transparent;color:var(--skin-ink);border-color:var(--skin-line)}
+#device[data-skin="graphite"] .field>span{color:var(--skin-muted);letter-spacing:.03em}
+#device[data-skin="graphite"] .field input,#device[data-skin="graphite"] .field select{background:#121416;border:1px solid var(--skin-line);border-radius:2px;color:var(--skin-ink)}
+#device[data-skin="graphite"] .pill.ok{background:#243028;color:var(--skin-ok)}
+#device[data-skin="graphite"] .pill.warn{background:#2C2618;color:var(--skin-warn)}
+#device[data-skin="graphite"] .pill.mute{background:#24272B;color:var(--skin-muted)}
+#device[data-skin="graphite"] .sms{background:#24272B;border:1px solid var(--skin-line);border-left:2px solid var(--skin-accent);border-radius:2px;box-shadow:none;color:var(--skin-ink)}
+#device[data-skin="graphite"] .sms b{color:var(--skin-muted)}
+#device[data-skin="graphite"] .bigres .mark{border-radius:2px;width:64px;height:64px;border:1px solid var(--skin-line);background:transparent}
+#device[data-skin="graphite"] .bigres.ok .mark{border-color:var(--skin-ok);color:var(--skin-ok)}
+#device[data-skin="graphite"] .bigres.bad .mark{border-color:var(--skin-bad);color:var(--skin-bad)}
+#device[data-skin="graphite"] .bigres.wait .mark{border-color:var(--skin-accent);color:var(--skin-accent);animation:skin-pulse 1s linear infinite}
+#device[data-skin="graphite"] .hist div{border-bottom:1px solid var(--skin-line);border-style:solid}
+.is-watch #device[data-skin="graphite"] .ph-top{border-bottom:0;padding:11px 0 2px}
+.is-watch #device[data-skin="graphite"] .ph-body{padding:2px 20px 22px}
+.is-watch #device[data-skin="graphite"] .bigres .mark{width:42px;height:42px}
+
+/* --- harbor: navy→indigo gradient, cyan accent, bottom drawer --- */
+#device[data-skin="harbor"]{
+  --skin-bg:#0B1B3A;--skin-ink:#102038;--skin-muted:#5A6A82;--skin-line:#D3DCE8;
+  --skin-accent:#22C7D6;--skin-card:#123056;--skin-card-ink:#F2FBFD;--skin-focus:#22C7D6;
+  --skin-ok:#1F7A4D;--skin-bad:#B3261E;--skin-warn:#9A6200;
+}
+#device[data-skin="harbor"] .screen{
+  background:linear-gradient(165deg,#0B1B3A 0%,#1A237E 48%,#283593 100%);
+  color:var(--skin-ink);display:flex;flex-direction:column
+}
+#device[data-skin="harbor"] .ph-top{color:#D7E8F5;padding:10px 14px 6px;flex:0 0 auto}
+#device[data-skin="harbor"] .ph-top .skin-walname{color:#F2FBFD}
+#device[data-skin="harbor"] .sms{margin:4px 12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--skin-accent);color:#F2FBFD;border-radius:12px 12px 4px 4px;backdrop-filter:blur(4px)}
+#device[data-skin="harbor"] .sms b{color:#B8D4E8}
+#device[data-skin="harbor"] .sms button{color:#D7E8F5}
+#device[data-skin="harbor"] .ph-body{padding:0;flex:1;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;min-height:0}
+#device[data-skin="harbor"] .skin-drawer{
+  background:#F7F9FC;color:var(--skin-ink);border-radius:18px 18px 18px 18px;margin:8px 10px 10px;
+  padding:14px 14px 16px;display:flex;flex-direction:column;gap:10px;max-height:100%;overflow:auto;
+  box-shadow:0 -8px 28px rgba(8,16,40,.35);flex:1;min-height:0
+}
+#device[data-skin="harbor"] .ph-body h3{font-size:16px;color:#0B1B3A}
+#device[data-skin="harbor"] .hint{color:var(--skin-muted)}
+#device[data-skin="harbor"] .wcard,#device[data-skin="harbor"] .art{
+  background:linear-gradient(135deg,#123056,#1A3A6E);color:var(--skin-card-ink);
+  border-radius:14px;border:1px solid rgba(34,199,214,.35);box-shadow:0 6px 16px rgba(11,27,58,.2)
+}
+#device[data-skin="harbor"] .wcard .acts button{border-radius:10px;border-color:rgba(34,199,214,.55);color:#F2FBFD}
+#device[data-skin="harbor"] .wcard .acts button.solid{background:var(--skin-accent);border-color:var(--skin-accent);color:#0B1B3A}
+#device[data-skin="harbor"] .pbtn{background:var(--skin-accent);border:0;border-radius:12px;color:#0B1B3A;font-weight:700}
+#device[data-skin="harbor"] .pbtn.ghost{background:transparent;color:#0B1B3A;border:1px solid var(--skin-line)}
+#device[data-skin="harbor"] .field input,#device[data-skin="harbor"] .field select{border-radius:10px;border-color:var(--skin-line);background:#fff}
+#device[data-skin="harbor"] .pill.ok{background:#D8F3E6;color:var(--skin-ok)}
+#device[data-skin="harbor"] .bigres .mark{border-radius:50%;box-shadow:0 0 0 4px rgba(34,199,214,.25)}
+#device[data-skin="harbor"] .bigres.ok .mark{background:#D8F3E6;color:var(--skin-ok)}
+#device[data-skin="harbor"] .bigres.bad .mark{background:#FBE7E4;color:var(--skin-bad)}
+#device[data-skin="harbor"] .bigres.wait .mark{background:#E6FBFD;color:#0B7A86;animation:skin-pulse 1.15s ease-in-out infinite}
+.is-watch #device[data-skin="harbor"] .skin-drawer{margin:4px 14px 16px;padding:10px 12px 14px;border-radius:22px;gap:7px}
+.is-watch #device[data-skin="harbor"] .ph-top{justify-content:center;padding:12px 18px 2px}
+.is-watch #device[data-skin="harbor"] .pbtn{border-radius:99px}
+
+/* --- meadow: off-white, forest green, medium corners, outlined buttons --- */
+#device[data-skin="meadow"]{
+  --skin-bg:#F7F8F4;--skin-ink:#1B2E22;--skin-muted:#5A6B5E;--skin-line:#C9D2C8;
+  --skin-accent:#2F6B45;--skin-card:#345C42;--skin-card-ink:#F7F8F4;--skin-focus:#2F6B45;
+  --skin-ok:#2F6B45;--skin-bad:#B3261E;--skin-warn:#9A6200;--skin-radius:10px;
+}
+#device[data-skin="meadow"] .screen{background:var(--skin-bg);color:var(--skin-ink)}
+#device[data-skin="meadow"] .ph-top{color:var(--skin-muted);border-bottom:1px solid var(--skin-line)}
+#device[data-skin="meadow"] .ph-body h3{font-size:16px;color:var(--skin-accent);font-weight:700}
+#device[data-skin="meadow"] .hint{color:var(--skin-muted)}
+#device[data-skin="meadow"] .wcard,#device[data-skin="meadow"] .art{
+  background:var(--skin-card);color:var(--skin-card-ink);border-radius:var(--skin-radius);
+  border:1px solid #2A5638;box-shadow:none
+}
+#device[data-skin="meadow"] .wcard .acts button{border-radius:8px;border:1px solid rgba(247,248,244,.55);background:transparent;color:var(--skin-card-ink)}
+#device[data-skin="meadow"] .wcard .acts button.solid{background:transparent;border:2px solid #F7F8F4;color:#F7F8F4;font-weight:700}
+#device[data-skin="meadow"] .pbtn{background:transparent;border:2px solid var(--skin-accent);border-radius:var(--skin-radius);color:var(--skin-accent);font-weight:700}
+#device[data-skin="meadow"] .pbtn:not(.ghost){background:var(--skin-accent);color:#F7F8F4;border-color:var(--skin-accent)}
+#device[data-skin="meadow"] .pbtn.ghost{background:transparent;color:var(--skin-accent);border-color:var(--skin-accent)}
+#device[data-skin="meadow"] .field input,#device[data-skin="meadow"] .field select{border-radius:var(--skin-radius);border:1px solid var(--skin-line);background:#fff}
+#device[data-skin="meadow"] .pill.ok{background:#E3F0E7;color:var(--skin-ok)}
+#device[data-skin="meadow"] .sms{border-radius:var(--skin-radius);border:1px solid var(--skin-line);border-left:3px solid var(--skin-accent);background:#fff;box-shadow:none}
+#device[data-skin="meadow"] .bigres .mark{border-radius:var(--skin-radius);border:2px solid currentColor;background:transparent}
+#device[data-skin="meadow"] .bigres.ok .mark{color:var(--skin-ok);border-color:var(--skin-ok)}
+#device[data-skin="meadow"] .bigres.bad .mark{color:var(--skin-bad);border-color:var(--skin-bad)}
+#device[data-skin="meadow"] .bigres.wait .mark{color:var(--skin-accent);border-color:var(--skin-accent);border-style:dashed;animation:skin-pulse 1.2s ease-in-out infinite}
+#device[data-skin="meadow"] .hist div{border-bottom:1px solid var(--skin-line);border-style:solid}
+.is-watch #device[data-skin="meadow"] .ph-top{border-bottom:0}
+.is-watch #device[data-skin="meadow"] .pbtn{border-radius:10px;padding:6px 8px}
+.is-watch #device[data-skin="meadow"] .wcard,.is-watch #device[data-skin="meadow"] .art{border-radius:10px}
+
+@keyframes skin-pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
 .flowcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-width:0;min-height:100%}
 .flowhead{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
 .flowhead h2{font-size:15px;margin:0;font-weight:600}
@@ -376,8 +575,16 @@ const UI = {
   scheme: 'VISA', device: 'phone', walletId: '', cardId: '', score: 3, reasons: [],
   speed: 'normal', manual: false, busy: false, screen: 'home', ctx: {},
   calls: [], callSel: 0, isoList: [], isoSel: 0, hops: [], hopSel: -1, checks: [],
-  txnId: null, guidedOn: false, guidedStop: false
+  txnId: null, txnClosed: null, guidedOn: false, guidedStop: false
 };
+// Expose for portal busy-guards (top-level const is not on window by default).
+window.UI = UI;
+function tknSimBusy() {
+  // Treat a finished hop cycle as "busy" for portal remount/push guards so the
+  // completed lane stays until the user hits Restart.
+  return !!(UI.busy || (UI.hops && UI.hops.length) || UI.txnClosed);
+}
+window.tknSimBusy = tknSimBusy;
 let pendingNext = null, userResolve = null, userQueued = null, stepNo = 0;
 
 function emptyStore() {
@@ -390,20 +597,44 @@ function emptyStore() {
 function syncFromPortal() {
   const host = portalHost();
   if (!host) return STORE;
+  // Mid-flow: do not pull portal snaps — that races our ops writes and remounts UI state.
+  if (UI.busy) return STORE;
   try {
     const snap = host.tknLiveStore();
     if (snap && typeof snap === 'object') {
       applySnap(snap);
-      STORE_FP = storeFingerprint(snap);
+      STORE_FP = storeFingerprint(STORE);
+      const rev = portalStoreRev(host);
+      if (rev != null) STORE_REV = rev;
     }
   } catch (e) {}
   return STORE;
 }
+function portalStoreRev(host) {
+  try {
+    if (!host) return null;
+    if (typeof host.tknStoreRevision === 'function') {
+      const n = Number(host.tknStoreRevision());
+      if (Number.isFinite(n) && n >= 0) return n;
+    }
+    if (host.storeRevision != null) {
+      const n = Number(host.storeRevision);
+      if (Number.isFinite(n) && n >= 0) return n;
+    }
+  } catch (e) {}
+  return null;
+}
 function receiveStore(snap) {
   if (!snap || typeof snap !== 'object') return;
+  // Match pollStore: never remount the device / wipe flow UI mid-run.
+  if (UI.busy) { pendingApply = snap; return; }
+  // After a finished flow, only absorb data — keep the hop cycle visible until Restart.
+  const keepFlow = (UI.hops && UI.hops.length) || UI.txnClosed;
   applySnap(snap);
   try { STORE_FP = storeFingerprint(STORE); } catch (e) { STORE_FP = String(Date.now()); }
-  STORE_REV = Math.max(STORE_REV, 1);
+  const rev = portalStoreRev(portalHost());
+  STORE_REV = rev != null ? rev : Math.max(STORE_REV, 1);
+  if (keepFlow) return;
   paintControls();
   renderPhone();
 }
@@ -415,6 +646,17 @@ window.addEventListener('message', (e) => {
 });
 function inst() { return (STORE.institution && STORE.institution[0]) || { bankName: 'IRIS Issuer Bank', currency: 'PKR' }; }
 function bankLabel() { return inst().bankName || 'IRIS Issuer Bank'; }
+/** Map token-requestor name → device skin (design-only). Order is intentional. */
+function walletSkin(name) {
+  const n = String(name == null ? '' : name).trim().toLowerCase();
+  if (!n) return '';
+  if (n.indexOf('bank') === 0) return 'bank';
+  if (n.indexOf('google') >= 0) return 'aurora';
+  if (n.indexOf('apple') >= 0) return 'graphite';
+  if (n.indexOf('samsung') >= 0) return 'harbor';
+  if (n.indexOf('huawei') >= 0) return 'meadow';
+  return '';
+}
 function findBy(list, key, val) { return (list || []).find((r) => r && String(r[key]) === String(val)) || null; }
 function cardById(id) {
   if (id == null || id === '') return null;
@@ -573,7 +815,8 @@ async function loadStore() {
     const snap = host.tknLiveStore();
     applySnap(snap);
     STORE_FP = storeFingerprint(snap);
-    STORE_REV = 1;
+    const rev = portalStoreRev(host);
+    STORE_REV = rev != null ? rev : 0;
     return;
   }
   requestStoreFromHosts();
@@ -592,6 +835,7 @@ async function loadStore() {
 async function pollStore() {
   try {
     const host = portalHost();
+    const keepFlow = (UI.hops && UI.hops.length) || UI.txnClosed;
     if (host) {
       const snap = host.tknLiveStore();
       const fp = storeFingerprint(snap);
@@ -599,6 +843,10 @@ async function pollStore() {
       if (UI.busy) { pendingApply = snap; return; }
       applySnap(snap);
       STORE_FP = fp;
+      const rev = portalStoreRev(host);
+      if (rev != null) STORE_REV = rev;
+      // Completed cycle must stay visible — data sync only until Restart.
+      if (keepFlow) return;
       paintControls();
       renderPhone();
       return;
@@ -608,6 +856,7 @@ async function pollStore() {
     if (rev === STORE_REV) return;
     if (UI.busy) { pendingApply = { __reload: true }; return; }
     await loadStore();
+    if (keepFlow) return;
     paintControls();
     renderPhone();
   } catch (e) {}
@@ -616,21 +865,21 @@ function flushPendingStore() {
   if (!pendingApply) return;
   const snap = pendingApply;
   pendingApply = null;
-  // After a flow, prefer the portal live store (it received our tknWrite calls).
-  // Applying a snapshot queued mid-flow can wipe tokens/txns written later in the same run.
+  // After a flow, sync data only — do not rebuild controls/phone in a way that feels like a refresh.
+  // Never clearFlow here; completed hops must remain until the user hits Restart.
   const host = portalHost();
   if (host) {
     try {
       const live = host.tknLiveStore();
       applySnap(live);
       STORE_FP = storeFingerprint(live);
-      paintControls();
-      renderPhone();
+      const rev = portalStoreRev(host);
+      if (rev != null) STORE_REV = rev;
       return;
     } catch (e) {}
   }
   if (snap.__reload) {
-    loadStore().then(() => { paintControls(); renderPhone(); });
+    loadStore().then(() => {});
     return;
   }
   const keep = {
@@ -642,8 +891,6 @@ function flushPendingStore() {
     if ((keep[k] || []).length >= (STORE[k] || []).length) STORE[k] = keep[k];
   });
   STORE_FP = storeFingerprint(STORE);
-  paintControls();
-  renderPhone();
 }
 function liveStore() {
   const host = portalHost();
@@ -669,15 +916,21 @@ function tknWriteLocal(name, rows) {
     try {
       host.tknWrite(name, cloned);
       wroteHost = true;
-      try { STORE_FP = storeFingerprint(host.tknLiveStore()); } catch (e) { STORE_FP = storeFingerprint(STORE); }
+      try {
+        const live = host.tknLiveStore();
+        // Portal may merge transactions; keep local STORE aligned with the merged result.
+        if (live && Array.isArray(live[name])) STORE[name] = live[name];
+        STORE_FP = storeFingerprint(live);
+      } catch (e) { STORE_FP = storeFingerprint(STORE); }
     } catch (e) { wroteHost = false; }
   }
-  // Always postMessage as well — nested frames / Simple Browser may not expose parent.tknWrite.
-  postWriteToHosts(name, cloned);
-  // When the portal accepted the write, it owns disk persistence. Extra PUTs from the
-  // simulator race the portal flush and can reload stale empty collections into the UI.
-  if (!wroteHost) putCollection(COLLECTION_FILES[name], cloned).catch(() => {});
-  if (!wroteHost) STORE_FP = storeFingerprint(STORE);
+  // Only fall back to postMessage/PUT when the portal bridge did not accept the write.
+  // Dual sync+postMessage let a stale RECEIVED snapshot overwrite APPROVED after awaits.
+  if (!wroteHost) {
+    postWriteToHosts(name, cloned);
+    putCollection(COLLECTION_FILES[name], cloned).catch(() => {});
+    STORE_FP = storeFingerprint(STORE);
+  }
 }
 function pushAudit(action, refOrId, summary, user) {
   // Portal Audit Log expects DCC-shaped events (action/module/summary/ts/actor*).
@@ -712,13 +965,15 @@ function txnId(kind) {
   return 'TKN-' + yymmdd() + '-' + kind + '-' + rnd(6);
 }
 function upsertTxn( partial ) {
-  const store = liveStore();
+  // While a flow is running, read our local STORE — not a portal snapshot that may
+  // still hold a stale RECEIVED copy from an earlier write.
+  const store = UI.busy ? STORE : liveStore();
   const list = Array.isArray(store.transactions) ? store.transactions.slice() : [];
   const i = list.findIndex((t) => t && t.id === partial.id);
   if (i >= 0) list[i] = Object.assign({}, list[i], partial);
   else list.unshift(partial);
   tknWriteLocal('transactions', list);
-  return list.find((t) => t.id === partial.id);
+  return (STORE.transactions || []).find((t) => t && t.id === partial.id) || list.find((t) => t && t.id === partial.id);
 }
 function applyEffects(effects) {
   if (!Array.isArray(effects)) return;
@@ -754,6 +1009,8 @@ function applyEffects(effects) {
 
 /* ================= UI paint ================= */
 function paintControls() {
+  // Rebuilding wallet/card selects mid-flow remounts controls and looks like a refresh.
+  if (UI.busy) return;
   syncFromPortal();
   const schemes = (STORE.schemes || []).filter((s) => s && !s.disabled);
   const seg = $('#schemeSeg');
@@ -820,12 +1077,14 @@ function beginFlow(title) {
   setBusy(true);
   stepNo = 0;
   userQueued = null;
+  UI.txnClosed = null;
   UI.hops = []; UI.hopSel = -1; UI.calls = []; UI.callSel = 0; UI.isoList = []; UI.isoSel = 0; UI.checks = [];
   $('#flow').innerHTML = `<div class="sep">${esc(title)}</div>`;
 }
 function endFlow(summary) {
   $('#cap').innerHTML = summary ? `<b>Finished.</b> ${esc(summary)}` : '<b>Finished.</b>';
   setBusy(false);
+  // Keep the completed hop cycle on screen; only Restart clears it.
   renderPhone();
 }
 function wait(mult) {
@@ -966,46 +1225,64 @@ function setChecks(checks) {
 /* ================= device screens ================= */
 function renderPhone() {
   syncFromPortal();
-  const sc = $('#screen'), dev = DEVICES[UI.device], x = UI.ctx, watch = UI.device === 'watch';
+  const sc = $('#screen'), deviceEl = $('#device'), dev = DEVICES[UI.device], x = UI.ctx, watch = UI.device === 'watch';
   $('#devcol').classList.toggle('is-watch', watch);
   const w = requestorById(UI.walletId);
+  const skin = walletSkin(w && w.name);
+  if (skin) deviceEl.setAttribute('data-skin', skin);
+  else deviceEl.removeAttribute('data-skin');
   $('#devHint').textContent = watch
     ? `Cardholder smartwatch (${dev.id}) · ${w ? w.name : 'wallet'}`
     : `Cardholder phone · ${w ? w.name : 'wallet'}`;
   const now = new Date(), clock = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  let h = watch
-    ? `<div class="ph-top"><span class="num">${clock}</span></div>`
-    : `<div class="ph-top"><span>${esc(dev.type)}</span><span style="font-family:var(--mono)">${esc(dev.id)}</span></div>`;
+  const wName = (w && w.name) || 'Wallet';
+  let h = skin
+    ? (watch
+      ? `<div class="ph-top"><span class="skin-walname">${esc(wName)}</span></div>`
+      : `<div class="ph-top"><span class="skin-walname">${esc(wName)}</span><span class="num">${clock}</span></div>`)
+    : (watch
+      ? `<div class="ph-top"><span class="num">${clock}</span></div>`
+      : `<div class="ph-top"><span>${esc(dev.type)}</span><span style="font-family:var(--mono)">${esc(dev.id)}</span></div>`);
   if (smsBanner) {
     h += `<div class="sms"><div style="flex:1"><b>SMS from ${esc(smsBanner.from)}</b>${esc(smsBanner.text)}</div><button type="button" data-act="sms-x" aria-label="Dismiss">&times;</button></div>`;
   }
-  h += `<div class="ph-body">`;
+  let body = '';
+  if (skin === 'bank' && UI.screen !== 'home') {
+    body += `<div class="skin-bank-hero skin-bank-hero-compact"><div class="skin-bank-name">${esc(bankLabel())}</div></div>`;
+  }
   if (UI.screen === 'home') {
     const ts = walletTokens();
-    h += `<h3>Wallet</h3>`;
-    if (!ts.length) h += `<p class="hint">No cards on this ${dev.type.toLowerCase()} yet. Add a bank card to create a token.</p>`;
+    if (skin === 'bank') {
+      body += `<div class="skin-bank-hero"><div class="skin-bank-name">${esc(bankLabel())}</div><p class="skin-bank-greet">Hello — here are your cards</p></div>`;
+      body += `<div class="skin-mycards"><div class="skin-mycards-label">My cards</div>`;
+    } else {
+      body += `<h3>Wallet</h3>`;
+    }
+    if (!ts.length) body += `<p class="hint">No cards on this ${dev.type.toLowerCase()} yet. Add a bank card to create a token.</p>`;
     ts.forEach((t) => {
       const c = cardById(t.cardId), p = productOf(c), paused = t.status !== 'ACTIVE';
       const last4 = cardLast4(c) || '····';
-      h += `<div class="wcard${paused ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${paused ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div>
+      body += `<div class="wcard${paused ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${paused ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div>
         <div class="pn">**** ${esc(last4)}</div>
         <div class="acts"><button type="button" class="solid lockable" data-act="open-pay" data-ref="${esc(t.ref)}">${paused ? 'Try to pay' : 'Pay'}</button><button type="button" class="lockable" data-act="remove" data-ref="${esc(t.ref)}">Remove</button></div></div>`;
     });
-    h += `<button type="button" class="pbtn ghost lockable" data-act="open-add">Add a card</button>`;
+    body += `<button type="button" class="pbtn ghost lockable" data-act="open-add">Add a card</button>`;
     const hs = localHistory.filter((i) => ts.some((t) => t.ref === i.ref)).slice(0, 4);
-    if (hs.length) h += `<div><div class="hint" style="font-weight:600">Recent activity</div><div class="hist">${hs.map((i) => `<div><span>${esc(i.text)}</span><span>${esc(money(i.amount))}</span></div>`).join('')}</div></div>`;
+    if (hs.length) body += `<div><div class="hint" style="font-weight:600">Recent activity</div><div class="hist">${hs.map((i) => `<div><span>${esc(i.text)}</span><span>${esc(money(i.amount))}</span></div>`).join('')}</div></div>`;
+    if (skin === 'bank') body += `</div>`;
   } else if (UI.screen === 'add') {
     const c = selectedCard();
     const p = productOf(c);
     const wrong = !!( $('#xCvv') && $('#xCvv').checked );
     const cvv = wrong ? '000' : cardCvv(c);
     const last4 = cardLast4(c);
+    const addTitle = skin === 'bank' ? 'Add card to wallet' : 'Add a card';
     if (!c) {
-      h += `<h3>Add a card</h3>
+      body += `<h3>${esc(addTitle)}</h3>
         <p class="hint">No card is available for ${esc(UI.scheme)}. Choose a card in the control bar, or check Card / Card Product configuration in the portal.</p>
         <div class="row"><button type="button" class="pbtn ghost" data-act="home">Cancel</button></div>`;
     } else {
-      h += `<h3>Add a card</h3>
+      body += `<h3>${esc(addTitle)}</h3>
         <div class="art"><b>${esc((p && p.name) || c.product || 'Card')}</b><span style="font-family:var(--mono)">**** ${esc(last4)}</span></div>
         <p class="hint">${esc(maskPan(c.pan || c.cardNumber || ''))} · ${esc(c.expiry || '')} · ${esc(c.status || '')}</p>
         <label class="field"><span>CVV2</span><input id="addCvv" inputmode="numeric" maxlength="3" value="${esc(cvv)}"></label>
@@ -1016,37 +1293,39 @@ function renderPhone() {
     }
   } else if (UI.screen === 'tnc') {
     const c = x.c;
-    h += `<h3>Terms and conditions</h3><div class="art"><b>${esc((productOf(c) || {}).name || '')}</b><span style="font-family:var(--mono)">**** ${esc(cardLast4(c))}</span></div>
+    body += `<h3>Terms and conditions</h3><div class="art"><b>${esc((productOf(c) || {}).name || '')}</b><span style="font-family:var(--mono)">**** ${esc(cardLast4(c))}</span></div>
       <p class="hint">Card art and terms from your bank. Accepting creates a device token. Your real card number is not stored on the device.</p>
       <div class="row"><button type="button" class="pbtn ghost" data-act="user" data-v="false">Decline</button><button type="button" class="pbtn" data-act="user" data-v="true">Accept</button></div>`;
   } else if (UI.screen === 'stepup') {
-    h += `<h3>Verify your card</h3><p class="hint">Your bank needs an extra check. Where should we send the code?</p>`;
+    body += `<h3>Verify your card</h3><p class="hint">Your bank needs an extra check. Where should we send the code?</p>`;
     (x.methods || []).forEach((m) => {
       const contact = m.contact ? ` to ${m.contact}` : '';
-      h += `<button type="button" class="pbtn${m.id === 'SMS' ? '' : ' ghost'}" data-act="user" data-v="${esc(m.id)}">${esc(m.label || m.id)}${esc(contact)}</button>`;
+      body += `<button type="button" class="pbtn${m.id === 'SMS' ? '' : ' ghost'}" data-act="user" data-v="${esc(m.id)}">${esc(m.label || m.id)}${esc(contact)}</button>`;
     });
-    if (!(x.methods || []).length) h += `<p class="hint">No step-up methods available.</p><button type="button" class="pbtn ghost" data-act="home">Cancel</button>`;
+    if (!(x.methods || []).length) body += `<p class="hint">No step-up methods available.</p><button type="button" class="pbtn ghost" data-act="home">Cancel</button>`;
   } else if (UI.screen === 'otp') {
     const left = x.attemptsLeft != null ? x.attemptsLeft : '';
-    h += `<h3>Enter the code</h3><p class="hint opt">We sent a one-time code.${left !== '' ? ' Attempts left: ' + left + '.' : ''}</p>
+    body += `<h3>Enter the code</h3><p class="hint opt">We sent a one-time code.${left !== '' ? ' Attempts left: ' + left + '.' : ''}</p>
       <label class="field"><span>One-time code</span><input id="otpIn" inputmode="numeric" maxlength="8" autocomplete="off"></label>
-      ${x.err ? `<p style="color:var(--bad);font-size:12px">${esc(x.err)}</p>` : ''}
+      ${x.err ? `<p style="color:var(--skin-bad,var(--bad));font-size:12px">${esc(x.err)}</p>` : ''}
       <div class="row"><button type="button" class="pbtn ghost" data-act="otp-cancel">Cancel</button>
       ${x.canResend ? `<button type="button" class="pbtn ghost" data-act="otp-resend">Resend</button>` : ''}
       <button type="button" class="pbtn" data-act="otp-ok">Verify</button></div>`;
   } else if (UI.screen === 'pay') {
     const t = tokenByRef(x.ref), c = t ? cardById(t.cardId) : null, p = productOf(c);
     const ms = merchantsForWallet();
-    h += `<h3>Pay</h3><div class="wcard${t && t.status !== 'ACTIVE' ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${t && t.status !== 'ACTIVE' ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div><div class="pn">**** ${esc(cardLast4(c))}</div></div>
+    const payTitle = skin === 'bank' ? 'Pay with phone' : 'Pay';
+    body += `<h3>${esc(payTitle)}</h3><div class="wcard${t && t.status !== 'ACTIVE' ? ' paused' : ''}"><div class="r"><b>${esc(p ? p.name : 'Card')}</b>${t && t.status !== 'ACTIVE' ? '<span class="pill warn">Paused by bank</span>' : '<span class="pill ok">Ready</span>'}</div><div class="pn">**** ${esc(cardLast4(c))}</div></div>
       <label class="field"><span>Merchant</span><select id="payM">${ms.map((m, i) => `<option value="${i}">${esc(m.label)}</option>`).join('')}</select></label>
       <label class="field"><span>Amount (${esc(inst().currency || 'PKR')})</span><input id="payAmt" inputmode="numeric" value="1850"></label>
       <div class="row"><button type="button" class="pbtn ghost" data-act="home">Back</button><button type="button" class="pbtn" data-act="do-pay">Tap to pay</button></div>`;
   } else if (UI.screen === 'progress') {
-    h += `<div class="bigres wait"><div class="mark">&#8230;</div><h3>${esc(watch && x.text === 'Hold near the reader' ? 'Hold watch near the reader' : (x.text || 'Working'))}</h3><p class="hint opt">Follow the hops in the backend flow.</p></div>`;
+    body += `<div class="bigres wait"><div class="mark">&#8230;</div><h3>${esc(watch && x.text === 'Hold near the reader' ? 'Hold watch near the reader' : (x.text || 'Working'))}</h3><p class="hint opt">Follow the hops in the backend flow.</p></div>`;
   } else if (UI.screen === 'result') {
-    h += `<div class="bigres ${x.ok ? 'ok' : 'bad'}"><div class="mark">${x.ok ? '&#10003;' : '&#10005;'}</div><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><button type="button" class="pbtn lockable" data-act="home">Done</button></div>`;
+    body += `<div class="bigres ${x.ok ? 'ok' : 'bad'}"><div class="mark">${x.ok ? '&#10003;' : '&#10005;'}</div><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><button type="button" class="pbtn lockable" data-act="home">Done</button></div>`;
   }
-  sc.innerHTML = h + `</div>`;
+  if (skin === 'harbor') body = `<div class="skin-drawer">${body}</div>`;
+  sc.innerHTML = h + `<div class="ph-body">${body}</div>`;
 }
 
 /* ================= flows ================= */
@@ -1057,18 +1336,25 @@ function hopStepsForTxn() {
   }));
 }
 function baseTxn(type, kind, extras) {
-  const c = cardById(UI.cardId);
+  extras = extras || {};
+  // Prefer explicit card/token fields from the flow (pay uses the token's card, not the picker).
+  const c = extras.cardId ? cardById(extras.cardId) : cardById(UI.cardId);
   const p = productOf(c);
-  const w = requestorById(UI.walletId);
+  const w = requestorById(extras.requestorId || UI.walletId);
   const id = txnId(kind);
   UI.txnId = id;
   const now = stamp();
   const row = Object.assign({
-    id, type, time: now, scheme: UI.scheme, channel: extras.channel || 'WALLET',
-    actor: extras.actor || 'cardholder', cardId: c ? c.id : '', card: c ? maskPan(c.pan || c.cardNumber || '') : '',
-    product: p ? p.name : '', tokenRef: extras.tokenRef || '', token: extras.token || '',
-    requestorId: UI.walletId, requestor: w ? w.name : '', deviceId: DEVICES[UI.device].id,
-    deviceType: DEVICES[UI.device].type, merchant: extras.merchant || '', entryMode: extras.entryMode || '',
+    id, type, time: now, scheme: (c && (schemeOf(c) || {}).code) || UI.scheme, channel: extras.channel || 'WALLET',
+    actor: extras.actor || 'cardholder',
+    cardId: extras.cardId || (c ? c.id : ''),
+    card: extras.card || (c ? maskPan(c.pan || c.cardNumber || '') : ''),
+    product: extras.product || (p ? p.name : ''),
+    tokenRef: extras.tokenRef || '', token: extras.token || '',
+    requestorId: extras.requestorId || UI.walletId, requestor: extras.requestor || (w ? w.name : ''),
+    deviceId: extras.deviceId || DEVICES[UI.device].id,
+    deviceType: extras.deviceType || DEVICES[UI.device].type,
+    merchant: extras.merchant || '', entryMode: extras.entryMode || '',
     amount: extras.amount != null ? extras.amount : null, currency: inst().currency || 'PKR',
     rrn: extras.rrn || rnd(12), status: 'RECEIVED', decision: '', reason: '', responseCode: '',
     message: '', inputs: extras.inputs || {}, checks: [], steps: [], cycle: [{ status: 'RECEIVED', time: now }],
@@ -1085,6 +1371,28 @@ function finishTxn(patch) {
   const cycle = (cur.cycle || []).slice();
   if (!cycle.length || cycle[cycle.length - 1].status !== patch.status) cycle.push({ status: patch.status, time: now });
   upsertTxn(Object.assign({ id: UI.txnId, time: now, steps: hopStepsForTxn(), checks: UI.checks, cycle }, patch));
+  if (patch && patch.status && patch.status !== 'RECEIVED') UI.txnClosed = UI.txnId;
+}
+function txnStillOpen() {
+  if (!UI.txnId) return false;
+  if (UI.txnClosed && UI.txnClosed === UI.txnId) return false;
+  const cur = (liveStore().transactions || []).find((t) => t && t.id === UI.txnId);
+  // Missing row after a closed finish must not resurrect a FAILED overwrite.
+  if (!cur) return false;
+  return !cur.status || cur.status === 'RECEIVED';
+}
+function finalizeOpenTxn(err) {
+  if (!txnStillOpen()) return;
+  const msg = err && (err.message || err) ? String(err.message || err) : 'Flow interrupted before completion';
+  finishTxn({
+    status: 'FAILED',
+    decision: 'FAILED',
+    reason: 'FLOW_INTERRUPTED',
+    message: msg
+  });
+}
+function endFlowSafe(summary) {
+  if (UI.busy) endFlow(summary);
 }
 
 async function provision() {
@@ -1112,6 +1420,7 @@ async function provision() {
   baseTxn('PROVISIONING', 'PRV', { inputs, channel: 'WALLET' });
   UI.screen = 'progress'; UI.ctx = { text: 'Contacting your bank' };
 
+  try {
   await step({ from: DEV, to: WAL, title: 'Cardholder starts Add card', body: { cardNumber: maskPan(pan), expiry: c.expiry, cvv2: '***', device: `${dev.type} ${dev.id}` }, src: 'R5 slide 24 step 1; R4 A4 Figure 3' });
   await step({ from: WAL, to: SCH, title: 'Wallet asks the scheme for a token', body: { tokenRequestor: w.name, tokenRequestorId: w.id, card: maskPan(pan) + '  (sent encrypted)', deviceInfo: `${dev.type}, ${dev.id}` }, note: 'Only the token requestor and the scheme are involved so far.', src: 'R5 slide 24 step 2; R3 Use case' });
 
@@ -1299,12 +1608,23 @@ async function provision() {
   pushAudit('TOKEN_CREATED', t.ref, `Token created for ${maskPan(pan)} on ${dev.type} (${idvPath})`);
   endFlow(`Token ${t.ref} is ${t.status} on ${dev.type}.`);
   return t.ref;
+  } catch (err) {
+    finalizeOpenTxn(err);
+    UI.screen = 'result';
+    UI.ctx = { ok: false, title: 'Provisioning interrupted', text: (err && err.message) || 'Flow interrupted' };
+    endFlowSafe((err && err.message) || 'Provisioning interrupted.');
+    return null;
+  } finally {
+    finalizeOpenTxn();
+    endFlowSafe('Provisioning ended.');
+  }
 }
 
 async function pay(ref, amount, merchantIdx) {
   const Eng = window.TknEngine;
   const t = tokenByRef(ref);
   if (!t) { toast('Token not found'); return; }
+  if (!Eng) { toast('tkn-engine.js not loaded'); return; }
   const c = cardById(t.cardId);
   const ms = merchantsForWallet();
   const m = ms[merchantIdx] || ms[0];
@@ -1323,6 +1643,7 @@ async function pay(ref, amount, merchantIdx) {
   });
   UI.screen = 'progress'; UI.ctx = { text: m.ch === 'POS' ? 'Hold near the reader' : 'Paying online' };
 
+  try {
   await step({ from: DEV, to: DEV, title: 'Cardholder authenticates on the device', body: { method: 'biometric or device passcode' }, src: 'R5 slide 36 step 1' });
   await step({ from: DEV, to: POS, title: m.ch === 'POS' ? 'Tap: token and one-time cryptogram' : 'Checkout: token and one-time cryptogram', body: { token: maskTok(t.token), tokenExpiry: msgTokenExpiry, cryptogram: crypto, realCardNumber: 'not present' }, src: 'R5 slide 36 step 1; R5 slide 38' });
   await step({
@@ -1345,6 +1666,15 @@ async function pay(ref, amount, merchantIdx) {
   setChecks(auth.checks);
   await step({ from: CMS, to: CMS, title: auth.ok ? 'Authorization checks passed' : `Check failed: ${auth.reason}`, tone: auth.ok ? 'good' : 'bad', body: { decision: auth.decision, reason: auth.reason, message: auth.message, responseCode: auth.responseCode }, src: 'R4 A4 Figure 5; R3 Acceptance Criteria 1-8', hold: 1.2 });
 
+  // Persist decision progress before debit/effects — cards writes used to race and drop the txn flush.
+  finishTxn({
+    status: auth.ok ? 'APPROVED' : 'DECLINED',
+    decision: auth.decision || (auth.ok ? 'APPROVED' : 'DECLINED'),
+    reason: auth.reason || '',
+    responseCode: auth.responseCode || '',
+    message: auth.message || '',
+    amount, merchant: m.name, tokenRef: t.ref, token: maskTok(t.token)
+  });
   if (auth.ok) applyEffects(auth.effects);
   const approved = !!auth.ok;
   const rc = auth.responseCode || (approved ? '00' : '05');
@@ -1372,6 +1702,16 @@ async function pay(ref, amount, merchantIdx) {
     `${approved ? 'Approved' : 'Declined'} ${money(amount)} at ${m.name}` + (auth.reason ? ` (${auth.reason})` : ''));
   endFlow(approved ? `Approved ${money(amount)}.` : `Declined: ${auth.reason}.`);
   return approved;
+  } catch (err) {
+    finalizeOpenTxn(err);
+    UI.screen = 'result';
+    UI.ctx = { ok: false, title: 'Payment interrupted', text: (err && err.message) || 'Flow interrupted' };
+    endFlowSafe((err && err.message) || 'Payment interrupted.');
+    return false;
+  } finally {
+    finalizeOpenTxn();
+    endFlowSafe('Payment ended.');
+  }
 }
 
 async function walletRemove(ref) {
@@ -1387,6 +1727,7 @@ async function walletRemove(ref) {
     card: c ? maskPan(c.pan) : '', inputs, actor: 'cardholder'
   });
 
+  try {
   await step({ from: DEV, to: WAL, title: 'Cardholder removes the card in the wallet', src: 'R4 case 41' });
   await step({ from: WAL, to: SCH, title: 'Token requestor asks the scheme to delete the token', body: { tokenReferenceId: t.ref, initiatedBy: 'TOKEN REQUESTOR' }, src: 'R5 slide 49' });
 
@@ -1416,6 +1757,15 @@ async function walletRemove(ref) {
   });
   pushAudit('Delete', t.ref, 'Token deleted by cardholder in wallet');
   endFlow('Token deleted. Tokens on other devices are not affected.');
+  } catch (err) {
+    finalizeOpenTxn(err);
+    UI.screen = 'result';
+    UI.ctx = { ok: false, title: 'Removal interrupted', text: (err && err.message) || 'Flow interrupted' };
+    endFlowSafe((err && err.message) || 'Wallet removal interrupted.');
+  } finally {
+    finalizeOpenTxn();
+    endFlowSafe('Wallet removal ended.');
+  }
 }
 
 async function operatorLifecycle(ref, action, code, reason) {
@@ -1431,6 +1781,7 @@ async function operatorLifecycle(ref, action, code, reason) {
     cardId: t.cardId, card: c ? maskPan(c.pan) : '',
     inputs: { tokenRef: ref, action, reasonCode: code, reasonText: reason, initiator: 'OPERATOR' }
   });
+  try {
   await step({ from: CMS, to: CMS, title: `Operator submits Update Token Status: ${actLabel}`, body: { tokenReference: t.ref, newStatus: actLabel, reasonCode: code, reason, user: 'token.admin (guided)' }, src: 'R4 A5; R4 HT-04 to HT-06' });
   await step({ from: CMS, to: ITC, title: 'Lifecycle request passed to Tokenization Connect', body: { tokenReference: t.ref, action: actLabel, reasonCode: code }, src: 'R2 Phase 03' });
   const life = Eng.lifecycle(liveStore(), { tokenRef: ref, action, reasonCode: code, reasonText: reason, initiator: 'OPERATOR' });
@@ -1464,6 +1815,14 @@ async function operatorLifecycle(ref, action, code, reason) {
   pushAudit(actLabel, t.ref, `Device token ${actLabel} (${code}) ${reason}`, 'token.admin (guided)');
   endFlow(`Token is now ${(life.token && life.token.status) || 'updated'}.`);
   return true;
+  } catch (err) {
+    finalizeOpenTxn(err);
+    endFlowSafe((err && err.message) || 'Lifecycle interrupted.');
+    return false;
+  } finally {
+    finalizeOpenTxn();
+    endFlowSafe('Lifecycle ended.');
+  }
 }
 
 /* ================= guided storyline ================= */
@@ -1524,7 +1883,7 @@ async function guided() {
 /* ================= restart / wiring ================= */
 function restart(keepBanners) {
   if (UI.busy) return;
-  Object.assign(UI, { screen: 'home', ctx: {}, txnId: null });
+  Object.assign(UI, { screen: 'home', ctx: {}, txnId: null, txnClosed: null });
   if (!keepBanners) smsBanner = null;
   clearFlow();
   paintControls();

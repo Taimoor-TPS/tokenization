@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRIS Tokenization Portal — Q&amp;A Reference</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.45;
+    color: #1a2332;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+  }
+  h1 {
+    font-size: 20pt;
+    color: #16233d;
+    border-bottom: 3px solid #e8492f;
+    padding-bottom: 8px;
+    margin: 0 0 6px;
+  }
+  .meta { color: #65748a; font-size: 10pt; margin-bottom: 22px; }
+  h2 {
+    font-size: 13pt;
+    color: #16233d;
+    margin: 26px 0 10px;
+    padding: 8px 10px;
+    background: #f0f4f9;
+    border-left: 4px solid #e8492f;
+    page-break-after: avoid;
+  }
+  h3 { font-size: 11.5pt; color: #1f3a5f; margin: 16px 0 6px; page-break-after: avoid; }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 14px;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #cad4e0;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #1b2a45; color: #fff; font-weight: 600; }
+  tr:nth-child(even) td { background: #f7f9fb; }
+  code, .mono {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: #f1f3f6;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  .q {
+    font-weight: 700;
+    color: #0f5e8c;
+    margin-top: 4px;
+  }
+  .note {
+    background: #fff8e6;
+    border: 1px solid #e9c46a;
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin: 10px 0 14px;
+    font-size: 10pt;
+  }
+  .flow {
+    background: #f7f9fb;
+    border: 1px solid #e4e9ef;
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 9.5pt;
+    white-space: pre-wrap;
+    margin: 8px 0 14px;
+    page-break-inside: avoid;
+  }
+  .toc a { color: #1f3a5f; text-decoration: none; }
+  .toc li { margin-bottom: 3px; }
+  .footer {
+    margin-top: 36px;
+    padding-top: 10px;
+    border-top: 1px solid #cad4e0;
+    font-size: 9pt;
+    color: #65748a;
+  }
+  @media print {
+    body { padding: 0; max-width: none; }
+    h2 { break-after: avoid; }
+    table, .flow, .note { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>IRIS Tokenization Operations Portal</h1>
+<p class="meta">
+  Q&amp;A reference from configuration walkthrough · Demo portal (not live Visa/MC)<br>
+  Generated for future reference · Path: <span class="mono">code/systemDoc</span> · 12 Nov 2026
+</p>
+
+<h2>Contents</h2>
+<ol class="toc">
+  <li><a href="#q1">Institution</a></li>
+  <li><a href="#q2">Token Requestor — configuration &amp; identification</a></li>
+  <li><a href="#q3">How the bank knows tokenRequestorId (e.g. Google Pay)</a></li>
+  <li><a href="#q4">Assurance without / after step-up (50 / 70)</a></li>
+  <li><a href="#q5">Eligibility, ID&amp;V Risk, Step-up — how they connect</a></li>
+  <li><a href="#q6">Assurance usage (Roman Urdu summary)</a></li>
+  <li><a href="#q7">Changing 50/70 and CMS “Record the token” screen</a></li>
+  <li><a href="#q8">Device score — who examines it</a></li>
+  <li><a href="#q9">Reason code rules (ID&amp;V)</a></li>
+  <li><a href="#q10">Do Visa/Mastercard send reason codes?</a></li>
+  <li><a href="#q11">Where is that written in this project?</a></li>
+  <li><a href="#q12">Official Visa/MC documentation</a></li>
+  <li><a href="#q13">Lifecycle Configuration</a></li>
+  <li><a href="#q14">Token Management → Suspend → Reason Code dropdown</a></li>
+</ol>
+
+<!-- ========== Q1 ========== -->
+<h2 id="q1">1. Institution (Master Configuration › General Configuration › Institution)</h2>
+<p class="q">What is it for?</p>
+<p><strong>Institution</strong> is the bank-level settings screen. It holds a <strong>single record</strong> used for branding and money display — not tokenization decision rules.</p>
+<table>
+  <tr><th>Field</th><th>Default (seed)</th><th>Used for</th></tr>
+  <tr><td>Bank name</td><td>IRIS Issuer Bank</td><td>Simulator SMS and receipts</td></tr>
+  <tr><td>Currency code</td><td>PKR</td><td>Amount display (e.g. PKR 1,850.00)</td></tr>
+  <tr><td>Currency decimals</td><td>2</td><td>Amount formatting</td></tr>
+  <tr><td>Timezone</td><td>Asia/Karachi</td><td>Institution timezone setting</td></tr>
+</table>
+<p>Help line: <em>“Bank name and currency used in simulator SMS, receipts and amount display.”</em></p>
+<p>Persisted as <code>institution.json</code>.</p>
+
+<!-- ========== Q2 ========== -->
+<h2 id="q2">2. Token Requestor — how configured &amp; how identified</h2>
+<p class="q">Path: Master Configuration › Wallet Configuration › Token Requestor</p>
+<p>Master list of wallets/merchants allowed to request tokens. Persisted as <code>token-requestors.json</code>.</p>
+<table>
+  <tr><th>Field</th><th>Role</th></tr>
+  <tr><td>Token requestor ID</td><td>Unique <strong>11-digit</strong> key (immutable after create)</td></tr>
+  <tr><td>Name</td><td>Display / “Channel” on the token</td></tr>
+  <tr><td>Type</td><td>OEM wallet / Issuer wallet (HCE) / Merchant card-on-file</td></tr>
+  <tr><td>Schemes</td><td>VISA / MC allowed</td></tr>
+  <tr><td>Token type</td><td>02 SE or 03 HCE — written on token</td></tr>
+  <tr><td>Device types</td><td>Mobile / Watch / Tablet for provisioning</td></tr>
+  <tr><td>Payment channels</td><td>POS contactless / E-commerce</td></tr>
+  <tr><td>Status</td><td>Enabled / Disabled</td></tr>
+</table>
+<p><strong>Seed IDs:</strong> <code>40010075001</code> OEM Wallet (enabled); <code>40010075002</code> Bank App Wallet; <code>40010075003</code> Unapproved Wallet (disabled).</p>
+<p><strong>Identification:</strong> exact match on <code>requestorId</code> ↔ <code>tokenRequestors[].id</code>. No name/type lookup for decisions.</p>
+<ol>
+  <li>Simulator picks wallet → sends that <code>id</code> as <code>requestorId</code></li>
+  <li>Eligibility: must exist, Enabled, support scheme, allow device type (if “Require approved requestor” on)</li>
+  <li>Token create stores <code>requestorId</code>, <code>channel</code> = name, <code>tokenType</code></li>
+  <li>Payment: if “Validate token requestor ID” on, requestor must still be Enabled</li>
+</ol>
+
+<!-- ========== Q3 ========== -->
+<h2 id="q3">3. How does back office know Google Pay’s tokenRequestorId is correct?</h2>
+<p>The bank does <strong>not</strong> invent or discover the ID from the cardholder session. It maintains an <strong>allowlist of scheme-assigned Token Requestor IDs</strong>.</p>
+<ol>
+  <li><strong>Scheme assigns the ID</strong> — Google/Apple register with Visa VTS / Mastercard MDES; network issues a fixed TR ID.</li>
+  <li><strong>Bank loads official list</strong> during tokenization onboarding into Token Requestor master.</li>
+  <li><strong>Provisioning</strong>: Wallet → Scheme → Issuer; scheme authenticates the wallet; issuer receives <code>tokenRequestorId</code> from the scheme.</li>
+  <li><strong>Check:</strong> “Is this ID on our approved Enabled list for this scheme/device?”</li>
+</ol>
+<p>In this <strong>demo</strong>, IDs are entered manually (OEM Wallet stands in for Google/Apple-style wallets). Nothing connects to live VTS/MDES.</p>
+
+<!-- ========== Q4 ========== -->
+<h2 id="q4">4. Assurance without step-up / Assurance after step-up</h2>
+<p class="q">Path: Eligibility Rules › ID&amp;V defaults</p>
+<p>These are <strong>token assurance levels</strong> (0–99) stamped on the token at create time — how strongly the cardholder was identified.</p>
+<table>
+  <tr><th>Setting</th><th>Default</th><th>Used when</th></tr>
+  <tr><td>Assurance without step-up</td><td>50</td><td>ID&amp;V path <strong>GREEN</strong> (no OTP)</td></tr>
+  <tr><td>Assurance after step-up</td><td>70</td><td>ID&amp;V path <strong>YELLOW</strong> / call-centre (after step-up)</td></tr>
+</table>
+<p><strong>Not</strong> used to decide GREEN/YELLOW/RED, eligibility, or payment approve/decline in this demo. Stored on the token; shown in Token Management / transaction detail.</p>
+
+<!-- ========== Q5 ========== -->
+<h2 id="q5">5. Eligibility, ID&amp;V Risk (1–5), Step-up — connection</h2>
+<p class="q">Confusion: scores 50/70 vs device score bands 1–5</p>
+<p>They are <strong>different numbers for different jobs</strong>. Three sequential stages:</p>
+<div class="flow">1. Eligibility Rules (checkboxes)
+   → May this card be tokenized at all?
+   → FAIL → NOT_ELIGIBLE | PASS → continue
+
+2. ID&amp;V Risk Rules (score 1–5 + reason codes)
+   → GREEN  → create token immediately
+   → YELLOW → Step-up / OTP
+   → RED    → decline (no token)
+
+3. Step-up and OTP (only if YELLOW)
+   → OTP OK → create token | fail → stop
+
+4. createToken stamps assurance
+   → GREEN  → Assurance without step-up (50)
+   → YELLOW → Assurance after step-up (70)</div>
+<table>
+  <tr><th>Number</th><th>Screen</th><th>Meaning</th></tr>
+  <tr><td><strong>1–5</strong></td><td>ID&amp;V Risk Rules › Device score bands</td><td>Risk score from scheme/wallet → maps to GREEN/YELLOW/RED</td></tr>
+  <tr><td><strong>50 / 70</strong></td><td>Eligibility › ID&amp;V defaults</td><td>Token assurance label after success — not the risk score</td></tr>
+</table>
+<p>OTP is <strong>not</strong> checked against the 1–5 score. Risk Rules decide <em>whether</em> OTP is needed; Step-up screen defines <em>how</em> OTP works (length, validity, channels, Issuer vs Scheme).</p>
+<p><strong>Unlisted reason code decision</strong> (default YELLOW): colour when a reason code is missing/disabled in Reason code rules — still unrelated to 50/70.</p>
+<p>Example: score 3 + NEW_DEVICE → YELLOW → OTP → token with assurance <strong>70</strong>. Score 5, no bad reasons → GREEN → no OTP → assurance <strong>50</strong>.</p>
+
+<!-- ========== Q6 ========== -->
+<h2 id="q6">6. Assurance in simple terms (Roman Urdu summary)</h2>
+<p><strong>50 aur 70 risk score nahi hain.</strong> Ye assurance level hai — token banate waqt system note karta hai: “is bande ko kitna strongly verify kiya tha?”</p>
+<ul>
+  <li>GREEN (bina OTP) → kam verification → stamp <strong>50</strong></li>
+  <li>YELLOW (OTP ke baad) → zyada verification → stamp <strong>70</strong></li>
+</ul>
+<p>Ye number baad mein approve/decline nahi karta (is demo mein). Sirf token record pe tag/label hai — jaise birth certificate pe verification level.</p>
+
+<!-- ========== Q7 ========== -->
+<h2 id="q7">7. If I change 50/70 — what changes? Why isn’t it on the CMS step image?</h2>
+<p><strong>Changing 50/70 in this demo:</strong> almost no behavioural change. Eligibility, colours, OTP, and payment decisions do <strong>not</strong> read this field. Only the number written on new tokens changes (visible in Token Management › View).</p>
+<p><strong>CMS “Record the token against the card” animation</strong> intentionally shows a short summary:</p>
+<p><code>card</code>, <code>tokenReference</code>, <code>device</code>, <code>channel</code>, <code>status</code>, <code>tokenExpiry</code></p>
+<p>Assurance is <strong>not</strong> listed in that UI box, but <code>createToken</code> still saves <code>assurance</code> on the token in the store. Open Token Management › View to see it.</p>
+
+<!-- ========== Q8 ========== -->
+<h2 id="q8">8. Device score — how examined and by whom?</h2>
+<table>
+  <tr><th>Role</th><th>What they do</th></tr>
+  <tr><td>Scheme / wallet</td><td>Produce score 1–5 (+ reason codes) with the provisioning request</td></tr>
+  <tr><td>Bank / issuer (<code>decideIdv</code>)</td><td>Map score via ID&amp;V Risk Rules › Device score bands → GREEN/YELLOW/RED</td></tr>
+  <tr><td>Back-office operator</td><td>Configure bands; does not calculate live scores</td></tr>
+</table>
+<p>Demo: simulator control bar “Device score” (default 3) simulates the scheme input. Engine looks up <code>risk-score-bands.json</code>. Final colour = most serious of score + reason colours (RED &gt; YELLOW &gt; GREEN).</p>
+<p>PRD: <em>“Risk input sent by the scheme with the provisioning request.”</em></p>
+
+<!-- ========== Q9 ========== -->
+<h2 id="q9">9. Reason code rules (ID&amp;V Risk Rules › Reason code rules)</h2>
+<p>Bank’s <strong>risk dictionary</strong>: maps scheme/wallet reason codes to GREEN / YELLOW / RED.</p>
+<table>
+  <tr><th>Code (seed)</th><th>Meaning</th><th>Decision</th></tr>
+  <tr><td>LONG_STANDING_ACCOUNT</td><td>Long clean wallet history</td><td>GREEN</td></tr>
+  <tr><td>NEW_DEVICE</td><td>Device not seen before</td><td>YELLOW</td></tr>
+  <tr><td>NEW_WALLET_ACCOUNT</td><td>Wallet account recently created</td><td>YELLOW</td></tr>
+  <tr><td>DEVICE_FLAGGED</td><td>Device flagged by scheme</td><td>RED</td></tr>
+  <tr><td>ACCOUNT_HIGH_RISK</td><td>Wallet account high risk</td><td>RED</td></tr>
+</table>
+<p><strong>Purpose:</strong> control bank response to risk signals after eligibility. Combined with device score; most serious colour wins.</p>
+<p><strong>How bank knows codes:</strong> from Visa/Mastercard (or wallet) issuer documentation at onboarding — not invented per transaction. Demo codes are illustrative seeds; simulator checkboxes simulate “scheme sent these.”</p>
+
+<!-- ========== Q10 ========== -->
+<h2 id="q10">10. Do Visa or Mastercard send reasonCodes?</h2>
+<p><strong>Yes — the scheme</strong> (Visa VTS or Mastercard MDES) delivers risk inputs with the provisioning / approve-provisioning style request. Often the <strong>wallet</strong> originated the scores/codes; the scheme <strong>forwards</strong> them to the issuer. Bank only looks them up in Reason code rules.</p>
+
+<!-- ========== Q11 ========== -->
+<h2 id="q11">11. Where is that written in this project?</h2>
+<p>In <strong>Tokenization Demo Portal PRD.md</strong> (word used: “scheme” = Visa/Mastercard here):</p>
+<ul>
+  <li>§7.7 — <em>“Reason codes the scheme may send with the request.”</em></li>
+  <li>§8 controls — Device score / Reason codes: <em>“Risk input sent by the scheme…”</em></li>
+  <li>§12.4 — <em>“real scales and codes come from the scheme's issuer documentation.”</em></li>
+  <li>§7.7 intro — <em>“The scheme's second question: given this risk information, does the bank approve?”</em></li>
+</ul>
+<p>Simulator ID&amp;V step goes Scheme → Issuer with <code>deviceScore</code> + <code>reasonCodes</code> in the request body.</p>
+
+<!-- ========== Q12 ========== -->
+<h2 id="q12">12. Official Visa / Mastercard documentation?</h2>
+<p><strong>Yes, the concept is real</strong> in scheme issuer APIs — but demo English names (<code>NEW_DEVICE</code>, etc.) are simplified seeds.</p>
+<table>
+  <tr><th>Concept</th><th>Real API (approx.)</th><th>Who creates</th><th>Who delivers to bank</th></tr>
+  <tr><td>Device score 1–5</td><td>Visa: <code>walletProviderDeviceScore</code>; MC: <code>deviceScore</code></td><td>Wallet / token requestor</td><td>Scheme (VTS / MDES)</td></tr>
+  <tr><td>Reason codes</td><td>Visa: <code>walletProviderReasonCodes</code>; MC: <code>recommendationReasons</code></td><td>Wallet scoring</td><td>Scheme</td></tr>
+</table>
+<p>Real codes are often like <code>01</code>, <code>02</code>, <code>0C</code>, <code>0D</code>… Full manuals are often on partner portals. Public/partner echoes exist in VTS Issuer API excerpts, MDES decisioning fields, and processor docs (e.g. Sofi, Thales).</p>
+
+<!-- ========== Q13 ========== -->
+<h2 id="q13">13. Lifecycle Configuration — what is it for?</h2>
+<p class="q">Path: Master Configuration › Lifecycle Configuration</p>
+<p><strong>Not used in provisioning / add-to-wallet.</strong> Used for <strong>token lifecycle after the token exists</strong> — Operations › <strong>Token Management</strong>.</p>
+<table>
+  <tr><th>Screen</th><th>Use</th></tr>
+  <tr><td><strong>Reason Codes</strong></td><td>Codes offered when operator Suspend / Unsuspend / Delete / Activate a token</td></tr>
+  <tr><td><strong>Card Status Cascade</strong></td><td>When operator changes <strong>card</strong> status, what happens to all tokens on that card</td></tr>
+</table>
+<p><strong>Important:</strong> Lifecycle Reason Codes (T, F, C, Z…) are <strong>not</strong> the same as ID&amp;V reason codes (NEW_DEVICE, etc.).</p>
+<h3>Card Status Cascade (seed)</h3>
+<table>
+  <tr><th>New card status</th><th>Effect on tokens</th></tr>
+  <tr><td>ACTIVE</td><td>Resume (only tokens with <code>suspendedBy = CARD</code>)</td></tr>
+  <tr><td>WARM / EXPIRED</td><td>Suspend</td></tr>
+  <tr><td>HOT / BLOCKED</td><td>Delete</td></tr>
+</table>
+<p>Scheme <strong>Cascade mode</strong> (Visa CARD_LEVEL / MC PER_TOKEN) controls how scheme calls are shown. Card status is changed from Token Management (not the Card master form) so cascade runs.</p>
+
+<!-- ========== Q14 ========== -->
+<h2 id="q14">14. Token Management → Suspend → Reason Code dropdown</h2>
+<p>This flow <strong>exists in the portal code</strong>. It is easy to miss in the UI.</p>
+<ol>
+  <li>Operations › <strong>Token Management</strong></li>
+  <li>Expand the card row (Tokens column ▸)</li>
+  <li>On an <strong>ACTIVE</strong> token, click <strong>✕</strong> (Suspend) — icon only, not a text button</li>
+  <li>Modal <strong>“Update Token Status”</strong> → <strong>Reason Code *</strong> dropdown filled from Lifecycle › Reason Codes via <code>reasonCodesFor(action, scheme)</code></li>
+  <li>Reason text (min 5 characters) → Continue → Confirm → <code>TknEngine.lifecycle</code></li>
+</ol>
+<div class="note">
+  <strong>If it seems missing:</strong> card not expanded; token not ACTIVE (Suspend disabled); looking at Simulator wallet Remove (cardholder delete — no operator reason-code dropdown); or looking only at Master Configuration screens (config only, no action).
+</div>
+<p>Engine checks reason code enabled + applies to action + scheme, else <code>REASON_CODE_INVALID</code>.</p>
+
+<!-- ========== End matter ========== -->
+<h2>Quick map — which menu affects what</h2>
+<table>
+  <tr><th>Menu area</th><th>When it matters</th></tr>
+  <tr><td>Institution</td><td>Display: bank name, currency</td></tr>
+  <tr><td>Scheme / Product / Card</td><td>Masters for cards and scheme behaviour</td></tr>
+  <tr><td>Token Requestor</td><td>Provisioning + payment requestor checks</td></tr>
+  <tr><td>Eligibility Rules</td><td>Can card be tokenized? + assurance stamps + unlisted reason colour</td></tr>
+  <tr><td>ID&amp;V Risk Rules</td><td>GREEN / YELLOW / RED from score + reason codes</td></tr>
+  <tr><td>Step-up and OTP</td><td>How OTP works when YELLOW</td></tr>
+  <tr><td>Notification Templates</td><td>SMS/email text for OTP and lifecycle</td></tr>
+  <tr><td>Authorization / Limits / Response Codes</td><td>Token payments</td></tr>
+  <tr><td>Lifecycle Reason Codes + Cascade</td><td>Token Management operator actions &amp; card status cascade</td></tr>
+</table>
+
+<p class="footer">
+  All cards, tokens, OTPs and codes in the portal are fictitious test data.
+  Nothing connects to live Visa VTS, Mastercard MDES, or IRIS CMS.
+  This document summarises a configuration Q&amp;A session for the IRIS Tokenization Operations Portal demo.
+</p>
+
+</body>
+</html>

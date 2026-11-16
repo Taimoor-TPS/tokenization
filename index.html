@@ -14,15 +14,17 @@
     button,input,select{font:inherit} button{cursor:pointer;border:0}
     .hidden{display:none!important}.muted{color:var(--muted)}.tiny{font-size:12px}.strong{font-weight:650}
     .login-page{min-height:100vh;display:grid;place-items:center;position:relative;overflow:hidden;background:
-      radial-gradient(circle at 82% 68%,rgba(24,78,58,.32),transparent 22%),
-      radial-gradient(circle at 14% 16%,rgba(22,52,96,.45),transparent 34%),
-      linear-gradient(165deg,#050d18 0%,#0c1b2e 46%,#07111d 100%)}
+      radial-gradient(circle at 78% 72%,rgba(232,73,47,.08),transparent 28%),
+      radial-gradient(circle at 18% 22%,rgba(40,90,140,.35),transparent 36%),
+      linear-gradient(165deg,#050d18 0%,#0a192f 48%,#07111d 100%)}
     .login-net{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none}
     .login-ips{display:none}
-    .login-card{width:min(425px,calc(100% - 36px));padding:40px 42px 34px;border:1px solid rgba(255,255,255,.45);
-      background:rgba(244,246,249,.88);box-shadow:0 20px 70px rgba(0,0,0,.38);border-radius:4px;position:relative;z-index:2}
-    .logo{font-weight:800;letter-spacing:.13em;color:var(--navy);font-size:25px}.logo span{color:var(--orange)}
-    .login-card .logo{text-align:center;margin-bottom:31px}.login-card h1{font-size:20px;color:var(--navy);text-align:center;margin:0 0 22px}
+    .login-card{width:min(380px,calc(100% - 36px));padding:36px 38px 28px;border:0;
+      background:#e8eaee;box-shadow:0 22px 60px rgba(0,0,0,.45);border-radius:2px;position:relative;z-index:2}
+    .logo{font-weight:800;letter-spacing:.08em;color:var(--navy);font-size:25px}.logo span{color:var(--orange)}
+    .login-card .logo{text-align:center;margin:0 auto 28px;width:fit-content;font-size:28px;letter-spacing:.14em;position:relative;padding-bottom:10px}
+    .login-card .logo:after{content:"";position:absolute;left:22%;right:22%;bottom:0;height:2px;background:var(--orange)}
+    .login-card h1{font-size:20px;color:var(--navy);text-align:center;margin:0 0 22px}
     .field{margin:0 0 17px}.field label{display:block;font-size:12px;font-weight:650;color:var(--navy);margin:0 0 7px}
     .field input,.field select,.field textarea{width:100%;border:1px solid #cdd5e0;padding:11px 12px;border-radius:3px;background:#fff;color:var(--ink);outline:0}
     .field select[multiple]{height:auto;min-height:108px;padding:6px}
@@ -30,8 +32,8 @@
     .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,73,47,.11)}
     .field textarea{min-height:160px;resize:vertical;font-family:Consolas,monospace;font-size:12px;line-height:1.55}
     .input-icon{position:relative}.input-icon input{padding-left:38px}.input-icon b{position:absolute;left:13px;top:10px;color:var(--muted);font-size:15px}
-    .password-eye{position:absolute;right:11px;top:9px;background:none;color:var(--muted);font-size:15px}.login-btn{width:100%;padding:12px;background:var(--teal);color:#fff;border-radius:3px;font-weight:650;margin-top:4px}
-    .login-btn:hover,.primary:hover{background:#162e4d}.login-help{text-align:center;margin-top:19px;color:var(--muted);font-size:12px}.login-help a{color:var(--teal);font-weight:650}
+    .password-eye{position:absolute;right:11px;top:9px;background:none;color:var(--muted);font-size:15px}.login-btn{width:100%;padding:12px;background:#1d3557;color:#fff;border-radius:2px;font-weight:650;margin-top:4px}
+    .login-btn:hover,.primary:hover{background:#162e4d}.login-help{text-align:center;margin-top:18px;color:var(--muted);font-size:13px}.login-help a{color:#2f6fb5;font-weight:500;text-decoration:underline}
     .login-error{background:#fff0f0;color:#ac2838;border:1px solid #f2c3c7;padding:9px 11px;font-size:12px;border-radius:3px;margin:0 0 16px}
     .demo-accounts{margin-top:26px;border-top:1px solid #e1e5eb;padding-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.demo-accounts b{color:var(--navy)}
     .app{height:100vh;display:flex;flex-direction:column;overflow:hidden}.topbar{height:68px;flex:0 0 68px;background:#fff;display:flex;align-items:center;padding:0 23px;gap:20px;border-bottom:1px solid var(--line);z-index:10}
@@ -183,7 +185,7 @@
     .data-table tbody tr.rule-group-atms,.data-table tbody tr.rule-group-atms:hover{background:#f7f9fb}
     .data-table tbody tr.rule-group-atms>td{white-space:normal;padding:0 13px 12px 42px;border-bottom:1px solid #e9edf2}
     .rule-nest{width:100%;border-collapse:collapse;min-width:640px;background:#fff}
-    .rule-nest th{background:#eef2f6;color:var(--navy);text-align:left;padding:8px 13px;font-size:11px;font-weight:650}
+    .rule-nest th{background:#eef2f6;color:var(--navy);text-align:left;padding:8px 13px;font-size:11px;font-weight:650;white-space:nowrap}
     .rule-nest td{padding:8px 13px;border-bottom:1px solid #eef2f6;font-size:12px;white-space:nowrap}
     .rule-nest tr:last-child td{border-bottom:0}
     @media(max-width:700px){.map-grid,.rule-split,.rule-amt-grid,.rule-option-picks{grid-template-columns:1fr}}
@@ -256,9 +258,15 @@ body{font-size:12px;line-height:1.35}
     .data-table th .col-filter svg{display:block;stroke:#fff}
     .data-table th .col-filter.on{background:rgba(255,255,255,.28)}
     .data-table th .col-filter.on svg path{fill:#fff;stroke:#fff}
-    .col-pop{position:fixed;z-index:25;width:240px;max-height:280px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:var(--shadow)}
-    .col-pop-search{margin:8px;height:24px;padding:0 6px;border:1px solid var(--line);border-radius:2px;font-size:11px}
-    .col-pop-list{overflow:auto;padding:0 8px 8px;display:flex;flex-direction:column;gap:2px}
+    .data-table th .col-filter:hover{background:rgba(255,255,255,.2)}
+    .col-pop{position:fixed;z-index:80;width:240px;max-height:280px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:var(--shadow)}
+    .col-pop-search{margin:8px;width:calc(100% - 16px);height:24px;padding:0 6px;border:1px solid var(--line);border-radius:2px;font-size:11px}
+    .col-pop-list{overflow:auto;flex:1;min-height:0;max-height:190px;padding:0 8px 8px;display:flex;flex-direction:column;gap:2px}
+    .rule-nest th .col-filter{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:2px;background:transparent;color:var(--navy);flex:none}
+    .rule-nest th .col-filter svg{display:block;stroke:var(--navy)}
+    .rule-nest th .col-filter.on{background:rgba(22,35,61,.12)}
+    .rule-nest th .col-filter.on svg path{fill:var(--navy);stroke:var(--navy)}
+    .rule-nest th .col-filter:hover{background:rgba(22,35,61,.08)}
     .col-pop-opt{display:flex;align-items:flex-start;gap:6px;font-size:12px;font-weight:400;color:var(--navy);line-height:1.3}
     .col-pop-opt input{margin-top:2px;accent-color:var(--orange)}
     .col-pop-foot{display:flex;align-items:center;gap:8px;padding:6px 8px;border-top:1px solid var(--line)}
@@ -453,9 +461,9 @@ body{font-size:12px;line-height:1.35}
     @media(max-width:700px){.sidebar{top:40px}.canvas{padding:8px}.page-head h1{font-size:14px}.kpis{grid-template-columns:repeat(2,1fr)}}
 
 .login-card .field{margin:0 0 16px}
-    .login-card .field label{display:block;font-size:12px;font-weight:650;color:var(--navy);margin:0 0 7px}
-    .login-input{display:flex;align-items:stretch;height:44px;background:#fff;border:1px solid #e23d32}
-    .login-ico{width:42px;flex:0 0 42px;height:42px;display:grid;place-items:center;background:#173a5f;color:#fff;border-right:1px solid #e23d32}
+    .login-card .field label{display:block;font-size:12px;font-weight:650;color:#1d3557;margin:0 0 7px}
+    .login-input{display:flex;align-items:stretch;height:44px;background:#fff;border:1px solid #d8a39e}
+    .login-ico{width:42px;flex:0 0 42px;height:42px;display:grid;place-items:center;background:#1d3557;color:#fff;border-right:1px solid #d8a39e}
     .login-ico svg{display:block}
     .login-input-box{position:relative;flex:1;min-width:0;display:flex;align-items:center}
     .login-card .login-input input{width:100%;height:42px;margin:0;border:0;border-radius:0;background:#fff;color:var(--ink);padding:0 12px;font-size:14px;line-height:42px;box-shadow:none;outline:0}
@@ -473,6 +481,7 @@ body{font-size:12px;line-height:1.35}
 .content:has(.canvas.sim-host) .breadcrumb{flex:0 0 auto}
 .canvas.sim-host{flex:1;min-height:0;max-width:none;margin:0;padding:0;overflow:hidden;display:flex;flex-direction:column}
 .canvas.sim-host>.page-head{flex:0 0 auto;margin:0;padding:8px 12px 4px}
+.sim-dock{position:fixed;left:-10000px;top:0;width:2px;height:2px;overflow:hidden;opacity:0;pointer-events:none}
 .sim-frame{width:100%;height:100%;flex:1;min-height:0;border:0;display:block;background:#eef1f4}
 .coming-card{padding:28px 20px;text-align:center;color:var(--muted);font-size:12px}
 .kpis.tkn-kpis{grid-template-columns:repeat(6,1fr)}
@@ -507,8 +516,7 @@ body{font-size:12px;line-height:1.35}
     <canvas id="loginNet" class="login-net" aria-hidden="true"></canvas>
     <div id="loginIps" class="login-ips" aria-hidden="true"></div>
     <div class="login-card">
-      <div class="logo">IRIS <span>●</span></div>
-      <h1>Tokenization Operations Portal</h1>
+      <div class="logo">IRI<span>S</span></div>
       <div id="loginError" class="login-error hidden"></div>
       <form id="loginForm">
         <div class="field"><label for="username">Username</label><div class="login-input"><span class="login-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.6 19.2c1.15-3.15 3.35-4.7 6.4-4.7s5.25 1.55 6.4 4.7" stroke-linecap="round"/></svg></span><input id="username" autocomplete="username" required placeholder="Username"></div></div>
@@ -542,6 +550,8 @@ body{font-size:12px;line-height:1.35}
       </main>
     </div>
   </div>
+  <!-- Keeps the simulator iframe alive when leaving the Simulator screen mid-flow. -->
+  <div id="simDock" class="sim-dock" hidden aria-hidden="true"></div>
   <div id="overlay"></div>
   <script src="config.js"></script>
   <script>
@@ -669,7 +679,6 @@ let cascadeRules=[
   {cardStatus:'WARM',effect:'Suspend',disabled:false,ts:STAMP,by:BY,upd:BY},
   {cardStatus:'HOT',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
   {cardStatus:'BLOCKED',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
-  {cardStatus:'DORMANT',effect:'Delete',disabled:false,ts:STAMP,by:BY,upd:BY},
   {cardStatus:'EXPIRED',effect:'Suspend',disabled:false,ts:STAMP,by:BY,upd:BY}
 ];
 let tokens=[],transactions=[],audits=[];
@@ -702,8 +711,64 @@ const DATA_FILES={
   'users.json':{key:'portalUsers'}
 };
 let lastSnapshot='',lastParts={},storeRevision=0,seenFileRev={},applyingRemote=false,flushing=false,flushAgain=false,remoteHold=null,sharedNotice=false;
-let localOpsWriteAt={},persistSkipSimPush=false;
+let localOpsWriteAt={},localOpsGen={tokens:0,transactions:0,cards:0,audits:0},opsPersistPending=false,persistSkipSimPush=false;
 const OPS_FILE_KEYS={'tokens.json':'tokens','transactions.json':'transactions','audits.json':'audits','cards.json':'cards'};
+const OPS_KEYS=['tokens','transactions','cards','audits'];
+function opsWriteFresh(opsKey){
+  const t=localOpsWriteAt[opsKey];
+  return !!(t&&(Date.now()-t<60000));
+}
+function shouldKeepLocalOps(opsKey,genAtStart){
+  if(!opsKey) return false;
+  if(opsWriteFresh(opsKey)) return true;
+  const start=genAtStart&&genAtStart[opsKey]!=null?genAtStart[opsKey]:0;
+  return (localOpsGen[opsKey]||0)!==start;
+}
+function txnStatusRank(status){
+  const s=String(status||'');
+  if(!s||s==='RECEIVED') return 0;
+  if(s==='FAILED') return 1;
+  return 2;
+}
+function preferRicherTxn(a,b){
+  if(!a) return b;
+  if(!b) return a;
+  const ra=txnStatusRank(a.status), rb=txnStatusRank(b.status);
+  if(ra!==rb) return rb>ra?b:a;
+  const sa=(a.steps&&a.steps.length)||0, sb=(b.steps&&b.steps.length)||0;
+  if(sa!==sb) return sb>sa?b:a;
+  const ca=(a.cycle&&a.cycle.length)||0, cb=(b.cycle&&b.cycle.length)||0;
+  if(ca!==cb) return cb>ca?b:a;
+  const da=(a.decision&&String(a.decision))||'', db=(b.decision&&String(b.decision))||'';
+  if(!!da!==!!db) return db?b:a;
+  return b;
+}
+/** Merge full txn list writes so a stale RECEIVED snapshot cannot wipe APPROVED. */
+function mergeTxnLists(incoming,current){
+  const byId=new Map();
+  (current||[]).forEach(t=>{if(t&&t.id) byId.set(String(t.id),t)});
+  (incoming||[]).forEach(t=>{
+    if(!t||!t.id) return;
+    const id=String(t.id);
+    byId.set(id,preferRicherTxn(byId.get(id),t));
+  });
+  const out=[], seen=new Set();
+  (incoming||[]).forEach(t=>{
+    if(!t||!t.id) return;
+    const id=String(t.id);
+    if(seen.has(id)) return;
+    seen.add(id);
+    out.push(byId.get(id));
+  });
+  (current||[]).forEach(t=>{
+    if(!t||!t.id) return;
+    const id=String(t.id);
+    if(seen.has(id)) return;
+    seen.add(id);
+    out.push(byId.get(id));
+  });
+  return out;
+}
 
 function snapshotState(){
   return {institution,schemes,products,cards,tokenRequestors,eligibility,riskScoreBands,riskReasonRules,stepup,templates,authRules,limits,responseCodes,reasonCodes,cascadeRules,tokens,transactions,audits,portalUsers};
@@ -727,7 +792,9 @@ function readData(file){
   }).catch(err=>{clearTimeout(timer);throw err});
 }
 function writeCollection(file,rows){
-  return fetch(DATA_BASE+'/'+file,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rows),keepalive:true}).then(res=>{
+  // Do NOT use keepalive — browser caps keepalive bodies at 64KB, so transactions.json
+  // (full hop cycles) silently fail to persist while smaller collections still write.
+  return fetch(DATA_BASE+'/'+file,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rows)}).then(res=>{
     if(!res.ok) throw new Error('write failed');
     return res.json();
   });
@@ -737,8 +804,64 @@ function rememberParts(parts){
   Object.keys(parts).forEach(file=>{lastParts[file]=JSON.stringify(parts[file])});
   lastSnapshot=JSON.stringify(snapshotState());
 }
+let opsWriteChain=Promise.resolve();
+const opsWriteLatest={};
+const opsWriteFail={};
+function markUnflushedOpsDirty(){
+  // rememberParts can mark in-memory ops as "synced" while disk is still stale.
+  // Keep those collections dirty so the next flush actually writes them.
+  Object.keys(OPS_FILE_KEYS).forEach(file=>{
+    const key=OPS_FILE_KEYS[file];
+    if(opsWriteLatest[file]!==undefined||opsWriteFresh(key)){
+      lastParts[file]='__unflushed__'+Date.now();
+      return;
+    }
+    const live=JSON.stringify(snapshotState()[key]||[]);
+    if(lastParts[file]===live) lastParts[file]='__unflushed__'+Date.now();
+  });
+}
+async function drainOpsWrites(){
+  while(Object.keys(opsWriteLatest).length){
+    const files=Object.keys(opsWriteLatest);
+    for(let i=0;i<files.length;i++){
+      const file=files[i];
+      const payload=opsWriteLatest[file];
+      delete opsWriteLatest[file];
+      if(!Array.isArray(payload)) continue;
+      try{
+        const meta=await writeCollection(file,payload);
+        if(meta&&meta.files){
+          if(meta.files[file]!=null) seenFileRev[file]=meta.files[file];
+          storeRevision=meta.revision||storeRevision;
+        }
+        lastParts[file]=JSON.stringify(payload);
+        delete opsWriteFail[file];
+      }catch(err){
+        // Re-queue if nothing newer arrived, but back off so one bad file cannot spin forever.
+        if(opsWriteLatest[file]===undefined){
+          const n=(opsWriteFail[file]||0)+1;
+          opsWriteFail[file]=n;
+          if(n<=8){
+            opsWriteLatest[file]=payload;
+            await new Promise(r=>setTimeout(r,Math.min(4000,250*n)));
+          }else{
+            // Leave dirty so a later tknWrite / flush can retry after a fresh payload.
+            lastParts[file]='__failed__'+Date.now();
+          }
+        }
+      }
+    }
+  }
+}
+function enqueueOpsFileWrite(file,rows){
+  if(!file||!Array.isArray(rows)) return;
+  opsWriteLatest[file]=rows;
+  delete opsWriteFail[file];
+  opsWriteChain=opsWriteChain.then(()=>drainOpsWrites()).catch(()=>drainOpsWrites());
+}
 function persistStore(){
-  if(applyingRemote) return;
+  // Never silently drop simulator ops while a remote apply is in flight.
+  if(applyingRemote){opsPersistPending=true;return}
   flushStore().catch(()=>{});
   // Do not echo simulator writes straight back into the iframe — that races in-flight flows.
   if(!persistSkipSimPush&&currentScreen==='Simulator'){
@@ -749,7 +872,11 @@ function persistStore(){
 function flushStore(){
   if(flushing){flushAgain=true;return Promise.resolve()}
   const parts=collectionParts();
-  const changed=Object.keys(parts).filter(file=>JSON.stringify(parts[file])!==lastParts[file]);
+  const changed=Object.keys(parts).filter(file=>{
+    // Ops disk writes are owned by enqueueOpsFileWrite — avoid racing a stale coalesced PUT.
+    if(OPS_FILE_KEYS[file]&&opsWriteLatest[file]!==undefined) return false;
+    return JSON.stringify(parts[file])!==lastParts[file];
+  });
   if(!changed.length) return Promise.resolve();
   const previous={};
   changed.forEach(file=>{previous[file]=lastParts[file];lastParts[file]=JSON.stringify(parts[file])});
@@ -770,8 +897,14 @@ function flushStore(){
     throw err;
   }).finally(()=>{
     flushing=false;
-    if(flushAgain){flushAgain=false;persistStore()}
-    else pollSharedStore().catch(()=>{});
+    const again=flushAgain||opsPersistPending;
+    flushAgain=false;
+    opsPersistPending=false;
+    if(again){
+      // If remote apply started, re-queue instead of dropping the pending write.
+      if(applyingRemote) opsPersistPending=true;
+      else persistStore();
+    }else pollSharedStore().catch(()=>{});
   });
 }
 function applySnapshot(s){
@@ -825,31 +958,50 @@ async function applyRemote(meta){
   const pendingNames=Object.keys(DATA_FILES).filter(file=>pending[file]!==seenFileRev[file]);
   if(!pendingNames.length){storeRevision=meta.revision||storeRevision;return}
   applyingRemote=true;
+  const genAtStart=Object.assign({},localOpsGen);
   try{
     const files=meta.files||{};
     const snap=snapshotState();
-    const now=Date.now();
+    const keepOps={};
     for(let i=0;i<pendingNames.length;i++){
       const file=pendingNames[i];
-      // Ignore stale disk reloads of ops collections just written by the simulator bridge.
+      // Never let a mid-flight disk reload wipe simulator ops that landed in memory.
       const opsKey=OPS_FILE_KEYS[file];
-      if(opsKey&&localOpsWriteAt[opsKey]&&(now-localOpsWriteAt[opsKey]<8000)){
+      const spec=DATA_FILES[file];
+      if((opsKey&&opsWriteLatest[file]!==undefined)||shouldKeepLocalOps(opsKey,genAtStart)){
+        keepOps[spec.key]=true;
         seenFileRev[file]=files[file];
         continue;
       }
       const data=await readData(file);
-      const spec=DATA_FILES[file];
+      if((opsKey&&opsWriteLatest[file]!==undefined)||shouldKeepLocalOps(opsKey,genAtStart)){
+        keepOps[spec.key]=true;
+        seenFileRev[file]=files[file];
+        continue;
+      }
       if(!Array.isArray(data)) continue;
-      snap[spec.key]=data;
+      // Disk reload of transactions must not regress completed rows to RECEIVED.
+      if(opsKey==='transactions') snap[spec.key]=mergeTxnLists(data,snap.transactions||transactions);
+      else snap[spec.key]=data;
     }
+    const live=snapshotState();
+    OPS_KEYS.forEach(k=>{
+      if(keepOps[k]||shouldKeepLocalOps(k,genAtStart)) snap[k]=live[k];
+    });
     applySnapshot(snap);
     storeRevision=meta.revision;
     seenFileRev=Object.assign({},files);
     rememberParts(collectionParts());
+    markUnflushedOpsDirty();
     sharedNotice=false;
     remoteHold=null;
-    if(currentUser&&currentScreen) renderScreen();
-  }finally{applyingRemote=false}
+    // Never remount Simulator from a remote/disk apply — parking/rebuilding the iframe
+    // wipes the completed hop cycle. Monitor/other screens still refresh normally.
+    if(currentUser&&currentScreen&&currentScreen!=='Simulator') renderScreen();
+  }finally{
+    applyingRemote=false;
+    if(opsPersistPending){opsPersistPending=false;persistStore()}
+  }
 }
 function releaseSharedHold(){
   setTimeout(()=>{
@@ -896,29 +1048,44 @@ async function bootSharedStore(){
 }
 function tknLiveStore(){return snapshotState()}
 function tknWrite(name,rows){
-  if(!['tokens','transactions','cards','audits'].includes(name)||!Array.isArray(rows)) return;
+  if(!OPS_KEYS.includes(name)||!Array.isArray(rows)) return;
   let cloned=rows;
   try{cloned=JSON.parse(JSON.stringify(rows))}catch(e){cloned=rows.slice()}
+  if(name==='transactions') cloned=mergeTxnLists(cloned,transactions);
   if(name==='tokens') tokens=cloned;
   else if(name==='transactions') transactions=cloned;
   else if(name==='cards') cards=cloned;
   else if(name==='audits') audits=cloned;
+  localOpsGen[name]=(localOpsGen[name]||0)+1;
   localOpsWriteAt[name]=Date.now();
-  // Force persist even when a simulator push / remote apply is in flight
-  applyingRemote=false;
+  const file=Object.keys(OPS_FILE_KEYS).find(f=>OPS_FILE_KEYS[f]===name);
+  // Dedicated serial disk queue — do not rely on coalesced flushStore for ops durability.
+  if(file){
+    lastParts[file]='__dirty__'+localOpsGen[name];
+    enqueueOpsFileWrite(file,cloned);
+  }
   persistSkipSimPush=true;
-  try{persistStore()}finally{persistSkipSimPush=false}
+  try{
+    // Keep generic flush for any non-ops dirty state; ops are owned by the queue above.
+    if(!(applyingRemote||flushing)) persistStore();
+    else{
+      opsPersistPending=true;
+      if(flushing) flushAgain=true;
+    }
+  }finally{persistSkipSimPush=false}
   if(['Token Management','Transaction Monitor','Dashboard','Audit Log'].includes(currentScreen)) renderScreen();
 }
+function tknStoreRevision(){return storeRevision}
 window.tknLiveStore=tknLiveStore;
 window.tknWrite=tknWrite;
+window.tknStoreRevision=tknStoreRevision;
 
 function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 function nowStamp(){const d=new Date(),months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],p=n=>String(n).padStart(2,'0');return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}, ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`}
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2900)}
 function showDrawer(html,wide){document.getElementById('overlay').innerHTML=`<div class="drawer-backdrop" onclick="closeOverlay()"><div class="drawer${wide?' wide':''}" onclick="event.stopPropagation()">${html}</div></div>`}
-function showModal(html,wide){document.getElementById('overlay').innerHTML=`<div class="modal-backdrop" onclick="closeOverlay()"><div class="modal${wide?' wide':''}" onclick="event.stopPropagation()">${html}</div></div>`}
-function closeOverlay(){document.getElementById('overlay').innerHTML='';releaseSharedHold&&releaseSharedHold()}
+function showModal(html,wide){const overlay=document.getElementById('overlay');overlay.innerHTML=`<div class="modal-backdrop" onclick="closeOverlay()"><div class="modal${wide?' wide':''}" onclick="event.stopPropagation()">${html}</div></div>`;initPagers(overlay)}
+function closeOverlay(){closeColFilter();document.getElementById('overlay').innerHTML='';releaseSharedHold&&releaseSharedHold()}
 function toggleSidebar(){sidebarCollapsed=!sidebarCollapsed;document.getElementById('sidebar').classList.toggle('collapsed',sidebarCollapsed)}
 function toggleUserMenu(){document.getElementById('userDropdown').classList.toggle('hidden')}
 function togglePassword(){const i=document.getElementById('password');const open=i.type==='password';i.type=open?'text':'password';const btn=i.parentElement.querySelector('.password-eye');btn.classList.toggle('is-open',open);btn.setAttribute('aria-label',open?'Hide password':'Show password')}
@@ -1055,7 +1222,7 @@ let masterIndex=null,idvTab='bands',auditFilter='';
 let tknMgmtQuery='',tknMgmtShowDeleted=false,tknExpanded=new Set(),opsBanner=null;
 let txnMonQuery='',txnMonType='',txnMonStatus='',txnViewFocus='',txnReVerifyHtml='';
 let pendingTokenAction=null,pendingCardStatus=null;
-const CARD_STATUSES=['ACTIVE','WARM','HOT','BLOCKED','DORMANT','EXPIRED'];
+const CARD_STATUSES=['ACTIVE','WARM','HOT','BLOCKED','EXPIRED'];
 const TOKEN_ACTIONS=['Suspend','Unsuspend','Delete','Activate'];
 const TXN_STATUSES=['STARTED','NOT_ELIGIBLE','TERMS_DECLINED','STEP_UP_PENDING','STEP_UP_FAILED','CANCELLED','DECLINED','PENDING_ACTIVATION','COMPLETED','RECEIVED','APPROVED','FAILED','PENDING','DELETED','UPDATED'];
 const ALLOWED_TEMPLATE_VARS=['bank','otp','minutes','product','last4','wallet','device'];
@@ -1812,12 +1979,101 @@ function openAudit(i){
   </div><div class="modal-foot"><button class="secondary" onclick="closeOverlay()">Close</button></div>`,true);
 }
 
-/* —— Simplified pager / filter —— */
+/* —— Pager and per-column multi-select filters —— */
 const pagerStates={};
+const COL_FILTER_ICON='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7.2V19l-4 2v-8.8z"></path></svg>';
+let colPopCtx=null;
 function pagerState(table){
   if(!table.id) table.id='grid-'+Math.random().toString(36).slice(2,8);
-  if(!pagerStates[table.id]) pagerStates[table.id]={page:1,size:10,query:''};
-  return pagerStates[table.id];
+  const host=table.closest('#screen')?(typeof currentScreen==='string'?currentScreen:'screen'):'overlay';
+  const key=host+'::'+table.id;
+  if(!pagerStates[key]) pagerStates[key]={page:1,size:10,query:'',cols:{}};
+  if(!pagerStates[key].cols) pagerStates[key].cols={};
+  return pagerStates[key];
+}
+function syncQueryFromToolbar(table){
+  const card=table.closest('.card');
+  if(!card||table.closest('td')||table.closest('.modal')) return;
+  const input=[...card.querySelectorAll(':scope>.toolbar .search-field')].find(el=>{
+    const handler=el.getAttribute('oninput')||'';
+    return handler.indexOf('filterTable')>=0&&handler.indexOf(table.id)>=0;
+  });
+  if(!input) return;
+  const state=pagerState(table);
+  if((input.value||'')!==(state.query||'')){state.query=input.value||'';state.page=1}
+}
+function isCompanionRow(tr){
+  return tr.classList.contains('rule-group-atms')||tr.classList.contains('payload-row');
+}
+function isDataRow(tr){
+  if(isCompanionRow(tr)) return false;
+  const cell=tr.cells[0];
+  if(cell&&cell.colSpan>1&&tr.cells.length===1) return false;
+  return true;
+}
+function cellFilterText(td){
+  if(!td) return '';
+  const clone=td.cloneNode(true);
+  clone.querySelectorAll('table,button.action-text,button.icon-btn,.actions,.nest-actions').forEach(n=>n.remove());
+  return (clone.textContent||'').replace(/[▸▾]/g,'').replace(/\s+/g,' ').trim();
+}
+function rowPassesCols(tr, cols){
+  if(!cols) return true;
+  for(const key of Object.keys(cols)){
+    const selected=cols[key];
+    if(!Array.isArray(selected)) continue;
+    if(selected.indexOf(cellFilterText(tr.cells[Number(key)]))<0) return false;
+  }
+  return true;
+}
+function tableUsesPager(table){
+  return !!(table.closest('.card')&&!table.closest('.modal')&&!table.closest('td'));
+}
+function syncCompanion(tr, visible){
+  let n=tr.nextElementSibling;
+  while(n&&isCompanionRow(n)){
+    n.style.display=visible?'':'none';
+    n=n.nextElementSibling;
+  }
+}
+function uniqueColValues(table, col){
+  const tbody=table.tBodies[0];
+  if(!tbody) return [];
+  const seen=new Set();
+  const vals=[];
+  [...tbody.rows].forEach(tr=>{
+    if(!isDataRow(tr)) return;
+    const text=cellFilterText(tr.cells[col]);
+    if(seen.has(text)) return;
+    seen.add(text);
+    vals.push(text);
+  });
+  vals.sort((a,b)=>{
+    if(!a&&b) return 1;
+    if(a&&!b) return -1;
+    return a.localeCompare(b,undefined,{numeric:true,sensitivity:'base'});
+  });
+  return vals;
+}
+function attachColFilters(table){
+  const head=table.tHead&&table.tHead.rows[0];
+  if(!head) return;
+  pagerState(table);
+  [...head.cells].forEach((th,i)=>{
+    if(th.querySelector('.col-filter')) return;
+    const label=(th.textContent||'').replace(/\s+/g,' ').trim();
+    if(!label) return;
+    if(!uniqueColValues(table,i).some(Boolean)) return;
+    th.innerHTML=`<span class="th-label"><span>${escHtml(label)}</span><button type="button" class="col-filter" data-col="${i}" title="Filter ${escHtml(label)}" aria-label="Filter ${escHtml(label)}">${COL_FILTER_ICON}</button></span>`;
+  });
+}
+function syncColFilterButtons(table){
+  const head=table.tHead&&table.tHead.rows[0];
+  if(!head) return;
+  const cols=pagerState(table).cols||{};
+  [...head.querySelectorAll('.col-filter')].forEach(btn=>{
+    btn.classList.toggle('on', Array.isArray(cols[btn.getAttribute('data-col')]));
+  });
 }
 function filterTable(input,id){
   const table=document.getElementById(id);
@@ -1828,36 +2084,181 @@ function filterTable(input,id){
   paintPager(table);
 }
 function paintPager(table){
+  syncQueryFromToolbar(table);
   const state=pagerState(table);
   const tbody=table.tBodies[0];
   if(!tbody) return;
   const q=(state.query||'').toLowerCase();
-  const all=[...tbody.rows];
-  const matched=all.filter(tr=>{
-    if(!q) return true;
-    return tr.textContent.toLowerCase().includes(q);
+  const dataRows=[...tbody.rows].filter(isDataRow);
+  const matched=dataRows.filter(tr=>{
+    if(q&&!(tr.textContent||'').toLowerCase().includes(q)) return false;
+    return rowPassesCols(tr, state.cols);
   });
-  all.forEach(tr=>tr.style.display='none');
-  const start=(state.page-1)*state.size;
-  const pageRows=matched.slice(start,start+state.size);
-  pageRows.forEach(tr=>tr.style.display='');
-  let pager=table.parentElement&&table.parentElement.parentElement?table.parentElement.parentElement.querySelector('.pager'):null;
-  const card=table.closest('.card');
-  if(card){
-    pager=card.querySelector('.pager');
-    if(!pager){pager=document.createElement('div');pager.className='pager';card.appendChild(pager)}
-    const pages=Math.max(1,Math.ceil(matched.length/state.size)||1);
+  dataRows.forEach(tr=>{tr.style.display='none';syncCompanion(tr,false)});
+  const usePager=tableUsesPager(table);
+  const pages=Math.max(1,Math.ceil(matched.length/(state.size||10))||1);
+  if(usePager){
     if(state.page>pages) state.page=pages;
-    pager.innerHTML=`<div class="pager-size">Rows <select onchange="setTablePageSize('${table.id}',this.value)"><option${state.size===10?' selected':''}>10</option><option${state.size===25?' selected':''}>25</option><option${state.size===50?' selected':''}>50</option></select></div><div class="pager-count">${matched.length? (start+1)+'–'+Math.min(start+state.size,matched.length)+' of '+matched.length : '0 records'}</div><div class="pager-nav"><button class="pager-btn" ${state.page<=1?'disabled':''} onclick="setTablePage('${table.id}',${state.page-1})">‹</button><button class="pager-btn active">${state.page}</button><button class="pager-btn" ${state.page>=pages?'disabled':''} onclick="setTablePage('${table.id}',${state.page+1})">›</button></div>`;
+    if(state.page<1) state.page=1;
   }
+  const start=usePager?(state.page-1)*state.size:0;
+  const pageRows=usePager?matched.slice(start,start+state.size):matched;
+  pageRows.forEach(tr=>{tr.style.display='';syncCompanion(tr,true)});
+  syncColFilterButtons(table);
+  if(!usePager) return;
+  const card=table.closest('.card');
+  let pager=[...card.querySelectorAll(':scope>.pager')].find(p=>p.dataset.for===table.id);
+  if(!pager){
+    pager=document.createElement('div');
+    pager.className='pager';
+    pager.dataset.for=table.id;
+    card.appendChild(pager);
+  }
+  const shownStart=matched.length?start+1:0;
+  pager.innerHTML=`<div class="pager-size">Rows <select onchange="setTablePageSize('${table.id}',this.value)"><option${state.size===10?' selected':''}>10</option><option${state.size===25?' selected':''}>25</option><option${state.size===50?' selected':''}>50</option></select></div><div class="pager-count">${matched.length? shownStart+'–'+Math.min(start+state.size,matched.length)+' of '+matched.length : '0 records'}</div><div class="pager-nav"><button type="button" class="pager-btn" ${state.page<=1?'disabled':''} onclick="setTablePage('${table.id}',${state.page-1})">‹</button><button type="button" class="pager-btn active">${state.page}</button><button type="button" class="pager-btn" ${state.page>=pages?'disabled':''} onclick="setTablePage('${table.id}',${state.page+1})">›</button></div>`;
 }
 function setTablePage(id,page){const table=document.getElementById(id);if(!table)return;pagerState(table).page=Number(page)||1;paintPager(table)}
 function setTablePageSize(id,size){const table=document.getElementById(id);if(!table)return;const state=pagerState(table);state.size=Number(size)||10;state.page=1;paintPager(table)}
-function initPagers(root){
-  (root||document).querySelectorAll('table.data-table').forEach(table=>paintPager(table));
+function visibleColEntries(){
+  const q=(colPopCtx.query||'').trim().toLowerCase();
+  return colPopCtx.values.map((v,i)=>({v,i,label:v||'(Blank)'})).filter(o=>!q||o.label.toLowerCase().includes(q));
 }
+function commitColFilter(){
+  if(!colPopCtx) return;
+  const table=document.getElementById(colPopCtx.tableId);
+  if(!table) return;
+  const state=pagerState(table);
+  const allOn=colPopCtx.values.every(v=>colPopCtx.selected.has(v));
+  if(allOn) delete state.cols[colPopCtx.col];
+  else state.cols[colPopCtx.col]=colPopCtx.values.filter(v=>colPopCtx.selected.has(v));
+  state.page=1;
+  paintPager(table);
+}
+function syncColPopAllBox(){
+  const pop=document.getElementById('colPop');
+  if(!pop||!colPopCtx) return;
+  const shown=visibleColEntries();
+  const allOn=shown.length>0&&shown.every(o=>colPopCtx.selected.has(o.v));
+  const some=shown.some(o=>colPopCtx.selected.has(o.v));
+  const allBox=pop.querySelector('.col-pop-list input[data-act="visible"]');
+  if(!allBox) return;
+  allBox.checked=allOn;
+  allBox.indeterminate=!allOn&&some;
+}
+function renderColPopList(){
+  const pop=document.getElementById('colPop');
+  if(!pop||!colPopCtx) return;
+  const list=pop.querySelector('.col-pop-list');
+  const shown=visibleColEntries();
+  const allOn=shown.length>0&&shown.every(o=>colPopCtx.selected.has(o.v));
+  const some=shown.some(o=>colPopCtx.selected.has(o.v));
+  const opts=shown.map(o=>`<label class="col-pop-opt"><input type="checkbox" data-idx="${o.i}"${colPopCtx.selected.has(o.v)?' checked':''}> <span>${escHtml(o.label)}</span></label>`).join('');
+  list.innerHTML=`<label class="col-pop-opt"><input type="checkbox" data-act="visible"${allOn?' checked':''}> <span>Select all</span></label>${opts||'<div class="tiny muted">No matches</div>'}`;
+  const allBox=list.querySelector('input[data-act="visible"]');
+  if(allBox) allBox.indeterminate=!allOn&&some;
+}
+function placeColPop(anchor){
+  const pop=document.getElementById('colPop');
+  if(!pop) return;
+  pop.classList.remove('hidden');
+  const rect=anchor.getBoundingClientRect();
+  const w=pop.offsetWidth||240;
+  const h=pop.offsetHeight||200;
+  let left=Math.min(Math.max(8,rect.left), Math.max(8, window.innerWidth-w-8));
+  let top=rect.bottom+4;
+  if(top+h>window.innerHeight-8) top=Math.max(8, rect.top-h-4);
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+}
+function ensureColPop(){
+  let pop=document.getElementById('colPop');
+  if(pop) return pop;
+  pop=document.createElement('div');
+  pop.id='colPop';
+  pop.className='col-pop hidden';
+  pop.innerHTML='<input class="col-pop-search" placeholder="Search" autocomplete="off" aria-label="Search values"><div class="col-pop-list"></div><div class="col-pop-foot"><button type="button" data-act="all">Select all</button><button type="button" data-act="clear">Clear filter</button></div>';
+  pop.addEventListener('input',e=>{
+    if(!colPopCtx||!e.target.classList.contains('col-pop-search')) return;
+    colPopCtx.query=e.target.value||'';
+    renderColPopList();
+  });
+  pop.addEventListener('change',e=>{
+    if(!colPopCtx) return;
+    const inp=e.target;
+    if(inp.dataset.act==='visible'){
+      visibleColEntries().forEach(o=>{if(inp.checked) colPopCtx.selected.add(o.v); else colPopCtx.selected.delete(o.v)});
+      commitColFilter();
+      renderColPopList();
+      return;
+    }
+    if(inp.dataset.idx==null) return;
+    const value=colPopCtx.values[Number(inp.dataset.idx)];
+    if(inp.checked) colPopCtx.selected.add(value); else colPopCtx.selected.delete(value);
+    commitColFilter();
+    syncColPopAllBox();
+  });
+  pop.addEventListener('click',e=>{
+    const btn=e.target.closest('button');
+    if(!btn||!colPopCtx) return;
+    if(btn.dataset.act==='all') visibleColEntries().forEach(o=>colPopCtx.selected.add(o.v));
+    else if(btn.dataset.act==='clear'){
+      colPopCtx.values.forEach(v=>colPopCtx.selected.add(v));
+      colPopCtx.query='';
+      const search=pop.querySelector('.col-pop-search');
+      if(search) search.value='';
+    }else return;
+    commitColFilter();
+    renderColPopList();
+  });
+  document.body.appendChild(pop);
+  return pop;
+}
+function openColFilter(btn){
+  const table=btn.closest('table');
+  if(!table) return;
+  const col=Number(btn.getAttribute('data-col'));
+  const values=uniqueColValues(table, col);
+  const saved=pagerState(table).cols[col];
+  colPopCtx={tableId:table.id,col,values,selected:new Set(Array.isArray(saved)?saved:values),query:'',btn};
+  const pop=ensureColPop();
+  const search=pop.querySelector('.col-pop-search');
+  if(search) search.value='';
+  renderColPopList();
+  placeColPop(btn);
+  if(search) search.focus({preventScroll:true});
+}
+function closeColFilter(){
+  colPopCtx=null;
+  const pop=document.getElementById('colPop');
+  if(pop) pop.classList.add('hidden');
+}
+function initPagers(root){
+  (root||document).querySelectorAll('table.data-table, table.rule-nest').forEach(table=>{
+    attachColFilters(table);
+    paintPager(table);
+  });
+}
+document.addEventListener('click',e=>{
+  const btn=e.target.closest&&e.target.closest('.col-filter');
+  if(btn){e.preventDefault();e.stopPropagation();if(colPopCtx&&colPopCtx.btn===btn) closeColFilter(); else openColFilter(btn);return}
+  if(e.target.closest&&e.target.closest('#colPop')) return;
+  closeColFilter();
+}, true);
+window.addEventListener('scroll',e=>{
+  const t=e.target;
+  if(t&&t.nodeType===1&&t.closest&&t.closest('#colPop')) return;
+  if(!colPopCtx) return;
+  if(colPopCtx.btn&&colPopCtx.btn.isConnected) placeColPop(colPopCtx.btn);
+  else closeColFilter();
+}, true);
+window.addEventListener('resize',()=>{
+  if(!colPopCtx) return;
+  if(colPopCtx.btn&&colPopCtx.btn.isConnected) placeColPop(colPopCtx.btn);
+  else closeColFilter();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&colPopCtx){e.preventDefault();closeColFilter()}});
 
-Object.assign(window,{saveMaster,toggleMaster,openMasterForm,saveInstitution,saveEligibility,saveStepup,saveAuthRules,switchIdvTab,openIdvBand,saveIdvBand,toggleIdvBand,openIdvReason,saveIdvReason,toggleIdvReason,openAudit,filterTable,setTablePage,setTablePageSize,initPagers,pushAudit,tokenManagement,transactionMonitor,dashboard,toggleTokenExpand,viewTokenDetails,openTokenAction,confirmTokenAction,runTokenAction,openCardStatusChange,refreshCardStatusPreview,confirmCardStatusChange,runCardStatusChange,viewTransaction,viewTxnById,reVerifyTransaction,exportTransactions,clearOpsBanner,downloadExcel,fmtMoney,nextTxnId,openResetDemo,confirmResetDemo,openSimulatorWindow,pushStoreToSimulator,bindSimulatorFrame,tknLiveStore,tknWrite});
+Object.assign(window,{saveMaster,toggleMaster,openMasterForm,saveInstitution,saveEligibility,saveStepup,saveAuthRules,switchIdvTab,openIdvBand,saveIdvBand,toggleIdvBand,openIdvReason,saveIdvReason,toggleIdvReason,openAudit,filterTable,setTablePage,setTablePageSize,initPagers,pushAudit,tokenManagement,transactionMonitor,dashboard,toggleTokenExpand,viewTokenDetails,openTokenAction,confirmTokenAction,runTokenAction,openCardStatusChange,refreshCardStatusPreview,confirmCardStatusChange,runCardStatusChange,viewTransaction,viewTxnById,reVerifyTransaction,exportTransactions,clearOpsBanner,downloadExcel,fmtMoney,nextTxnId,openResetDemo,confirmResetDemo,openSimulatorWindow,pushStoreToSimulator,bindSimulatorFrame,tknLiveStore,tknWrite,tknStoreRevision,simIsBusy});
 
 
 
@@ -1890,7 +2291,7 @@ function tokensForCard(cardId,includeDeleted){
 }
 function cardStatusPill(s){
   const u=String(s||'').toUpperCase();
-  const c=u==='ACTIVE'?'green':(u==='WARM'||u==='DORMANT'||u==='EXPIRED')?'orange':(u==='HOT'||u==='BLOCKED')?'red':'gray';
+  const c=u==='ACTIVE'?'green':(u==='WARM'||u==='EXPIRED')?'orange':(u==='HOT'||u==='BLOCKED')?'red':'gray';
   return `<span class="status ${c}">${escHtml(s||'—')}</span>`;
 }
 function tokenStatusPill(s){
@@ -2101,7 +2502,7 @@ function toggleTokenExpand(cardId){
 }
 function renderTokenNest(card,tokList){
   if(!tokList.length) return `<div class="tiny muted" style="padding:10px 0">No device tokens yet. Run the simulator to provision one.</div>`;
-  return `<table class="rule-nest"><thead><tr>
+  return `<table class="rule-nest" id="nest-${escHtml(card.id)}"><thead><tr>
     <th>Device ID</th><th>Device Type</th><th>Token Reference</th><th>Channel</th><th>Status</th>
     <th>Provisioning Date</th><th>Token Expiry</th><th>Last Updated</th><th>Last Event / Reason</th><th>Action</th>
   </tr></thead><tbody>${tokList.map(t=>{
@@ -2382,16 +2783,22 @@ function filteredTransactions(){
     if(txnMonType&&t.type!==txnMonType) return false;
     if(txnMonStatus&&t.status!==txnMonStatus) return false;
     if(!q) return true;
-    const hay=[t.id,t.card,t.tokenRef,t.token,t.merchant,t.reason,t.decision,t.message,t.channel].join(' ').toLowerCase();
+    const hay=[t.id,t.card,t.tokenRef,t.token,t.merchant,t.reason,t.decision,t.message,t.channel,t.requestor,t.requestorId,t.deviceId].join(' ').toLowerCase();
     return hay.includes(q);
   });
+}
+function txnChannelLabel(t){
+  const ch=t&&t.channel?String(t.channel):'';
+  const w=t&&t.requestor?String(t.requestor):'';
+  if(ch&&w) return ch+' · '+w;
+  return ch||w||'';
 }
 function transactionMonitor(el){
   const rows=filteredTransactions();
   const statusOpts=['',...new Set(TXN_STATUSES.concat(transactions.map(t=>t&&t.status).filter(Boolean)))];
   el.innerHTML=pageHead('Transaction Monitor',`<button type="button" class="secondary" onclick="exportTransactions()">Export</button>`)+
     `<div class="card"><div class="toolbar">
-      <input class="search-field" style="min-width:280px" placeholder="Search ID, card, token reference, merchant or reason" value="${escHtml(txnMonQuery)}" oninput="txnMonQuery=this.value;renderScreen()">
+      <input class="search-field" style="min-width:280px" placeholder="Search ID, card, wallet, token reference, merchant or reason" value="${escHtml(txnMonQuery)}" oninput="txnMonQuery=this.value;renderScreen()">
       <select class="select-mini" onchange="txnMonType=this.value;renderScreen()">
         <option value="">All types</option>
         <option value="PROVISIONING"${txnMonType==='PROVISIONING'?' selected':''}>PROVISIONING</option>
@@ -2416,7 +2823,7 @@ function transactionMonitor(el){
         return `<tr>
           <td class="strong">${escHtml(t.id||'')}</td>
           <td>${txnTypePill(t.type)}</td>
-          <td>${escHtml(t.channel||'')}</td>
+          <td>${escHtml(txnChannelLabel(t))}</td>
           <td>${escHtml(t.card||'')}</td>
           <td><code>${escHtml(t.tokenRef||'')}</code></td>
           <td>${escHtml(t.time||'')}</td>
@@ -2725,8 +3132,18 @@ function dashboard(el){
     </div>`;
 }
 
+function simIsBusy(win){
+  if(!win) return false;
+  try{
+    if(typeof win.tknSimBusy==='function') return !!win.tknSimBusy();
+    if(win.UI&&(win.UI.busy||(win.UI.hops&&win.UI.hops.length)||win.UI.txnClosed)) return true;
+  }catch(e){}
+  return false;
+}
 function pushStoreToSimulator(win){
   if(!win) return;
+  // Skip while a flow is running OR a completed cycle is still on screen.
+  if(simIsBusy(win)) return;
   let snap;
   try{snap=JSON.parse(JSON.stringify(snapshotState()))}catch(e){snap=snapshotState()}
   try{if(typeof win.tknReceiveStore==='function') win.tknReceiveStore(snap)}catch(e){}
@@ -2758,24 +3175,38 @@ if(!window.__tknStoreRequestBound){
     }
   });
 }
+function parkSimFrame(){
+  const frame=document.getElementById('simFrame');
+  const dock=document.getElementById('simDock');
+  if(frame&&dock&&frame.parentElement!==dock) dock.appendChild(frame);
+}
 function simulator(el){
-  // Preserve an existing simulator iframe across re-entry to this screen.
-  const existing=document.getElementById('simFrame');
-  if(existing){
-    existing.remove();
-    el.innerHTML=pageHead('Simulator',`<button type="button" class="secondary" onclick="openSimulatorWindow()">Open in new window</button>`);
-    el.appendChild(existing);
-    bindSimulatorFrame(existing);
-    pushStoreToSimulator(existing.contentWindow);
-    setTimeout(()=>pushStoreToSimulator(existing.contentWindow),200);
-    return;
+  // Park FIRST — setting el.innerHTML while the iframe is still a child destroys it and
+  // reloads the simulator (wiping the completed message-flow cycle).
+  parkSimFrame();
+  let frame=document.getElementById('simFrame');
+  const firstLoad=!frame;
+  el.innerHTML=pageHead('Simulator',`<button type="button" class="secondary" onclick="openSimulatorWindow()">Open in new window</button>`);
+  if(!frame){
+    frame=document.createElement('iframe');
+    frame.id='simFrame';
+    frame.className='sim-frame';
+    frame.src='IRIS-Tokenization-Simulator.html';
+    frame.title='Tokenization Simulator';
   }
-  el.innerHTML=pageHead('Simulator',`<button type="button" class="secondary" onclick="openSimulatorWindow()">Open in new window</button>`)+
-    `<iframe id="simFrame" class="sim-frame" src="IRIS-Tokenization-Simulator.html" title="Tokenization Simulator"></iframe>`;
-  bindSimulatorFrame(document.getElementById('simFrame'));
+  el.appendChild(frame);
+  bindSimulatorFrame(frame);
+  // Push config only on first create / cold load — never after a finished flow.
+  if(firstLoad&&!simIsBusy(frame.contentWindow)){
+    pushStoreToSimulator(frame.contentWindow);
+    setTimeout(()=>pushStoreToSimulator(frame.contentWindow),200);
+  }
 }
 function renderScreen(){
+  closeColFilter();
   const target=document.getElementById('screen');
+  // Always park before wiping #screen (including Simulator re-entry via applyRemote).
+  parkSimFrame();
   target.classList.toggle('dock',currentScreen!=='Dashboard'&&currentScreen!=='Simulator');
   target.classList.toggle('sim-host',currentScreen==='Simulator');
   const map={
@@ -2816,7 +3247,37 @@ function startLoginBackdrop(){
   if(!page||!canvas) return;
   const ctx=canvas.getContext('2d');
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let w=0,h=0,nodes=[],raf=0,dpr=1;
+  let w=0,h=0,nodes=[],ips=[],raf=0,dpr=1,last=0;
+  const LINK=130;
+  function randIp(){
+    return `${1+Math.floor(Math.random()*223)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
+  }
+  function spawnNode(seedAge){
+    const angle=Math.random()*Math.PI*2;
+    const speed=.12+.28*Math.random();
+    const life=4200+Math.random()*5200;
+    return {
+      x:Math.random()*w,y:Math.random()*h,
+      vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      r:.8+Math.random()*1.8,
+      glow:Math.random()<.18,
+      glowR:6+Math.random()*16,
+      age:seedAge==null?Math.random()*life:seedAge,
+      life
+    };
+  }
+  function spawnIp(seedAge){
+    const angle=Math.random()*Math.PI*2;
+    const speed=.08+.2*Math.random();
+    const life=5000+Math.random()*7000;
+    return {
+      x:Math.random()*w,y:Math.random()*h,
+      vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      text:randIp(),
+      age:seedAge==null?Math.random()*life:seedAge,
+      life
+    };
+  }
   function resize(){
     const box=page.getBoundingClientRect();
     dpr=Math.min(window.devicePixelRatio||1,2);
@@ -2824,26 +3285,79 @@ function startLoginBackdrop(){
     canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
     canvas.style.width=w+'px';canvas.style.height=h+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    nodes=[];
-    const n=Math.max(40,Math.round((w*h)/18000));
-    for(let i=0;i<n;i++) nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:1+Math.random()*1.6});
+    const n=Math.max(55,Math.round((w*h)/14000));
+    const ipN=Math.max(10,Math.round((w*h)/90000));
+    nodes=Array.from({length:n},()=>spawnNode());
+    ips=Array.from({length:ipN},()=>spawnIp());
   }
-  function draw(){
+  function wrap(p){
+    if(p.x<-40)p.x=w+40;else if(p.x>w+40)p.x=-40;
+    if(p.y<-40)p.y=h+40;else if(p.y>h+40)p.y=-40;
+  }
+  function draw(ts){
+    if(page.classList.contains('hidden')){raf=0;return}
+    const now=ts||performance.now();
+    const dt=reduce?0:Math.min(40,now-(last||now));
+    last=now;
     ctx.clearRect(0,0,w,h);
+
     for(let i=0;i<nodes.length;i++){
       const a=nodes[i];
-      if(!reduce){a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>w)a.vx*=-1;if(a.y<0||a.y>h)a.vy*=-1}
-      for(let j=i+1;j<nodes.length;j++){
-        const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-        if(d<110){ctx.strokeStyle=`rgba(214,198,154,${.35*(1-d/110)})`;ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
-      }
-      ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fillStyle='rgba(236,226,198,.85)';ctx.fill();
+      a.age+=dt;
+      if(a.age>=a.life){nodes[i]=spawnNode(0);continue}
+      if(!reduce){a.x+=a.vx*(dt/16);a.y+=a.vy*(dt/16);wrap(a)}
     }
-    if(!page.classList.contains('hidden')&&!reduce) raf=requestAnimationFrame(draw);
+    for(let i=0;i<ips.length;i++){
+      const p=ips[i];
+      p.age+=dt;
+      if(p.age>=p.life){ips[i]=spawnIp(0);continue}
+      if(!reduce){p.x+=p.vx*(dt/16);p.y+=p.vy*(dt/16);wrap(p)}
+    }
+
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      const oa=Math.max(0,Math.min(1,a.age/a.life));
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
+        if(d2>=LINK*LINK) continue;
+        const d=Math.sqrt(d2);
+        const ob=Math.max(0,Math.min(1,b.age/b.life));
+        const alpha=Math.min(oa,ob)*.42*(1-d/LINK);
+        if(alpha<=.01) continue;
+        ctx.strokeStyle=`rgba(190,205,220,${alpha})`;
+        ctx.lineWidth=.75;
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      }
+    }
+
+    for(const a of nodes){
+      const o=Math.max(0,Math.min(1,a.age/a.life));
+      if(a.glow){
+        const g=ctx.createRadialGradient(a.x,a.y,0,a.x,a.y,a.glowR);
+        g.addColorStop(0,`rgba(232,120,60,${.55*o})`);
+        g.addColorStop(.45,`rgba(232,90,50,${.22*o})`);
+        g.addColorStop(1,'rgba(232,90,50,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(a.x,a.y,a.glowR,0,Math.PI*2);ctx.fill();
+      }
+      ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(210,220,232,${.85*o})`;ctx.fill();
+    }
+
+    ctx.font='11px Consolas,Menlo,monospace';
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    for(const p of ips){
+      const o=Math.max(0,Math.min(1,p.age/p.life));
+      ctx.fillStyle=`rgba(230,236,245,${.9*o})`;
+      ctx.fillText(p.text,p.x,p.y);
+    }
+
+    if(reduce) return;
+    raf=requestAnimationFrame(draw);
   }
   resize();
-  window.addEventListener('resize',()=>{resize();if(reduce)draw()});
-  draw();
+  window.addEventListener('resize',()=>{resize();if(reduce){last=0;draw(performance.now())}});
+  if(reduce) draw(performance.now());
+  else raf=requestAnimationFrame(draw);
 }
 
 document.getElementById('loginForm').addEventListener('submit',e=>{
